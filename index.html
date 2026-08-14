@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Performa Teknisi - Live Sync</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS untuk Export Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #f1f5f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -37,7 +34,7 @@
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">
-                <button onclick="fetchLiveData()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Tarik Data Terbaru">
+                <button onclick="fetchLiveData()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                     <i class="fa-solid fa-rotate" id="refresh-icon"></i> Refresh Data
                 </button>
                 <button onclick="openAreaModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
@@ -52,98 +49,60 @@
         <!-- KPI Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-users"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-users"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Teknisi</div>
+                    <div class="text-xs font-semibold text-slate-500 uppercase">Total Teknisi</div>
                     <div id="stat-total-teknisi" class="text-2xl font-bold text-slate-800">0</div>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-ticket"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-ticket"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tiket Completed</div>
+                    <div class="text-xs font-semibold text-slate-500 uppercase">Total Tiket</div>
                     <div id="stat-total-tiket" class="text-2xl font-bold text-slate-800">0</div>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-trophy"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Performer</div>
+                    <div class="text-xs font-semibold text-slate-500 uppercase">Top Performer</div>
                     <div id="stat-top-performer" class="text-lg font-bold text-slate-800 truncate max-w-[150px]">-</div>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-chart-pie"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-chart-pie"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rata-rata % Target</div>
+                    <div class="text-xs font-semibold text-slate-500 uppercase">Rata-rata % Target</div>
                     <div id="stat-avg-target" class="text-2xl font-bold text-slate-800">0%</div>
                 </div>
             </div>
         </div>
 
-        <!-- Top 5 & Bottom 5 Performance Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-medal text-emerald-600"></i> Top 5 Performa Tertinggi
-                </h3>
-                <div id="top-5-container" class="space-y-2">
-                    <div class="text-xs text-slate-400 italic">Sedang memuat data...</div>
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Bottom 5 Performa Terendah
-                </h3>
-                <div id="bottom-5-container" class="space-y-2">
-                    <div class="text-xs text-slate-400 italic">Sedang memuat data...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controls, Filter Area, Filter Sektor & Search Bar -->
+        <!-- Filter & Search Bar -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-area" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:
-                    </label>
-                    <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white font-medium text-slate-700">
+                    <label class="text-xs font-bold text-slate-600 uppercase"><i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:</label>
+                    <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium text-slate-700">
                         <option value="ALL">-- SEMUA AREA --</option>
                     </select>
                 </div>
 
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-sektor" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-filter text-blue-600"></i> Sektor:
-                    </label>
-                    <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-medium text-slate-700">
+                    <label class="text-xs font-bold text-slate-600 uppercase"><i class="fa-solid fa-filter text-blue-600"></i> Sektor:</label>
+                    <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium text-slate-700">
                         <option value="ALL">-- SEMUA SEKTOR --</option>
                     </select>
                 </div>
 
                 <div class="relative w-full md:w-56">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
-                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border rounded-lg text-sm">
                 </div>
-            </div>
-
-            <div class="flex items-center gap-3 text-xs text-slate-500">
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-300 rounded-full inline-block"></span> Target Teratas</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded-full inline-block"></span> Menengah</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-red-300 rounded-full inline-block"></span> Perlu Peningkatan</span>
             </div>
         </div>
 
-        <!-- Main Data Table Container -->
+        <!-- Main Data Table -->
         <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs md:text-sm">
@@ -157,64 +116,17 @@
                             <th class="p-3 min-w-[100px]">UNDERSPEC</th>
                             <th class="p-3 bg-slate-300 min-w-[100px]">Grand Total</th>
                             <th class="p-3 bg-emerald-100 text-emerald-900 min-w-[70px]">RANK</th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">
-                                TARGET 70%<br><span class="text-[10px] font-normal text-slate-600">= 124 JAM = 62 TIKET</span>
-                            </th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">
-                                TARGET 100%<br><span class="text-[10px] font-normal text-slate-600">= 176 JAM = 88 TIKET</span>
-                            </th>
+                            <th class="p-3 bg-slate-100 min-w-[110px]">TARGET 70%<br><span class="text-[10px] font-normal text-slate-600">= 62 TIKET</span></th>
+                            <th class="p-3 bg-slate-100 min-w-[110px]">TARGET 100%<br><span class="text-[10px] font-normal text-slate-600">= 88 TIKET</span></th>
                             <th class="p-3 bg-blue-100 text-blue-900 min-w-[90px]">%</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
-                        <!-- Dynamic Rows -->
-                    </tbody>
-                    <tfoot id="table-foot" class="bg-slate-200 font-bold border-t-2 border-slate-400">
-                        <!-- Dynamic Totals -->
-                    </tfoot>
+                    <tbody id="table-body"></tbody>
+                    <tfoot id="table-foot" class="bg-slate-200 font-bold border-t-2 border-slate-400"></tfoot>
                 </table>
             </div>
         </div>
 
-    </div>
-
-    <!-- Area Mapping Management Modal -->
-    <div id="area-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-map-marked-alt text-amber-600"></i> Pengaturan Flexible Mapping Area
-                </h3>
-                <button onclick="closeAreaModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-
-            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-                <div class="font-bold text-sm text-slate-700">Tambah / Edit Area Baru</div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Area</label>
-                        <input type="text" id="input-area-name" placeholder="Misal: GLADAK" class="w-full px-3 py-2 border rounded-lg text-xs font-semibold focus:ring-2 focus:ring-amber-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-xs font-semibold text-slate-600 block mb-1">Daftar Sektor (Pisahkan dengan koma)</label>
-                        <input type="text" id="input-area-sectors" placeholder="Misal: GLD, GLD1, GLD2, SLO" class="w-full px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-amber-500">
-                    </div>
-                </div>
-                <div class="flex justify-end gap-2">
-                    <button onclick="resetAreaForm()" class="px-3 py-1.5 text-xs text-slate-500 hover:bg-slate-200 rounded">Reset</button>
-                    <button onclick="saveAreaMapping()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-bold shadow">Simpan Area</button>
-                </div>
-            </div>
-
-            <div class="space-y-2 max-h-60 overflow-y-auto">
-                <div class="font-bold text-xs text-slate-500 uppercase tracking-wider">Daftar Mapping Area Aktif</div>
-                <div id="area-list-container" class="space-y-2"></div>
-            </div>
-
-            <div class="flex justify-end pt-3 border-t">
-                <button onclick="closeAreaModal()" class="px-5 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium">Selesai</button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -222,7 +134,6 @@
         const GOOGLE_SHEETS_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
 
         let dataset = [];
-
         let areaMapping = JSON.parse(localStorage.getItem('areaMapping_v1')) || {
             'GLADAK': ['GLD', 'GLD1', 'GLD2', 'SLO'],
             'KARTASURA': ['KRT1', 'KRT2', 'KRT3', 'KRT4'],
@@ -238,140 +149,79 @@
         window.google.visualization = window.google.visualization || {};
         window.google.visualization.Query = {
             setResponse: function(response) {
-                const refreshIcon = document.getElementById('refresh-icon');
-                const statusText = document.getElementById('sync-status-text');
-                const statusIndicator = document.getElementById('sync-status-indicator');
-
-                if (!response || !response.table) {
-                    statusText.innerText = "Data Google Sheets kosong/tidak valid.";
-                    statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
-                    refreshIcon.classList.remove('fa-spin');
-                    return;
+                if (response && response.table) {
+                    parseGVizData(response.table);
+                    document.getElementById('sync-status-text').innerText = "Terhubung (Data Lengkap Sync)";
+                    document.getElementById('sync-status-indicator').className = "w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block";
                 }
-
-                parseGVizData(response.table);
-
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                statusText.innerText = `Terhubung (Auto-Sync - Update Terakhir: ${timeStr} WIB)`;
-                statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block";
-                refreshIcon.classList.remove('fa-spin');
+                document.getElementById('refresh-icon').classList.remove('fa-spin');
             }
         };
 
         function fetchLiveData() {
-            const statusText = document.getElementById('sync-status-text');
-            const statusIndicator = document.getElementById('sync-status-indicator');
-            const refreshIcon = document.getElementById('refresh-icon');
-
-            statusText.innerText = "Mengambil data terbaru...";
-            statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-amber-400 inline-block animate-pulse";
-            refreshIcon.classList.add('fa-spin');
-
-            const oldScript = document.getElementById('gviz-script');
-            if (oldScript) oldScript.remove();
-
+            document.getElementById('refresh-icon').classList.add('fa-spin');
             const script = document.createElement('script');
-            script.id = 'gviz-script';
             script.src = GOOGLE_SHEETS_GVIZ_URL + "&t=" + new Date().getTime();
-
-            script.onerror = function() {
-                console.error("Gagal memuat script dari Google Sheets.");
-                statusText.innerText = "Gagal memuat data live. Mencoba menggunakan cache lokal...";
-                statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
-                refreshIcon.classList.remove('fa-spin');
-                
-                dataset = JSON.parse(localStorage.getItem('dashboard_dataset_v1')) || [];
-                updateSektorDropdown();
-                renderTable();
-            };
-
             document.body.appendChild(script);
         }
 
-        // PARSER PENINGKATAN: DETEKSI DENGAN DETEKSI HEADER FLEKSIBEL
+        // FUNGSI UTAMA: MENGAMBIL HANYA KOLOM PENTING & DETEKSI HEADER DENGAN PRESISI
         function parseGVizData(table) {
             const rows = table.rows;
             if (!rows || rows.length === 0) return;
 
-            let techColIndex = -1;
-            let jenisColIndex = -1;
-            let sektorColIndex = -1;
-            let startRowIndex = 0;
+            let techIndex = -1, jenisIndex = -1, sektorIndex = -1;
 
-            // 1. Cari baris yang berisi Header Asli (NO, JENIS, TIKET, SEKTOR, TEKNISI, dll)
+            // 1. Cari letak pasti posisi kolom TEKNISI, JENIS, dan SEKTOR
             for (let i = 0; i < rows.length; i++) {
                 if (!rows[i].c) continue;
-                let rowValues = rows[i].c.map(cell => cell && cell.v !== null ? String(cell.v).toUpperCase().trim() : '');
-                
-                let tIndex = rowValues.findIndex(v => v === 'TEKNISI' || v.includes('TEKNISI') || v.includes('NAMA'));
-                let jIndex = rowValues.findIndex(v => v === 'JENIS' || v.includes('JENIS') || v.includes('KATEGORI'));
-                let sIndex = rowValues.findIndex(v => v === 'SEKTOR' || v.includes('SEKTOR') || v.includes('STO'));
+                let rowVals = rows[i].c.map(cell => cell && cell.v !== null ? String(cell.v).toUpperCase().trim() : '');
 
-                if (tIndex !== -1) {
-                    techColIndex = tIndex;
-                    jenisColIndex = jIndex;
-                    sektorColIndex = sIndex;
-                    startRowIndex = i + 1; // Data dimulai tepat setelah baris header ini
+                let tIdx = rowVals.findIndex(v => v === 'TEKNISI');
+                let jIdx = rowVals.findIndex(v => v === 'JENIS');
+                let sIdx = rowVals.findIndex(v => v === 'SEKTOR');
+
+                if (tIdx !== -1) {
+                    techIndex = tIdx;
+                    jenisIndex = jIdx;
+                    sektorIndex = sIdx;
                     break;
                 }
             }
 
-            // Fallback jika tidak ditemukan baris header eksplisit
-            if (techColIndex === -1) {
-                techColIndex = 5;  // Default Kolom TEKNISI (Kolom F / Index 5)
-                jenisColIndex = 1; // Default Kolom JENIS (Kolom B / Index 1)
-                sektorColIndex = 4;// Default Kolom SEKTOR (Kolom E / Index 4)
-                startRowIndex = 0;
-            }
+            // Fallback default index jika header tersembunyi
+            if (techIndex === -1) { techIndex = 5; jenisIndex = 1; sektorIndex = 4; }
 
             let techMap = {};
 
-            // 2. Loop data asli
-            for (let i = startRowIndex; i < rows.length; i++) {
+            // 2. Olah data baris demi baris secara rapi
+            for (let i = 0; i < rows.length; i++) {
                 let r = rows[i];
                 if (!r || !r.c) continue;
 
-                let name = r.c[techColIndex] && r.c[techColIndex].v !== null ? String(r.c[techColIndex].v).trim() : '';
-                
-                // Abaikan jika nama kosong atau baris summary/header
-                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL") || name.toUpperCase() === "TEKNISI") continue;
+                let name = r.c[techIndex] && r.c[techIndex].v !== null ? String(r.c[techIndex].v).trim() : '';
 
-                let jenis = (jenisColIndex !== -1 && r.c[jenisColIndex] && r.c[jenisColIndex].v !== null) ? String(r.c[jenisColIndex].v).toUpperCase().trim() : "REGULER";
-                let sektor = (sektorColIndex !== -1 && r.c[sektorColIndex] && r.c[sektorColIndex].v !== null) ? String(r.c[sektorColIndex].v).toUpperCase().trim() : "-";
+                // Filter agar baris judul / total / kosong tidak terikut
+                if (!name || name.toUpperCase() === "TEKNISI" || name.toUpperCase().includes("TOTAL") || name.toUpperCase().includes("REKAP")) continue;
+
+                let jenis = (jenisIndex !== -1 && r.c[jenisIndex] && r.c[jenisIndex].v !== null) ? String(r.c[jenisIndex].v).toUpperCase().trim() : "REGULER";
+                let sektor = (sektorIndex !== -1 && r.c[sektorIndex] && r.c[sektorIndex].v !== null) ? String(r.c[sektorIndex].v).toUpperCase().trim() : "-";
 
                 let key = name.toUpperCase();
 
                 if (!techMap[key]) {
-                    techMap[key] = {
-                        teknisi: name,
-                        sektor: sektor,
-                        sqm: 0,
-                        reguler: 0,
-                        insera: 0,
-                        underspec: 0
-                    };
+                    techMap[key] = { teknisi: name, sektor: sektor, sqm: 0, reguler: 0, insera: 0, underspec: 0 };
                 }
 
-                // Update sektor jika sebelumnya bernilai '-'
-                if (sektor !== '-' && techMap[key].sektor === '-') {
-                    techMap[key].sektor = sektor;
-                }
+                if (sektor !== '-' && techMap[key].sektor === '-') techMap[key].sektor = sektor;
 
-                // Hitung tiket berdasarkan jenis
-                if (jenis.includes("SQM")) {
-                    techMap[key].sqm += 1;
-                } else if (jenis.includes("INSERA")) {
-                    techMap[key].insera += 1;
-                } else if (jenis.includes("UNDERSPEC")) {
-                    techMap[key].underspec += 1;
-                } else {
-                    techMap[key].reguler += 1;
-                }
+                if (jenis.includes("SQM")) techMap[key].sqm++;
+                else if (jenis.includes("INSERA")) techMap[key].insera++;
+                else if (jenis.includes("UNDERSPEC")) techMap[key].underspec++;
+                else techMap[key].reguler++;
             }
 
             dataset = Object.values(techMap);
-            localStorage.setItem('dashboard_dataset_v1', JSON.stringify(dataset));
             updateSektorDropdown();
             renderTable();
         }
@@ -388,59 +238,7 @@
                 let target100 = grandTotal - 88;
                 let pct = (grandTotal / 88) * 100;
 
-                return {
-                    ...item,
-                    sqm, reguler, insera, underspec, grandTotal, target70, target100, pct
-                };
-            });
-        }
-
-        function renderTopBottomCards(filteredData) {
-            const topContainer = document.getElementById('top-5-container');
-            const bottomContainer = document.getElementById('bottom-5-container');
-
-            topContainer.innerHTML = '';
-            bottomContainer.innerHTML = '';
-
-            if (filteredData.length === 0) {
-                topContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
-                bottomContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
-                return;
-            }
-
-            let top5 = filteredData.slice(0, 5);
-            let bottom5 = [...filteredData].reverse().slice(0, 5);
-
-            top5.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-xs';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[10px]">${idx + 1}</span>
-                        <div>
-                            <span class="font-bold text-slate-800">${item.teknisi}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span>
-                        </div>
-                    </div>
-                    <div class="font-bold text-emerald-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
-                `;
-                topContainer.appendChild(div);
-            });
-
-            bottom5.forEach((item) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-red-50 border border-red-200 p-2 rounded-lg text-xs';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-[10px]">${item.rank}</span>
-                        <div>
-                            <span class="font-bold text-slate-800">${item.teknisi}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span>
-                        </div>
-                    </div>
-                    <div class="font-bold text-red-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
-                `;
-                bottomContainer.appendChild(div);
+                return { ...item, sqm, reguler, insera, underspec, grandTotal, target70, target100, pct };
             });
         }
 
@@ -468,13 +266,9 @@
 
             let currentRank = 1;
             for (let i = 0; i < filtered.length; i++) {
-                if (i > 0 && filtered[i].grandTotal < filtered[i - 1].grandTotal) {
-                    currentRank = i + 1;
-                }
+                if (i > 0 && filtered[i].grandTotal < filtered[i - 1].grandTotal) currentRank = i + 1;
                 filtered[i].rank = currentRank;
             }
-
-            renderTopBottomCards(filtered);
 
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
@@ -482,7 +276,7 @@
             let sumSqm = 0, sumReguler = 0, sumInsera = 0, sumUnderspec = 0, sumGrandTotal = 0;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="p-8 text-center text-slate-400 font-medium">Sedang memuat data atau tidak ada data yang cocok.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="11" class="p-8 text-center text-slate-400">Data tidak ditemukan.</td></tr>`;
             } else {
                 filtered.forEach((row, index) => {
                     sumSqm += row.sqm;
@@ -491,26 +285,22 @@
                     sumUnderspec += row.underspec;
                     sumGrandTotal += row.grandTotal;
 
-                    let rankClass = '';
-                    if (row.rank === 1) rankClass = 'rank-1';
-                    else if (row.rank <= 3) rankClass = 'rank-2';
-                    else if (row.rank <= 10) rankClass = 'rank-mid';
-                    else rankClass = 'rank-low';
+                    let rankClass = row.rank === 1 ? 'rank-1' : (row.rank <= 3 ? 'rank-2' : (row.rank <= 10 ? 'rank-mid' : 'rank-low'));
 
                     const tr = document.createElement('tr');
                     tr.className = index % 2 === 0 ? 'zebra-even text-center' : 'zebra-odd text-center';
                     tr.innerHTML = `
-                        <td class="p-3 text-left font-semibold text-slate-800 border-b border-slate-200">${row.teknisi}</td>
-                        <td class="p-3 font-semibold text-slate-600 border-b border-slate-200">${row.sektor || '-'}</td>
-                        <td class="p-3 border-b border-slate-200">${row.sqm || ''}</td>
-                        <td class="p-3 border-b border-slate-200 font-medium">${row.reguler || ''}</td>
-                        <td class="p-3 border-b border-slate-200">${row.insera || ''}</td>
-                        <td class="p-3 border-b border-slate-200">${row.underspec || ''}</td>
-                        <td class="p-3 border-b border-slate-200 font-bold bg-slate-50">${row.grandTotal}</td>
-                        <td class="p-3 border-b border-slate-200 ${rankClass}">${row.rank}</td>
-                        <td class="p-3 border-b border-slate-200 text-slate-700">${row.target70}</td>
-                        <td class="p-3 border-b border-slate-200 text-slate-700">${row.target100}</td>
-                        <td class="p-3 border-b border-slate-200 font-bold text-blue-700">${row.pct.toFixed(2).replace('.', ',')}%</td>
+                        <td class="p-3 text-left font-semibold text-slate-800 border-b">${row.teknisi}</td>
+                        <td class="p-3 font-semibold text-slate-600 border-b">${row.sektor || '-'}</td>
+                        <td class="p-3 border-b">${row.sqm || ''}</td>
+                        <td class="p-3 border-b font-medium">${row.reguler || ''}</td>
+                        <td class="p-3 border-b">${row.insera || ''}</td>
+                        <td class="p-3 border-b">${row.underspec || ''}</td>
+                        <td class="p-3 border-b font-bold bg-slate-50">${row.grandTotal}</td>
+                        <td class="p-3 border-b ${rankClass}">${row.rank}</td>
+                        <td class="p-3 border-b text-slate-700">${row.target70}</td>
+                        <td class="p-3 border-b text-slate-700">${row.target100}</td>
+                        <td class="p-3 border-b font-bold text-blue-700">${row.pct.toFixed(2).replace('.', ',')}%</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -542,135 +332,29 @@
             document.getElementById('stat-avg-target').innerText = overallPct.toFixed(1).replace('.', ',') + '%';
         }
 
-        function openAreaModal() {
-            renderAreaList();
-            document.getElementById('area-modal').classList.remove('hidden');
-        }
-
-        function closeAreaModal() {
-            document.getElementById('area-modal').classList.add('hidden');
-            updateAreaDropdown();
-            renderTable();
-        }
-
-        function resetAreaForm() {
-            document.getElementById('input-area-name').value = '';
-            document.getElementById('input-area-sectors').value = '';
-        }
-
-        function saveAreaMapping() {
-            const name = document.getElementById('input-area-name').value.trim().toUpperCase();
-            const sectorsRaw = document.getElementById('input-area-sectors').value.trim().toUpperCase();
-
-            if (!name || !sectorsRaw) {
-                alert("Harap isi Nama Area dan Daftar Sektor!");
-                return;
-            }
-
-            const sectorsArr = sectorsRaw.split(',').map(s => s.trim()).filter(s => s !== '');
-            areaMapping[name] = sectorsArr;
-
-            localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
-            resetAreaForm();
-            renderAreaList();
-        }
-
-        function editArea(areaName) {
-            document.getElementById('input-area-name').value = areaName;
-            document.getElementById('input-area-sectors').value = areaMapping[areaName].join(', ');
-        }
-
-        function deleteArea(areaName) {
-            if (confirm(`Apakah kamu yakin ingin menghapus Area ${areaName}?`)) {
-                delete areaMapping[areaName];
-                localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
-                renderAreaList();
-            }
-        }
-
-        function renderAreaList() {
-            const container = document.getElementById('area-list-container');
-            container.innerHTML = '';
-
-            const keys = Object.keys(areaMapping);
-            if (keys.length === 0) {
-                container.innerHTML = `<div class="text-xs text-slate-400 p-2">Belum ada Area yang ditambahkan.</div>`;
-                return;
-            }
-
-            keys.forEach(areaName => {
-                const item = document.createElement('div');
-                item.className = 'flex justify-between items-center bg-slate-100 p-2.5 rounded-lg border text-xs';
-                item.innerHTML = `
-                    <div>
-                        <span class="font-bold text-amber-800">${areaName}</span>
-                        <span class="text-slate-500 ml-2">(${areaMapping[areaName].join(', ')})</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="editArea('${areaName}')" class="text-blue-600 hover:text-blue-800 font-bold"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="deleteArea('${areaName}')" class="text-red-600 hover:text-red-800 font-bold"><i class="fa-solid fa-trash"></i> Hapus</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
         function updateAreaDropdown() {
             const areaSelect = document.getElementById('filter-area');
-            const currentSelected = areaSelect.value;
-
             areaSelect.innerHTML = `<option value="ALL">-- SEMUA AREA --</option>`;
             Object.keys(areaMapping).sort().forEach(area => {
                 const opt = document.createElement('option');
                 opt.value = area;
                 opt.innerText = area;
-                if (area === currentSelected) opt.selected = true;
                 areaSelect.appendChild(opt);
             });
         }
 
         function updateSektorDropdown() {
             const sektorSelect = document.getElementById('filter-sektor');
-            const currentSelected = sektorSelect.value;
-
             let sektorSet = new Set();
-            dataset.forEach(item => {
-                if (item.sektor && item.sektor !== '-') {
-                    sektorSet.add(item.sektor);
-                }
-            });
-
-            let sortedSektor = Array.from(sektorSet).sort();
+            dataset.forEach(item => { if (item.sektor && item.sektor !== '-') sektorSet.add(item.sektor); });
 
             sektorSelect.innerHTML = `<option value="ALL">-- SEMUA SEKTOR --</option>`;
-            sortedSektor.forEach(sektor => {
+            Array.from(sektorSet).sort().forEach(sektor => {
                 const opt = document.createElement('option');
                 opt.value = sektor;
                 opt.innerText = sektor;
-                if (sektor === currentSelected) opt.selected = true;
                 sektorSelect.appendChild(opt);
             });
-        }
-
-        function exportExcel() {
-            const baseData = calculateBaseData(dataset);
-            const exportData = baseData.map(d => ({
-                "TEKNISI": d.teknisi,
-                "SEKTOR": d.sektor,
-                "SQM": d.sqm,
-                "REGULER": d.reguler,
-                "INSERA": d.insera,
-                "UNDERSPEC": d.underspec,
-                "Grand Total": d.grandTotal,
-                "TARGET 70%": d.target70,
-                "TARGET 100%": d.target100,
-                "%": d.pct.toFixed(2).replace('.', ',') + "%"
-            }));
-
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
-            XLSX.writeFile(wb, "Dashboard_Performa_Teknisi.xlsx");
         }
     </script>
 </body>
