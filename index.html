@@ -218,13 +218,11 @@
     </div>
 
     <script>
-        // SPREADSHEET ID ASLI (MENGGUNAKAN GVIZ JSONP BYPASS CORS)
         const SPREADSHEET_ID = "1KlgbcBoN6Exq4VgJW_WQixf3-i4oLv1t0K4MIj71yHg";
         const GOOGLE_SHEETS_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
 
         let dataset = [];
 
-        // Mapping Default Area
         let areaMapping = JSON.parse(localStorage.getItem('areaMapping_v1')) || {
             'GLADAK': ['GLD', 'GLD1', 'GLD2', 'SLO'],
             'KARTASURA': ['KRT1', 'KRT2', 'KRT3', 'KRT4'],
@@ -236,7 +234,6 @@
             fetchLiveData();
         });
 
-        // HANDLER GVIZ JSONP DIPANGGIL OTOMATIS OLEH GOOGLE
         window.google = window.google || {};
         window.google.visualization = window.google.visualization || {};
         window.google.visualization.Query = {
@@ -262,7 +259,6 @@
             }
         };
 
-        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS DENGAN JSONP
         function fetchLiveData() {
             const statusText = document.getElementById('sync-status-text');
             const statusIndicator = document.getElementById('sync-status-indicator');
@@ -293,37 +289,61 @@
             document.body.appendChild(script);
         }
 
+        // PARSER PENINGKATAN: DETEKSI DENGAN DETEKSI HEADER FLEKSIBEL
         function parseGVizData(table) {
-            const cols = table.cols.map(c => (c.label || c.id || '').toUpperCase());
             const rows = table.rows;
+            if (!rows || rows.length === 0) return;
 
-            let techColIndex = cols.findIndex(c => c.includes("TEKNISI") || c.includes("NAMA"));
-            let jenisColIndex = cols.findIndex(c => c.includes("JENIS") || c.includes("KATEGORI"));
-            let sektorColIndex = cols.findIndex(c => c.includes("SEKTOR") || c.includes("STO") || c.includes("AREA"));
+            let techColIndex = -1;
+            let jenisColIndex = -1;
+            let sektorColIndex = -1;
+            let startRowIndex = 0;
 
-            if (techColIndex === -1 && rows.length > 0) {
-                rows[0].c.forEach((cell, idx) => {
-                    let val = cell && cell.v ? String(cell.v).toUpperCase() : '';
-                    if (val.includes("TEKNISI") || val.includes("NAMA")) techColIndex = idx;
-                    if (val.includes("JENIS") || val.includes("KATEGORI")) jenisColIndex = idx;
-                    if (val.includes("SEKTOR") || val.includes("STO")) sektorColIndex = idx;
-                });
+            // 1. Cari baris yang berisi Header Asli (NO, JENIS, TIKET, SEKTOR, TEKNISI, dll)
+            for (let i = 0; i < rows.length; i++) {
+                if (!rows[i].c) continue;
+                let rowValues = rows[i].c.map(cell => cell && cell.v !== null ? String(cell.v).toUpperCase().trim() : '');
+                
+                let tIndex = rowValues.findIndex(v => v === 'TEKNISI' || v.includes('TEKNISI') || v.includes('NAMA'));
+                let jIndex = rowValues.findIndex(v => v === 'JENIS' || v.includes('JENIS') || v.includes('KATEGORI'));
+                let sIndex = rowValues.findIndex(v => v === 'SEKTOR' || v.includes('SEKTOR') || v.includes('STO'));
+
+                if (tIndex !== -1) {
+                    techColIndex = tIndex;
+                    jenisColIndex = jIndex;
+                    sektorColIndex = sIndex;
+                    startRowIndex = i + 1; // Data dimulai tepat setelah baris header ini
+                    break;
+                }
             }
 
-            if (techColIndex === -1) techColIndex = 0;
+            // Fallback jika tidak ditemukan baris header eksplisit
+            if (techColIndex === -1) {
+                techColIndex = 5;  // Default Kolom TEKNISI (Kolom F / Index 5)
+                jenisColIndex = 1; // Default Kolom JENIS (Kolom B / Index 1)
+                sektorColIndex = 4;// Default Kolom SEKTOR (Kolom E / Index 4)
+                startRowIndex = 0;
+            }
 
             let techMap = {};
 
-            rows.forEach(r => {
-                if (!r.c) return;
-                let name = r.c[techColIndex] && r.c[techColIndex].v ? String(r.c[techColIndex].v).trim() : '';
-                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL") || name.toUpperCase().includes("TEKNISI")) return;
+            // 2. Loop data asli
+            for (let i = startRowIndex; i < rows.length; i++) {
+                let r = rows[i];
+                if (!r || !r.c) continue;
 
-                let jenis = (jenisColIndex !== -1 && r.c[jenisColIndex] && r.c[jenisColIndex].v) ? String(r.c[jenisColIndex].v).toUpperCase() : "REGULER";
-                let sektor = (sektorColIndex !== -1 && r.c[sektorColIndex] && r.c[sektorColIndex].v) ? String(r.c[sektorColIndex].v).toUpperCase() : "-";
+                let name = r.c[techColIndex] && r.c[techColIndex].v !== null ? String(r.c[techColIndex].v).trim() : '';
+                
+                // Abaikan jika nama kosong atau baris summary/header
+                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL") || name.toUpperCase() === "TEKNISI") continue;
 
-                if (!techMap[name.toUpperCase()]) {
-                    techMap[name.toUpperCase()] = {
+                let jenis = (jenisColIndex !== -1 && r.c[jenisColIndex] && r.c[jenisColIndex].v !== null) ? String(r.c[jenisColIndex].v).toUpperCase().trim() : "REGULER";
+                let sektor = (sektorColIndex !== -1 && r.c[sektorColIndex] && r.c[sektorColIndex].v !== null) ? String(r.c[sektorColIndex].v).toUpperCase().trim() : "-";
+
+                let key = name.toUpperCase();
+
+                if (!techMap[key]) {
+                    techMap[key] = {
                         teknisi: name,
                         sektor: sektor,
                         sqm: 0,
@@ -333,16 +353,22 @@
                     };
                 }
 
-                if (jenis.includes("SQM")) {
-                    techMap[name.toUpperCase()].sqm += 1;
-                } else if (jenis.includes("INSERA")) {
-                    techMap[name.toUpperCase()].insera += 1;
-                } else if (jenis.includes("UNDERSPEC")) {
-                    techMap[name.toUpperCase()].underspec += 1;
-                } else {
-                    techMap[name.toUpperCase()].reguler += 1;
+                // Update sektor jika sebelumnya bernilai '-'
+                if (sektor !== '-' && techMap[key].sektor === '-') {
+                    techMap[key].sektor = sektor;
                 }
-            });
+
+                // Hitung tiket berdasarkan jenis
+                if (jenis.includes("SQM")) {
+                    techMap[key].sqm += 1;
+                } else if (jenis.includes("INSERA")) {
+                    techMap[key].insera += 1;
+                } else if (jenis.includes("UNDERSPEC")) {
+                    techMap[key].underspec += 1;
+                } else {
+                    techMap[key].reguler += 1;
+                }
+            }
 
             dataset = Object.values(techMap);
             localStorage.setItem('dashboard_dataset_v1', JSON.stringify(dataset));
