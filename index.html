@@ -218,8 +218,8 @@
     </div>
 
     <script>
-        // LINK GOOGLE SHEETS LIVE CSV
-        const GOOGLE_SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWlelMgP-NBU2SewciP4Qyp2Y4YEEOMf7G6IXBgoDuwiu5qm62e-I7r-ToGxL8GBxR2FgVkEZ_ErAF/pub?gid=0&single=true&output=csv";
+        // LINK GOOGLE SHEETS LIVE GVIZ (JSONP BYPASS CORS)
+        const GOOGLE_SHEETS_GVIZ_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWlelMgP-NBU2SewciP4Qyp2Y4YEEOMf7G6IXBgoDuwiu5qm62e-I7r-ToGxL8GBxR2FgVkEZ_ErAF/gviz/tq?tqx=out:json";
 
         let dataset = [];
 
@@ -235,7 +235,33 @@
             fetchLiveData();
         });
 
-        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS (MENGGUNAKAN ALLORIGINS PROXY)
+        // HANDLER GVIZ JSONP DIPANGGIL SECARA OTOMATIS OLEH GOOGLE
+        window.google = window.google || {};
+        window.google.visualization = window.google.visualization || {};
+        window.google.visualization.Query = {
+            setResponse: function(response) {
+                const refreshIcon = document.getElementById('refresh-icon');
+                const statusText = document.getElementById('sync-status-text');
+                const statusIndicator = document.getElementById('sync-status-indicator');
+
+                if (!response || !response.table) {
+                    statusText.innerText = "Data Google Sheets kosong/tidak valid.";
+                    statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
+                    refreshIcon.classList.remove('fa-spin');
+                    return;
+                }
+
+                parseGVizData(response.table);
+
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                statusText.innerText = `Terhubung (Auto-Sync - Update Terakhir: ${timeStr} WIB)`;
+                statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block";
+                refreshIcon.classList.remove('fa-spin');
+            }
+        };
+
+        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS MENGGUNAKAN JSONP (BYPASS CORS)
         function fetchLiveData() {
             const statusText = document.getElementById('sync-status-text');
             const statusIndicator = document.getElementById('sync-status-indicator');
@@ -245,80 +271,58 @@
             statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-amber-400 inline-block animate-pulse";
             refreshIcon.classList.add('fa-spin');
 
-            // Gunakan AllOrigins Proxy agar tidak terhalang CORS Browser
-            const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(GOOGLE_SHEETS_CSV_URL + "&t=" + new Date().getTime());
+            // Hapus script lama jika ada
+            const oldScript = document.getElementById('gviz-script');
+            if (oldScript) oldScript.remove();
 
-            fetch(proxyUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error("Gagal mengambil data dari Google Sheets via Proxy");
-                    return response.json();
-                })
-                .then(data => {
-                    if (!data.contents || data.contents.trim() === "") {
-                        throw new Error("Isi data dari Google Sheets kosong");
-                    }
-                    parseCSVText(data.contents);
-                    const now = new Date();
-                    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                    statusText.innerText = `Terhubung (Auto-Sync Per Jam - Update Terakhir: ${timeStr} WIB)`;
-                    statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block";
-                    refreshIcon.classList.remove('fa-spin');
-                })
-                .catch(err => {
-                    console.error("Fetch/CORS Error:", err);
-                    statusText.innerText = "Gagal memuat data live. Mencoba menggunakan cache lokal...";
-                    statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
-                    refreshIcon.classList.remove('fa-spin');
-                    
-                    // Fallback to cache if available
-                    dataset = JSON.parse(localStorage.getItem('dashboard_dataset_v1')) || [];
-                    updateSektorDropdown();
-                    renderTable();
-                });
+            // Inject script tag baru untuk memicu JSONP request
+            const script = document.createElement('script');
+            script.id = 'gviz-script';
+            script.src = GOOGLE_SHEETS_GVIZ_URL + "&t=" + new Date().getTime();
+
+            script.onerror = function() {
+                console.error("Gagal memuat script dari Google Sheets.");
+                statusText.innerText = "Gagal memuat data live. Mencoba menggunakan cache lokal...";
+                statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
+                refreshIcon.classList.remove('fa-spin');
+                
+                dataset = JSON.parse(localStorage.getItem('dashboard_dataset_v1')) || [];
+                updateSektorDropdown();
+                renderTable();
+            };
+
+            document.body.appendChild(script);
         }
 
-        function parseCSVText(csvText) {
-            const lines = csvText.split(/\r\n|\n/);
-            if (lines.length < 2) return;
+        function parseGVizData(table) {
+            const cols = table.cols.map(c => (c.label || c.id || '').toUpperCase());
+            const rows = table.rows;
 
-            let headerLineIndex = -1;
-            let delimiter = ';';
-            let techColIndex = -1;
-            let jenisColIndex = -1;
-            let sektorColIndex = -1;
+            let techColIndex = cols.findIndex(c => c.includes("TEKNISI") || c.includes("NAMA"));
+            let jenisColIndex = cols.findIndex(c => c.includes("JENIS") || c.includes("KATEGORI"));
+            let sektorColIndex = cols.findIndex(c => c.includes("SEKTOR") || c.includes("STO") || c.includes("AREA"));
 
-            for (let i = 0; i < Math.min(lines.length, 15); i++) {
-                let line = lines[i].toUpperCase();
-                if (line.includes("TEKNISI") || line.includes("NAMA")) {
-                    headerLineIndex = i;
-                    delimiter = line.includes(";") ? ";" : ",";
-
-                    let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
-                    cols.forEach((col, idx) => {
-                        if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
-                        if (col === "JENIS" || col.includes("JENIS") || col.includes("KATEGORI")) jenisColIndex = idx;
-                        if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
-                    });
-                    break;
-                }
+            // Jika header tidak ada di label metadata, periksa baris pertama
+            if (techColIndex === -1 && rows.length > 0) {
+                rows[0].c.forEach((cell, idx) => {
+                    let val = cell && cell.v ? String(cell.v).toUpperCase() : '';
+                    if (val.includes("TEKNISI") || val.includes("NAMA")) techColIndex = idx;
+                    if (val.includes("JENIS") || val.includes("KATEGORI")) jenisColIndex = idx;
+                    if (val.includes("SEKTOR") || val.includes("STO")) sektorColIndex = idx;
+                });
             }
 
-            if (headerLineIndex === -1 || techColIndex === -1) return;
+            if (techColIndex === -1) techColIndex = 0;
 
             let techMap = {};
 
-            for (let i = headerLineIndex + 1; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
+            rows.forEach(r => {
+                if (!r.c) return;
+                let name = r.c[techColIndex] && r.c[techColIndex].v ? String(r.c[techColIndex].v).trim() : '';
+                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL") || name.toUpperCase().includes("TEKNISI")) return;
 
-                let cols = line.split(delimiter).map(c => c.replace(/"/g, '').trim());
-                if (!cols[techColIndex]) continue;
-
-                let name = cols[techColIndex].trim();
-                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
-
-                let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
-                let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
+                let jenis = (jenisColIndex !== -1 && r.c[jenisColIndex] && r.c[jenisColIndex].v) ? String(r.c[jenisColIndex].v).toUpperCase() : "REGULER";
+                let sektor = (sektorColIndex !== -1 && r.c[sektorColIndex] && r.c[sektorColIndex].v) ? String(r.c[sektorColIndex].v).toUpperCase() : "-";
 
                 if (!techMap[name.toUpperCase()]) {
                     techMap[name.toUpperCase()] = {
@@ -340,10 +344,10 @@
                 } else {
                     techMap[name.toUpperCase()].reguler += 1;
                 }
-            }
+            });
 
             dataset = Object.values(techMap);
-            localStorage.setItem('dashboard_dataset_v1', JSON.stringify(dataset)); // Simpan sebagai cache
+            localStorage.setItem('dashboard_dataset_v1', JSON.stringify(dataset));
             updateSektorDropdown();
             renderTable();
         }
