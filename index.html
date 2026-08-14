@@ -218,8 +218,9 @@
     </div>
 
     <script>
-        // LINK GOOGLE SHEETS LIVE GVIZ (JSONP BYPASS CORS)
-        const GOOGLE_SHEETS_GVIZ_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWlelMgP-NBU2SewciP4Qyp2Y4YEEOMf7G6IXBgoDuwiu5qm62e-I7r-ToGxL8GBxR2FgVkEZ_ErAF/gviz/tq?tqx=out:json";
+        // SPREADSHEET ID ASLI (MENGGUNAKAN GVIZ JSONP BYPASS CORS)
+        const SPREADSHEET_ID = "1KlgbcBoN6Exq4VgJW_WQixf3-i4oLv1t0K4MIj71yHg";
+        const GOOGLE_SHEETS_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
 
         let dataset = [];
 
@@ -235,7 +236,7 @@
             fetchLiveData();
         });
 
-        // HANDLER GVIZ JSONP DIPANGGIL SECARA OTOMATIS OLEH GOOGLE
+        // HANDLER GVIZ JSONP DIPANGGIL OTOMATIS OLEH GOOGLE
         window.google = window.google || {};
         window.google.visualization = window.google.visualization || {};
         window.google.visualization.Query = {
@@ -261,7 +262,7 @@
             }
         };
 
-        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS MENGGUNAKAN JSONP (BYPASS CORS)
+        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS DENGAN JSONP
         function fetchLiveData() {
             const statusText = document.getElementById('sync-status-text');
             const statusIndicator = document.getElementById('sync-status-indicator');
@@ -271,11 +272,9 @@
             statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-amber-400 inline-block animate-pulse";
             refreshIcon.classList.add('fa-spin');
 
-            // Hapus script lama jika ada
             const oldScript = document.getElementById('gviz-script');
             if (oldScript) oldScript.remove();
 
-            // Inject script tag baru untuk memicu JSONP request
             const script = document.createElement('script');
             script.id = 'gviz-script';
             script.src = GOOGLE_SHEETS_GVIZ_URL + "&t=" + new Date().getTime();
@@ -302,7 +301,6 @@
             let jenisColIndex = cols.findIndex(c => c.includes("JENIS") || c.includes("KATEGORI"));
             let sektorColIndex = cols.findIndex(c => c.includes("SEKTOR") || c.includes("STO") || c.includes("AREA"));
 
-            // Jika header tidak ada di label metadata, periksa baris pertama
             if (techColIndex === -1 && rows.length > 0) {
                 rows[0].c.forEach((cell, idx) => {
                     let val = cell && cell.v ? String(cell.v).toUpperCase() : '';
