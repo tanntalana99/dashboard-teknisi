@@ -235,7 +235,7 @@
             fetchLiveData();
         });
 
-        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS
+        // FUNGSI TARIK DATA LIVE DARI GOOGLE SHEETS (MENGGUNAKAN ALLORIGINS PROXY)
         function fetchLiveData() {
             const statusText = document.getElementById('sync-status-text');
             const statusIndicator = document.getElementById('sync-status-indicator');
@@ -245,16 +245,19 @@
             statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-amber-400 inline-block animate-pulse";
             refreshIcon.classList.add('fa-spin');
 
-            // Tambahkan cache buster agar selalu mendapat data paling baru
-            const fetchUrl = GOOGLE_SHEETS_CSV_URL + "&t=" + new Date().getTime();
+            // Gunakan AllOrigins Proxy agar tidak terhalang CORS Browser
+            const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(GOOGLE_SHEETS_CSV_URL + "&t=" + new Date().getTime());
 
-            fetch(fetchUrl)
+            fetch(proxyUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error("Gagal mengambil data dari Google Sheets");
-                    return response.text();
+                    if (!response.ok) throw new Error("Gagal mengambil data dari Google Sheets via Proxy");
+                    return response.json();
                 })
-                .then(csvText => {
-                    parseCSVText(csvText);
+                .then(data => {
+                    if (!data.contents || data.contents.trim() === "") {
+                        throw new Error("Isi data dari Google Sheets kosong");
+                    }
+                    parseCSVText(data.contents);
                     const now = new Date();
                     const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
                     statusText.innerText = `Terhubung (Auto-Sync Per Jam - Update Terakhir: ${timeStr} WIB)`;
@@ -262,7 +265,7 @@
                     refreshIcon.classList.remove('fa-spin');
                 })
                 .catch(err => {
-                    console.error(err);
+                    console.error("Fetch/CORS Error:", err);
                     statusText.innerText = "Gagal memuat data live. Mencoba menggunakan cache lokal...";
                     statusIndicator.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
                     refreshIcon.classList.remove('fa-spin');
