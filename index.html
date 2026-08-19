@@ -515,6 +515,26 @@
     }
 }
 
+// Fungsi untuk memuat data dari data.json
+async function loadDataFromJSON() {
+    try {
+        // Mencegah browser melakukan caching agar data selalu segar
+        const response = await fetch('data.json?v=' + new Date().getTime());
+        const data = await response.json();
+        
+        console.log("Data berhasil dimuat:", data);
+        
+        // Panggil fungsi render tabel kamu di sini
+        renderTable(data); 
+        
+    } catch (error) {
+        console.error("Gagal mengambil data dari data.json:", error);
+    }
+}
+
+// Jalankan fungsi saat halaman HTML selesai dimuat
+document.addEventListener('DOMContentLoaded', loadDataFromJSON);
+        
 // Panggil fungsi saat halaman selesai dimuat
 document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
 
