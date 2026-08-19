@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Performa Teknisi</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS untuk Parsing Excel (.xlsx, .xls) & CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- FontAwesome Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #f1f5f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -23,15 +21,13 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-white hidden">
         <i class="fa-solid fa-spinner fa-spin text-5xl mb-3 text-indigo-400"></i>
-        <p id="loading-text" class="font-bold text-base">Menghubungkan ke Database MySQL...</p>
+        <p id="loading-text" class="font-bold text-base">Menghubungkan ke Supabase Database...</p>
     </div>
 
     <div class="max-w-7xl mx-auto space-y-6">
 
-        <!-- Header -->
         <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-xl p-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
@@ -42,10 +38,10 @@
             
             <div class="flex flex-wrap gap-2 items-center">
                 <div id="admin-actions" class="hidden flex flex-wrap gap-2">
-                    <button onclick="syncFromDatabase()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Refresh data dari Database">
+                    <button onclick="syncFromDatabase()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-rotate"></i> Sync Database
                     </button>
-                    <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
+                    <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-trash-can"></i> Reset Data
                     </button>
                     <button onclick="openAreaModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
@@ -58,44 +54,34 @@
                         <i class="fa-solid fa-file-excel"></i> Export Excel
                     </button>
                 </div>
-
                 <div id="auth-button-container"></div>
             </div>
         </div>
 
-        <!-- KPI Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-users"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-users"></i></div>
                 <div>
                     <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Teknisi</div>
                     <div id="stat-total-teknisi" class="text-2xl font-bold text-slate-800">0</div>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-ticket"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-ticket"></i></div>
                 <div>
                     <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tiket Completed</div>
                     <div id="stat-total-tiket" class="text-2xl font-bold text-slate-800">0</div>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-trophy"></i></div>
                 <div>
                     <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Performer</div>
                     <div id="stat-top-performer" class="text-lg font-bold text-slate-800 truncate max-w-[150px]">-</div>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-chart-pie"></i>
-                </div>
+                <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-chart-pie"></i></div>
                 <div>
                     <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rata-rata % Target</div>
                     <div id="stat-avg-target" class="text-2xl font-bold text-slate-800">0%</div>
@@ -103,63 +89,43 @@
             </div>
         </div>
 
-        <!-- Top 5 & Bottom 5 Performance Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-medal text-emerald-600"></i> Top 5 Performa Tertinggi
-                </h3>
-                <div id="top-5-container" class="space-y-2">
-                    <div class="text-xs text-slate-400 italic">Belum ada data...</div>
-                </div>
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2"><i class="fa-solid fa-medal text-emerald-600"></i> Top 5 Performa Tertinggi</h3>
+                <div id="top-5-container" class="space-y-2"><div class="text-xs text-slate-400 italic">Belum ada data...</div></div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Bottom 5 Performa Terendah
-                </h3>
-                <div id="bottom-5-container" class="space-y-2">
-                    <div class="text-xs text-slate-400 italic">Belum ada data...</div>
-                </div>
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Bottom 5 Performa Terendah</h3>
+                <div id="bottom-5-container" class="space-y-2"><div class="text-xs text-slate-400 italic">Belum ada data...</div></div>
             </div>
         </div>
 
-        <!-- Controls & Filters -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto flex-wrap">
                 <div class="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-lg border border-slate-200">
-                    <label class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-calendar-days text-indigo-600"></i> Tgl:
-                    </label>
+                    <label class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1"><i class="fa-solid fa-calendar-days text-indigo-600"></i> Tgl:</label>
                     <input type="date" id="filter-date-start" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs font-medium text-slate-700">
                     <span class="text-xs font-bold text-slate-400">s/d</span>
                     <input type="date" id="filter-date-end" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs font-medium text-slate-700">
                     <button onclick="resetDateFilter()" class="text-slate-400 hover:text-red-500 text-xs px-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-area" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:
-                    </label>
+                    <label for="filter-area" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1"><i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:</label>
                     <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">
                         <option value="ALL">-- SEMUA AREA --</option>
                     </select>
                 </div>
-
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-sektor" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-filter text-blue-600"></i> Sektor:
-                    </label>
+                    <label for="filter-sektor" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1"><i class="fa-solid fa-filter text-blue-600"></i> Sektor:</label>
                     <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">
                         <option value="ALL">-- SEMUA SEKTOR --</option>
                     </select>
                 </div>
-
                 <div class="relative w-full md:w-48">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
                     <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm">
                 </div>
             </div>
-
             <div class="flex items-center gap-3 text-xs text-slate-500">
                 <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-300 rounded-full"></span> Target Teratas</span>
                 <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded-full"></span> Menengah</span>
@@ -167,7 +133,6 @@
             </div>
         </div>
 
-        <!-- Main Data Table -->
         <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs md:text-sm">
@@ -198,9 +163,7 @@
     <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-lock text-blue-600"></i> Login Administrator
-                </h3>
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-lock text-blue-600"></i> Login Administrator</h3>
                 <button onclick="closeLoginModal()" class="text-slate-400 text-xl font-bold">&times;</button>
             </div>
             <div class="space-y-4">
@@ -212,9 +175,7 @@
             </div>
             <div class="flex justify-end gap-3 pt-3 border-t">
                 <button onclick="closeLoginModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm">Batal</button>
-                <button onclick="performLogin()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> Masuk
-                </button>
+                <button onclick="performLogin()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
             </div>
         </div>
     </div>
@@ -223,21 +184,17 @@
     <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-6">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload File CSV Rekap Tiket
-                </h3>
+                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload File CSV Rekap Tiket</h3>
                 <button onclick="closeModal()" class="text-slate-400 text-xl font-bold">&times;</button>
             </div>
-
             <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-8 text-center bg-slate-50 cursor-pointer">
                 <i class="fa-solid fa-file-csv text-4xl text-emerald-600 mb-3"></i>
                 <p class="text-slate-700 font-medium text-base">Pilih atau Drag & Drop File CSV / Excel di sini</p>
                 <p class="text-slate-400 text-xs mt-1">Sistem membaca file Rekap-Closing CSV secara otomatis</p>
                 <input type="file" id="file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelect(event)">
             </div>
-
             <div id="mode-selection-section" class="hidden bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 text-xs">
-                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Database MySQL:</div>
+                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Database:</div>
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="upload-mode" value="replace" checked class="text-blue-600">
                     <span class="text-slate-700 font-semibold">Gantikan Seluruh Data di Database dengan File Ini</span>
@@ -247,14 +204,10 @@
                     <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada</span>
                 </label>
             </div>
-
             <div id="file-info-section" class="hidden bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-900 flex justify-between items-center">
-                <div>
-                    <span class="font-bold" id="info-filename">file.csv</span> — Terbaca <span id="info-count" class="font-bold">0</span> Tiket
-                </div>
+                <div><span class="font-bold" id="info-filename">file.csv</span> — Terbaca <span id="info-count" class="font-bold">0</span> Tiket</div>
                 <span class="bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded text-[10px]" id="info-status">Siap Di-update</span>
             </div>
-
             <div class="flex justify-end gap-3 pt-3 border-t">
                 <button onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
                 <button id="btn-submit" onclick="submitData()" disabled class="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2">
@@ -268,12 +221,9 @@
     <div id="area-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-map-marked-alt text-amber-600"></i> Pengaturan Flexible Mapping Area
-                </h3>
+                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-map-marked-alt text-amber-600"></i> Pengaturan Flexible Mapping Area</h3>
                 <button onclick="closeAreaModal()" class="text-slate-400 text-xl font-bold">&times;</button>
             </div>
-
             <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
                 <div class="font-bold text-sm text-slate-700" id="area-form-title">Tambah / Edit Area Baru</div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -291,12 +241,10 @@
                     <button onclick="saveAreaMapping()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-bold shadow">Simpan Area</button>
                 </div>
             </div>
-
             <div class="space-y-2 max-h-60 overflow-y-auto">
                 <div class="font-bold text-xs text-slate-500 uppercase tracking-wider">Daftar Mapping Area Aktif</div>
                 <div id="area-list-container" class="space-y-2"></div>
             </div>
-
             <div class="flex justify-end pt-3 border-t">
                 <button onclick="closeAreaModal()" class="px-5 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium">Selesai</button>
             </div>
@@ -304,8 +252,11 @@
     </div>
 
     <script>
-        // === KONFIGURASI API MYSQL INFINITYFREE ===
-        const API_URL = "https://dashboardsagladag.site.je/api.php";
+        // === PASTE CREDENTIAL SUPABASE DI SINI ===
+        const SUPABASE_URL = "https://URL_PROJECT_KAMU.supabase.co"; 
+        const SUPABASE_ANON_KEY = "KEY_ANON_KAMU";
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let rawTickets = JSON.parse(localStorage.getItem('dashboard_raw_tickets_v1')) || [];
         let pendingParsedTickets = [];
@@ -337,8 +288,6 @@
 
             updateAuthUI();
             updateAreaDropdown();
-            
-            // Ambil data dari MySQL
             syncFromDatabase();
         });
 
@@ -347,69 +296,64 @@
             document.getElementById('loading-overlay').classList.remove('hidden');
         }
 
-        function hideLoading() {
-            document.getElementById('loading-overlay').classList.add('hidden');
-        }
+        function hideLoading() { document.getElementById('loading-overlay').classList.add('hidden'); }
 
-        // --- AMBIL DATA DARI MYSQL ---
-        function syncFromDatabase() {
-            showLoading("Mengambil data terbaru dari Database MySQL...");
-
-            fetch(API_URL)
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        rawTickets = data;
-                        saveDatasetToStorage();
-                        updateSektorDropdown();
-                        renderTable();
-                    }
-                })
-                .catch(err => {
-                    console.error("Gagal sync dari Database:", err);
+        async function syncFromDatabase() {
+            showLoading("Mengambil data dari Supabase...");
+            try {
+                const { data, error } = await supabase.from('dataupload').select('teknisi, sektor, jenis, tanggal');
+                if (error) throw error;
+                if (data) {
+                    rawTickets = data.map(item => ({ ...item, date: item.tanggal }));
+                    saveDatasetToStorage();
+                    updateSektorDropdown();
                     renderTable();
-                })
-                .finally(() => hideLoading());
+                }
+            } catch (err) {
+                console.error("Gagal sync dari Supabase:", err);
+                renderTable();
+            } finally {
+                hideLoading();
+            }
         }
 
-        // --- KIRIM DATA KE MYSQL ---
-        function submitData() {
+        async function submitData() {
             if (!isLoggedIn) return;
-            if (pendingParsedTickets.length === 0) {
-                alert("Tidak ada data yang terbaca dari CSV.");
-                return;
-            }
+            if (pendingParsedTickets.length === 0) return alert("Tidak ada data dari CSV.");
 
             const mode = document.querySelector('input[name="upload-mode"]:checked').value;
+            showLoading("Mengirim data ke Supabase...");
 
-            showLoading("Mengirim data ke Database MySQL...");
-
-            fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    mode: mode,
-                    tickets: pendingParsedTickets
-                })
-            })
-            .then(res => res.json())
-            .then(response => {
-                if (response.status === 'success') {
-                    alert("Data berhasil tersimpan di Database MySQL!");
-                    closeModal();
-                    syncFromDatabase();
-                } else {
-                    alert("Gagal menyimpan ke Database: " + (response.message || "Error server"));
+            try {
+                if (mode === 'replace') {
+                    await supabase.from('dataupload').delete().neq('id', 0);
                 }
-            })
-            .catch(err => {
-                alert("Gagal terhubung ke API MySQL.");
+
+                const batchData = pendingParsedTickets.map(t => ({
+                    teknisi: t.teknisi,
+                    sektor: t.sektor,
+                    jenis: t.jenis,
+                    tanggal: t.date
+                }));
+
+                // Upload ber-batch max 500 baris agar ringan
+                for (let i = 0; i < batchData.length; i += 500) {
+                    const chunk = batchData.slice(i, i + 500);
+                    const { error } = await supabase.from('dataupload').insert(chunk);
+                    if (error) throw error;
+                }
+
+                alert("Data berhasil tersimpan di Supabase!");
+                closeModal();
+                syncFromDatabase();
+            } catch (err) {
+                alert("Gagal menyimpan ke Supabase: " + err.message);
                 console.error(err);
-            })
-            .finally(() => hideLoading());
+            } finally {
+                hideLoading();
+            }
         }
 
-        // --- AUTH & LAINNYA ---
         function updateAuthUI() {
             const adminActions = document.getElementById('admin-actions');
             const authContainer = document.getElementById('auth-button-container');
@@ -463,23 +407,22 @@
 
         function saveDatasetToStorage() { localStorage.setItem('dashboard_raw_tickets_v1', JSON.stringify(rawTickets)); }
 
-        function clearAllData() {
+        async function clearAllData() {
             if (!isLoggedIn) return;
-            if (confirm("Apakah kamu yakin ingin menghapus seluruh data di Database MySQL?")) {
-                showLoading("Menghapus seluruh data...");
-                fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mode: 'replace', tickets: [] })
-                })
-                .then(() => {
+            if (confirm("Apakah kamu yakin ingin menghapus seluruh data di Supabase?")) {
+                showLoading("Menghapus data...");
+                try {
+                    await supabase.from('dataupload').delete().neq('id', 0);
                     rawTickets = [];
                     localStorage.removeItem('dashboard_raw_tickets_v1');
                     updateSektorDropdown();
                     renderTable();
-                    alert("Seluruh data berhasil dihapus dari Database.");
-                })
-                .finally(() => hideLoading());
+                    alert("Seluruh data berhasil dihapus dari Supabase.");
+                } catch (err) {
+                    alert("Gagal menghapus: " + err.message);
+                } finally {
+                    hideLoading();
+                }
             }
         }
 
