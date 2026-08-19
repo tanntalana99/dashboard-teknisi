@@ -502,6 +502,22 @@
             }
         }
 
+        async function loadDataFromGitHub() {
+    try {
+        // Panggil file data.json dari GitHub Pages / Raw URL
+        const response = await fetch('data.json'); 
+        const data = await response.json();
+        
+        // Render data ke tabel Dashboard kamu
+        renderTable(data);
+    } catch (error) {
+        console.error("Gagal memuat data JSON:", error);
+    }
+}
+
+// Panggil fungsi saat halaman selesai dimuat
+document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
+
         // --- SISTEM AUTHENTICATION & LOGIN ---
         function updateAuthUI() {
             const adminActions = document.getElementById('admin-actions');
