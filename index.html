@@ -235,7 +235,6 @@
                 const text = e.target.result;
                 const rows = text.split('\n').filter(row => row.trim() !== '');
                 
-                // Parse CSV sederhana
                 let parsedData = [];
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i].split(',');
@@ -250,7 +249,6 @@
                 }
 
                 if (parsedData.length > 0) {
-                    // Upload ke Supabase
                     const { error } = await supabaseClient
                         .from('performa_teknisi')
                         .insert(parsedData);
@@ -272,7 +270,7 @@
                 const { error } = await supabaseClient
                     .from('performa_teknisi')
                     .delete()
-                    .neq('id', 0); // Hapus semua baris
+                    .neq('id', 0);
 
                 if (error) {
                     alert('Gagal menghapus data: ' + error.message);
