@@ -46,26 +46,51 @@
                 </div>
             </div>
             
-            <div class="flex flex-wrap gap-2 items-center">
-                <!-- Action Buttons (Hanya muncul jika sudah Login Admin) -->
-                <div id="admin-actions" class="hidden flex flex-wrap gap-2">
-                    <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
-                        <i class="fa-solid fa-trash-can"></i> Reset Data
-                    </button>
-                    <button onclick="openAreaModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-layer-group"></i> Kelola Mapping Area
-                    </button>
-                    <button onclick="openModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-upload"></i> Upload CSV
-                    </button>
-                    <button onclick="exportExcel()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-excel"></i> Export Excel
+            <div class="flex flex-col items-end gap-3">
+                <!-- Control Panel Nucleus API -->
+                <div class="bg-blue-950/60 border border-blue-400/30 p-2.5 rounded-xl flex flex-wrap items-center gap-2 text-xs shadow-inner">
+                    <!-- Indikator Koneksi Nucleus (Titik Hijau / Merah) -->
+                    <div id="nucleus-status-badge" class="flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-700" title="Status Koneksi ke Server Nucleus">
+                        <span id="nucleus-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                        <span id="nucleus-status-text" class="font-bold text-[11px] text-slate-200">Nucleus: Standby</span>
+                    </div>
+
+                    <!-- Filter Rentang Tanggal Nucleus -->
+                    <div class="flex items-center gap-1 bg-blue-900/80 px-2 py-1 rounded-lg border border-blue-500/30">
+                        <i class="fa-solid fa-server text-blue-300 text-xs pl-1"></i>
+                        <input type="date" id="nucleus-date-start" class="bg-slate-800 text-white px-1.5 py-0.5 rounded border border-slate-600 text-[11px] focus:outline-none focus:border-blue-400">
+                        <span class="text-blue-200 text-[10px]">s/d</span>
+                        <input type="date" id="nucleus-date-end" class="bg-slate-800 text-white px-1.5 py-0.5 rounded border border-slate-600 text-[11px] focus:outline-none focus:border-blue-400">
+                    </div>
+
+                    <!-- Tombol Update Nucleus -->
+                    <button onclick="fetchFromNucleus()" id="btn-update-nucleus" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow flex items-center gap-1.5 transition active:scale-95">
+                        <i class="fa-solid fa-cloud-arrow-down" id="nucleus-btn-icon"></i>
+                        <span>Update Nucleus</span>
                     </button>
                 </div>
 
-                <!-- Tombol Login / Status User -->
-                <div id="auth-button-container">
-                    <!-- Dynamic Auth Button -->
+                <div class="flex flex-wrap gap-2 items-center">
+                    <!-- Action Buttons (Hanya muncul jika sudah Login Admin) -->
+                    <div id="admin-actions" class="hidden flex flex-wrap gap-2">
+                        <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
+                            <i class="fa-solid fa-trash-can"></i> Reset Data
+                        </button>
+                        <button onclick="openAreaModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
+                            <i class="fa-solid fa-layer-group"></i> Kelola Mapping Area
+                        </button>
+                        <button onclick="openModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
+                            <i class="fa-solid fa-file-upload"></i> Upload CSV
+                        </button>
+                        <button onclick="exportExcel()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
+                            <i class="fa-solid fa-file-excel"></i> Export Excel
+                        </button>
+                    </div>
+
+                    <!-- Tombol Login / Status User -->
+                    <div id="auth-button-container">
+                        <!-- Dynamic Auth Button -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -338,6 +363,9 @@
         const SUPABASE_URL = "https://xphudssbidvymyxheeav.supabase.co/rest/v1/dataupload";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwaHVkc3NiaWR2eW15eGhlZWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjAxMzksImV4cCI6MjEwMjY5NjEzOX0.OGhFqXmU4ph3_S4qk3H2GdYjRbDjCZYk9qeaIAeQosA";
 
+        // URL ENDPOINT NUCLEUS (Sesuaikan dengan URL API / backend Nucleus Anda)
+        const NUCLEUS_API_URL = "https://nucleus.example.com/api/tickets"; 
+
         // Memory State
         let rawTickets = [];
         let pendingParsedTickets = [];
@@ -368,6 +396,12 @@
                     handleFileSelect({ target: fileInput });
                 }
             });
+
+            // Set Default Tanggal Filter Nucleus (3 Bulan Terakhir - Hari ini)
+            const todayStr = new Date().toISOString().split('T')[0];
+            const threeMonthsAgoStr = getThreeMonthsAgoDateString();
+            document.getElementById('nucleus-date-start').value = threeMonthsAgoStr;
+            document.getElementById('nucleus-date-end').value = todayStr;
 
             updateAuthUI();
             updateAreaDropdown();
@@ -404,6 +438,92 @@
             }) + ' WIB';
         }
 
+        // --- HELPER STATUS NUCLEUS CONNECTION (INDIKATOR MERAH/HIJAU) ---
+        function setNucleusStatus(status, message = '') {
+            const dot = document.getElementById('nucleus-dot');
+            const text = document.getElementById('nucleus-status-text');
+
+            if (status === 'connected') {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]";
+                text.innerText = message || "Nucleus: Connected";
+                text.className = "font-bold text-[11px] text-emerald-300";
+            } else if (status === 'connecting') {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping";
+                text.innerText = message || "Nucleus: Connecting...";
+                text.className = "font-bold text-[11px] text-amber-300";
+            } else if (status === 'error') {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]";
+                text.innerText = message || "Nucleus: Disconnected";
+                text.className = "font-bold text-[11px] text-red-400";
+            } else {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+                text.innerText = message || "Nucleus: Standby";
+                text.className = "font-bold text-[11px] text-slate-300";
+            }
+        }
+
+        // --- FETCH DATA DARI WEB NUCLEUS ---
+        async function fetchFromNucleus() {
+            const startDate = document.getElementById('nucleus-date-start').value;
+            const endDate = document.getElementById('nucleus-date-end').value;
+
+            if (!startDate || !endDate) {
+                alert("Harap tentukan rentang tanggal awal dan akhir untuk update data dari Nucleus.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-update-nucleus');
+            const icon = document.getElementById('nucleus-btn-icon');
+            
+            // Ubah UI ke status loading / connecting
+            setNucleusStatus('connecting', 'Nucleus: Syncing...');
+            btn.disabled = true;
+            icon.className = "fa-solid fa-spinner fa-spin";
+
+            try {
+                // Panggil Endpoint API Nucleus dengan Parameter Tanggal
+                const response = await fetch(`${NUCLEUS_API_URL}?start_date=${startDate}&end_date=${endDate}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Tambahkan header otorisasi/token Nucleus jika diperlukan:
+                        // 'Authorization': 'Bearer YOUR_NUCLEUS_TOKEN'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Asumsi struktur balikan Nucleus dalam bentuk array [ { teknisi, sektor, jenis, tanggal } ]
+                    if (Array.isArray(data) && data.length > 0) {
+                        pendingParsedTickets = data.map(item => ({
+                            teknisi: item.teknisi || item.nama_teknisi || '-',
+                            sektor: item.sektor || item.sto || '-',
+                            jenis: item.jenis || item.kategori || 'REGULER',
+                            date: parseDateString(item.tanggal || item.date)
+                        }));
+
+                        // Otomatis sinkronkan ke Supabase setelah fetch Nucleus berhasil
+                        await submitData();
+                        setNucleusStatus('connected', 'Nucleus: Connected (Sync OK)');
+                    } else {
+                        setNucleusStatus('connected', 'Nucleus: No Data Received');
+                        alert("Koneksi berhasil tetapi tidak ditemukan data pada rentang tanggal tersebut.");
+                    }
+                } else {
+                    throw new Error(`Server Response HTTP ${response.status}`);
+                }
+
+            } catch (err) {
+                console.error("Gagal melakukan koneksi ke Nucleus:", err);
+                setNucleusStatus('error', 'Nucleus: Connection Failed');
+                alert(`Gagal terhubung ke web Nucleus!\nDetail: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                icon.className = "fa-solid fa-cloud-arrow-down";
+            }
+        }
+
         // --- SUPABASE API INTEGRATION WITH PAGINATION & FILTER 3 BULAN ---
         async function loadDataFromSupabase() {
             const spinner = document.getElementById('sync-spinner');
@@ -417,7 +537,6 @@
 
                 // Hitung rentang 3 bulan terakhir
                 const threeMonthsAgo = getThreeMonthsAgoDateString();
-                const todayStr = new Date().toISOString().split('T')[0];
 
                 // Looping fetch bertahap per 1000 baris data dengan filter tanggal >= 3 bulan lalu
                 while (hasMore) {
@@ -468,7 +587,7 @@
 
             } catch (err) {
                 console.error("Error fetching data:", err);
-            } finally {
+            } font-bold {
                 if (spinner) spinner.classList.remove('animate-spin');
             }
         }
@@ -501,17 +620,19 @@
         }
 
         async function submitData() {
-            if (!isLoggedIn) return;
             if (pendingParsedTickets.length === 0) {
-                alert("Tidak ada data yang terbaca dari CSV.");
+                alert("Tidak ada data yang terbaca.");
                 return;
             }
 
             const btnSubmit = document.getElementById('btn-submit');
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+            }
 
-            const mode = document.querySelector('input[name="upload-mode"]:checked').value;
+            const modeInput = document.querySelector('input[name="upload-mode"]:checked');
+            const mode = modeInput ? modeInput.value : 'replace';
 
             try {
                 // Mode 'replace' menghapus data lama di database
@@ -551,13 +672,14 @@
 
                 await loadDataFromSupabase();
                 closeModal();
-                alert("Data berhasil tersimpan ke Supabase!");
             } catch (err) {
                 console.error("Error submitting data:", err);
                 alert("Gagal menyimpan data ke database!");
             } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
+                }
             }
         }
 
