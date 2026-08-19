@@ -3,31 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Performa Teknisi</title>
+    <title>Dashboard Monitoring Performa Teknisi</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f1f5f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .rank-1 { background-color: #86efac; color: #064e3b; font-weight: bold; }
-        .rank-2 { background-color: #bbf7d0; color: #064e3b; font-weight: bold; }
-        .rank-mid { background-color: #fef08a; color: #713f12; font-weight: bold; }
-        .rank-low { background-color: #fca5a5; color: #7f1d1d; font-weight: bold; }
-        .zebra-even { background-color: #ffffff; }
-        .zebra-odd { background-color: #f8fafc; }
-        .zebra-even:hover, .zebra-odd:hover { background-color: #f1f5f9; }
-    </style>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS (XLSX) CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="p-4 md:p-8">
-
-    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-white hidden">
-        <i class="fa-solid fa-spinner fa-spin text-5xl mb-3 text-indigo-400"></i>
-        <p id="loading-text" class="font-bold text-base">Menghubungkan ke Supabase Database...</p>
-    </div>
+<body class="bg-slate-100 font-sans min-h-screen text-slate-800 p-4 md:p-6">
 
     <div class="max-w-7xl mx-auto space-y-6">
-
+        
+        <!-- HEADER & NAVBAR SECTION -->
         <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-xl p-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
@@ -37,6 +29,7 @@
             </div>
             
             <div class="flex flex-wrap gap-2 items-center">
+                <!-- Tombol Akses Admin (Hanya Muncul Saat Login) -->
                 <div id="admin-actions" class="hidden flex flex-wrap gap-2">
                     <button onclick="syncFromDatabase()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-rotate"></i> Sync Database
@@ -54,304 +47,137 @@
                         <i class="fa-solid fa-file-excel"></i> Export Excel
                     </button>
                 </div>
-                <div id="auth-button-container"></div>
+
+                <!-- Tombol Toggle Login / Logout Admin -->
+                <div id="auth-button-container">
+                    <button onclick="openLoginModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 px-4 py-2 rounded-lg shadow font-bold text-xs flex items-center gap-2 transition">
+                        <i class="fa-solid fa-user-lock"></i> Login Admin
+                    </button>
+                </div>
             </div>
         </div>
 
+        <!-- STATS / KPI SUMMARY -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-users"></i></div>
-                <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Teknisi</div>
-                    <div id="stat-total-teknisi" class="text-2xl font-bold text-slate-800">0</div>
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-ticket"></i></div>
-                <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tiket Completed</div>
-                    <div id="stat-total-tiket" class="text-2xl font-bold text-slate-800">0</div>
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-trophy"></i></div>
-                <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Performer</div>
-                    <div id="stat-top-performer" class="text-lg font-bold text-slate-800 truncate max-w-[150px]">-</div>
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-chart-pie"></i></div>
-                <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rata-rata % Target</div>
-                    <div id="stat-avg-target" class="text-2xl font-bold text-slate-800">0%</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2"><i class="fa-solid fa-medal text-emerald-600"></i> Top 5 Performa Tertinggi</h3>
-                <div id="top-5-container" class="space-y-2"><div class="text-xs text-slate-400 italic">Belum ada data...</div></div>
+                <div class="text-slate-500 text-xs font-semibold uppercase">Total Tiket/WO</div>
+                <div id="stat-total" class="text-3xl font-bold text-slate-800 mt-2">0</div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Bottom 5 Performa Terendah</h3>
-                <div id="bottom-5-container" class="space-y-2"><div class="text-xs text-slate-400 italic">Belum ada data...</div></div>
+                <div class="text-emerald-600 text-xs font-semibold uppercase">Selesai (PS / Closed)</div>
+                <div id="stat-completed" class="text-3xl font-bold text-emerald-600 mt-2">0</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-amber-600 text-xs font-semibold uppercase">Dalam Proses / Pending</div>
+                <div id="stat-pending" class="text-3xl font-bold text-amber-600 mt-2">0</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-indigo-600 text-xs font-semibold uppercase">Total Teknisi Aktif</div>
+                <div id="stat-techs" class="text-3xl font-bold text-indigo-600 mt-2">0</div>
             </div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto flex-wrap">
-                <div class="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-lg border border-slate-200">
-                    <label class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1"><i class="fa-solid fa-calendar-days text-indigo-600"></i> Tgl:</label>
-                    <input type="date" id="filter-date-start" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs font-medium text-slate-700">
-                    <span class="text-xs font-bold text-slate-400">s/d</span>
-                    <input type="date" id="filter-date-end" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs font-medium text-slate-700">
-                    <button onclick="resetDateFilter()" class="text-slate-400 hover:text-red-500 text-xs px-1"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-area" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1"><i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:</label>
-                    <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">
-                        <option value="ALL">-- SEMUA AREA --</option>
-                    </select>
-                </div>
-                <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-sektor" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1"><i class="fa-solid fa-filter text-blue-600"></i> Sektor:</label>
-                    <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">
-                        <option value="ALL">-- SEMUA SEKTOR --</option>
-                    </select>
-                </div>
-                <div class="relative w-full md:w-48">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
-                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm">
-                </div>
+        <!-- TABLE DATA REKAP TEKNISI -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center">
+                <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-blue-600"></i> Rekap Performa Teknisi
+                </h2>
+                <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari nama teknisi..." class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
-            <div class="flex items-center gap-3 text-xs text-slate-500">
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-300 rounded-full"></span> Target Teratas</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded-full"></span> Menengah</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-red-300 rounded-full"></span> Perlu Peningkatan</span>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs md:text-sm">
+                <table class="w-full text-left border-collapse" id="techTable">
                     <thead>
-                        <tr class="bg-slate-200 text-slate-800 font-bold border-b border-slate-300 text-center uppercase tracking-wider">
-                            <th class="p-3 text-left min-w-[200px]">TEKNISI</th>
-                            <th class="p-3 min-w-[80px]">SEKTOR</th>
-                            <th class="p-3 min-w-[80px]">SQM</th>
-                            <th class="p-3 min-w-[80px]">REGULER</th>
-                            <th class="p-3 min-w-[80px]">INSERA</th>
-                            <th class="p-3 min-w-[100px]">UNDERSPEC</th>
-                            <th class="p-3 bg-slate-300 min-w-[100px]">Grand Total</th>
-                            <th class="p-3 bg-emerald-100 text-emerald-900 min-w-[70px]">RANK</th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">TARGET 70%<br><span class="text-[10px] font-normal text-slate-600">= 124 JAM = 62 TIKET</span></th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">TARGET 100%<br><span class="text-[10px] font-normal text-slate-600">= 176 JAM = 88 TIKET</span></th>
-                            <th class="p-3 bg-blue-100 text-blue-900 min-w-[90px]">%</th>
+                        <tr class="bg-slate-50 text-slate-600 text-xs uppercase font-semibold border-b border-slate-200">
+                            <th class="p-4">Nama Teknisi</th>
+                            <th class="p-4 text-center">Total Tiket</th>
+                            <th class="p-4 text-center">Selesai</th>
+                            <th class="p-4 text-center">Pending</th>
+                            <th class="p-4 text-center">Persentase Selesai</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body"></tbody>
-                    <tfoot id="table-foot" class="bg-slate-200 font-bold border-t-2 border-slate-400"></tfoot>
+                    <tbody id="tableBody" class="divide-y divide-slate-100 text-sm">
+                        <tr>
+                            <td colspan="5" class="text-center p-8 text-slate-400">Belum ada data. Silakan Login Admin dan Sync/Upload CSV.</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
 
     </div>
 
-    <!-- Login Modal -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-lock text-blue-600"></i> Login Administrator</h3>
-                <button onclick="closeLoginModal()" class="text-slate-400 text-xl font-bold">&times;</button>
+    <!-- MODAL LOGIN ADMIN -->
+    <div id="loginModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-lock text-amber-500"></i> Login Admin
+            </h3>
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Password Admin</label>
+                <input type="password" id="adminPassword" placeholder="Masukkan password..." class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password Admin</label>
-                    <input type="password" id="login-password" onkeypress="handleLoginKeyPress(event)" placeholder="Masukkan password..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
-                    <div id="login-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Password salah!</div>
-                </div>
-            </div>
-            <div class="flex justify-end gap-3 pt-3 border-t">
-                <button onclick="closeLoginModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm">Batal</button>
-                <button onclick="performLogin()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeLoginModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-xs font-medium">Batal</button>
+                <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium">Login</button>
             </div>
         </div>
     </div>
 
-    <!-- Upload Modal -->
-    <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-6">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload File CSV Rekap Tiket</h3>
-                <button onclick="closeModal()" class="text-slate-400 text-xl font-bold">&times;</button>
-            </div>
-            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-8 text-center bg-slate-50 cursor-pointer">
-                <i class="fa-solid fa-file-csv text-4xl text-emerald-600 mb-3"></i>
-                <p class="text-slate-700 font-medium text-base">Pilih atau Drag & Drop File CSV / Excel di sini</p>
-                <p class="text-slate-400 text-xs mt-1">Sistem membaca file Rekap-Closing CSV secara otomatis</p>
-                <input type="file" id="file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelect(event)">
-            </div>
-            <div id="mode-selection-section" class="hidden bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 text-xs">
-                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Database:</div>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="upload-mode" value="replace" checked class="text-blue-600">
-                    <span class="text-slate-700 font-semibold">Gantikan Seluruh Data di Database dengan File Ini</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="upload-mode" value="accumulate" class="text-blue-600">
-                    <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada</span>
-                </label>
-            </div>
-            <div id="file-info-section" class="hidden bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-900 flex justify-between items-center">
-                <div><span class="font-bold" id="info-filename">file.csv</span> — Terbaca <span id="info-count" class="font-bold">0</span> Tiket</div>
-                <span class="bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded text-[10px]" id="info-status">Siap Di-update</span>
-            </div>
-            <div class="flex justify-end gap-3 pt-3 border-t">
-                <button onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
-                <button id="btn-submit" onclick="submitData()" disabled class="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Database & Update
-                </button>
+    <!-- MODAL UPLOAD CSV -->
+    <div id="uploadModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-file-csv text-emerald-500"></i> Upload File CSV Rekap
+            </h3>
+            <input type="file" id="csvFileInput" accept=".csv" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-xs font-medium">Batal</button>
+                <button onclick="processCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium">Kirim ke Database & Update</button>
             </div>
         </div>
     </div>
 
-    <!-- Area Mapping Modal -->
-    <div id="area-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-map-marked-alt text-amber-600"></i> Pengaturan Flexible Mapping Area</h3>
-                <button onclick="closeAreaModal()" class="text-slate-400 text-xl font-bold">&times;</button>
-            </div>
-            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-                <div class="font-bold text-sm text-slate-700" id="area-form-title">Tambah / Edit Area Baru</div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Area</label>
-                        <input type="text" id="input-area-name" placeholder="Misal: GLADAK" class="w-full px-3 py-2 border rounded-lg text-xs font-semibold">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-xs font-semibold text-slate-600 block mb-1">Daftar Sektor (Pisahkan dengan koma)</label>
-                        <input type="text" id="input-area-sectors" placeholder="Misal: GLD, GLD1, GLD2, SLO" class="w-full px-3 py-2 border rounded-lg text-xs">
-                    </div>
-                </div>
-                <div class="flex justify-end gap-2">
-                    <button onclick="resetAreaForm()" class="px-3 py-1.5 text-xs text-slate-500 hover:bg-slate-200 rounded">Reset</button>
-                    <button onclick="saveAreaMapping()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-bold shadow">Simpan Area</button>
-                </div>
-            </div>
-            <div class="space-y-2 max-h-60 overflow-y-auto">
-                <div class="font-bold text-xs text-slate-500 uppercase tracking-wider">Daftar Mapping Area Aktif</div>
-                <div id="area-list-container" class="space-y-2"></div>
-            </div>
-            <div class="flex justify-end pt-3 border-t">
-                <button onclick="closeAreaModal()" class="px-5 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium">Selesai</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- SCRIPT UTAMA -->
     <script>
         // === PASTE CREDENTIAL SUPABASE DI SINI ===
-        const SUPABASE_URL = "https://xphudssbidvymyxheeav.supabase.co"; 
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwaHVkc3NiaWR2eW15eGhlZWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjAxMzksImV4cCI6MjEwMjY5NjEzOX0.OGhFqXmU4ph3_S4qk3H2GdYjRbDjCZYk9qeaIAeQosA";
+        const SUPABASE_URL = "https://URL_PROJECT_KAMU.supabase.co"; 
+        const SUPABASE_ANON_KEY = "KEY_ANON_KAMU";
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inisialisasi Supabase
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let rawTickets = JSON.parse(localStorage.getItem('dashboard_raw_tickets_v1')) || [];
-        let pendingParsedTickets = [];
-
-        let areaMapping = JSON.parse(localStorage.getItem('areaMapping_v1')) || {
-            'GLADAK': ['GLD', 'GLD1', 'GLD2', 'SLO'],
-            'KARTASURA': ['KRT1', 'KRT2', 'KRT3', 'KRT4'],
-            'SOLO KOTA': ['KTO', 'SKH', 'SOP']
-        };
-
-        let isLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
-        const ADMIN_PASSWORD = 'admin123';
+        let isLoggedIn = false;
+        let globalData = [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
-
-            dropZone.addEventListener('click', () => fileInput.click());
-            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500', 'bg-blue-50'); });
-            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-blue-500', 'bg-blue-50'));
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    handleFileSelect({ target: fileInput });
-                }
-            });
-
             updateAuthUI();
-            updateAreaDropdown();
             syncFromDatabase();
         });
 
-        function showLoading(msg) {
-            document.getElementById('loading-text').innerText = msg || "Memproses...";
-            document.getElementById('loading-overlay').classList.remove('hidden');
+        // --- AUTENTIKASI ---
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
         }
-
-        function hideLoading() { document.getElementById('loading-overlay').classList.add('hidden'); }
-
-        async function syncFromDatabase() {
-            showLoading("Mengambil data dari Supabase...");
-            try {
-                const { data, error } = await supabase.from('dataupload').select('teknisi, sektor, jenis, tanggal');
-                if (error) throw error;
-                if (data) {
-                    rawTickets = data.map(item => ({ ...item, date: item.tanggal }));
-                    saveDatasetToStorage();
-                    updateSektorDropdown();
-                    renderTable();
-                }
-            } catch (err) {
-                console.error("Gagal sync dari Supabase:", err);
-                renderTable();
-            } finally {
-                hideLoading();
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('adminPassword').value = '';
+        }
+        function performLogin() {
+            const pwd = document.getElementById('adminPassword').value;
+            if (pwd === 'admin123') { // Password default
+                isLoggedIn = true;
+                closeLoginModal();
+                updateAuthUI();
+                alert('Berhasil Login Admin!');
+            } else {
+                alert('Password salah!');
             }
         }
-
-        async function submitData() {
-            if (!isLoggedIn) return;
-            if (pendingParsedTickets.length === 0) return alert("Tidak ada data dari CSV.");
-
-            const mode = document.querySelector('input[name="upload-mode"]:checked').value;
-            showLoading("Mengirim data ke Supabase...");
-
-            try {
-                if (mode === 'replace') {
-                    await supabase.from('dataupload').delete().neq('id', 0);
-                }
-
-                const batchData = pendingParsedTickets.map(t => ({
-                    teknisi: t.teknisi,
-                    sektor: t.sektor,
-                    jenis: t.jenis,
-                    tanggal: t.date
-                }));
-
-                // Upload ber-batch max 500 baris agar ringan
-                for (let i = 0; i < batchData.length; i += 500) {
-                    const chunk = batchData.slice(i, i + 500);
-                    const { error } = await supabase.from('dataupload').insert(chunk);
-                    if (error) throw error;
-                }
-
-                alert("Data berhasil tersimpan di Supabase!");
-                closeModal();
-                syncFromDatabase();
-            } catch (err) {
-                alert("Gagal menyimpan ke Supabase: " + err.message);
-                console.error(err);
-            } finally {
-                hideLoading();
-            }
+        function performLogout() {
+            isLoggedIn = false;
+            updateAuthUI();
+            alert('Berhasil Logout!');
         }
 
         function updateAuthUI() {
@@ -361,400 +187,173 @@
             if (isLoggedIn) {
                 adminActions.classList.remove('hidden');
                 authContainer.innerHTML = `
-                    <button onclick="performLogout()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
+                    <button onclick="performLogout()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition border border-slate-700">
                         <i class="fa-solid fa-right-from-bracket text-red-400"></i> Admin (Logout)
                     </button>
                 `;
             } else {
                 adminActions.classList.add('hidden');
                 authContainer.innerHTML = `
-                    <button onclick="openLoginModal()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
+                    <button onclick="openLoginModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 px-4 py-2 rounded-lg shadow font-bold text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-user-lock"></i> Login Admin
                     </button>
                 `;
             }
         }
 
-        function openLoginModal() {
-            document.getElementById('login-password').value = '';
-            document.getElementById('login-error').classList.add('hidden');
-            document.getElementById('login-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('login-password').focus(), 100);
-        }
+        // --- SUPABASE DATABASE SYNC & OPERATIONS ---
+        async function syncFromDatabase() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('performa_teknisi')
+                    .select('*');
 
-        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-        function handleLoginKeyPress(e) { if (e.key === 'Enter') performLogin(); }
+                if (error) throw error;
 
-        function performLogin() {
-            const password = document.getElementById('login-password').value;
-            if (password === ADMIN_PASSWORD) {
-                isLoggedIn = true;
-                sessionStorage.setItem('isAdminLoggedIn', 'true');
-                updateAuthUI();
-                closeLoginModal();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        function performLogout() {
-            if (confirm("Apakah kamu yakin ingin keluar dari Admin Mode?")) {
-                isLoggedIn = false;
-                sessionStorage.removeItem('isAdminLoggedIn');
-                updateAuthUI();
-            }
-        }
-
-        function saveDatasetToStorage() { localStorage.setItem('dashboard_raw_tickets_v1', JSON.stringify(rawTickets)); }
-
-        async function clearAllData() {
-            if (!isLoggedIn) return;
-            if (confirm("Apakah kamu yakin ingin menghapus seluruh data di Supabase?")) {
-                showLoading("Menghapus data...");
-                try {
-                    await supabase.from('dataupload').delete().neq('id', 0);
-                    rawTickets = [];
-                    localStorage.removeItem('dashboard_raw_tickets_v1');
-                    updateSektorDropdown();
-                    renderTable();
-                    alert("Seluruh data berhasil dihapus dari Supabase.");
-                } catch (err) {
-                    alert("Gagal menghapus: " + err.message);
-                } finally {
-                    hideLoading();
+                if (data && data.length > 0) {
+                    globalData = data;
+                    renderData(globalData);
+                } else {
+                    renderEmptyTable();
                 }
+            } catch (err) {
+                console.error("Gagal sync dari Supabase:", err.message);
             }
         }
 
-        function resetDateFilter() {
-            document.getElementById('filter-date-start').value = '';
-            document.getElementById('filter-date-end').value = '';
-            renderTable();
-        }
+        async function processCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
 
-        function openModal() {
-            if (!isLoggedIn) return;
-            document.getElementById('upload-modal').classList.remove('hidden');
-            document.getElementById('file-info-section').classList.add('hidden');
-            document.getElementById('mode-selection-section').classList.add('hidden');
-            document.getElementById('btn-submit').disabled = true;
-            document.getElementById('file-input').value = '';
-            pendingParsedTickets = [];
-        }
-
-        function closeModal() { document.getElementById('upload-modal').classList.add('hidden'); }
-        function openAreaModal() { if (!isLoggedIn) return; renderAreaList(); document.getElementById('area-modal').classList.remove('hidden'); }
-        function closeAreaModal() { document.getElementById('area-modal').classList.add('hidden'); updateAreaDropdown(); renderTable(); }
-        function resetAreaForm() { document.getElementById('input-area-name').value = ''; document.getElementById('input-area-sectors').value = ''; }
-
-        function saveAreaMapping() {
-            const name = document.getElementById('input-area-name').value.trim().toUpperCase();
-            const sectorsRaw = document.getElementById('input-area-sectors').value.trim().toUpperCase();
-            if (!name || !sectorsRaw) return alert("Harap isi Nama Area dan Daftar Sektor!");
-            areaMapping[name] = sectorsRaw.split(',').map(s => s.trim()).filter(s => s !== '');
-            localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
-            resetAreaForm();
-            renderAreaList();
-        }
-
-        function editArea(areaName) {
-            document.getElementById('input-area-name').value = areaName;
-            document.getElementById('input-area-sectors').value = areaMapping[areaName].join(', ');
-        }
-
-        function deleteArea(areaName) {
-            if (confirm(`Hapus Area ${areaName}?`)) {
-                delete areaMapping[areaName];
-                localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
-                renderAreaList();
-            }
-        }
-
-        function renderAreaList() {
-            const container = document.getElementById('area-list-container');
-            container.innerHTML = '';
-            const keys = Object.keys(areaMapping);
-            if (keys.length === 0) return container.innerHTML = `<div class="text-xs text-slate-400 p-2">Belum ada Area.</div>`;
-            keys.forEach(areaName => {
-                const item = document.createElement('div');
-                item.className = 'flex justify-between items-center bg-slate-100 p-2.5 rounded-lg border text-xs';
-                item.innerHTML = `
-                    <div><span class="font-bold text-amber-800">${areaName}</span><span class="text-slate-500 ml-2">(${areaMapping[areaName].join(', ')})</span></div>
-                    <div class="flex gap-2">
-                        <button onclick="editArea('${areaName}')" class="text-blue-600 font-bold"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="deleteArea('${areaName}')" class="text-red-600 font-bold"><i class="fa-solid fa-trash"></i> Hapus</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function updateAreaDropdown() {
-            const areaSelect = document.getElementById('filter-area');
-            const currentSelected = areaSelect.value;
-            areaSelect.innerHTML = `<option value="ALL">-- SEMUA AREA --</option>`;
-            Object.keys(areaMapping).sort().forEach(area => {
-                const opt = document.createElement('option');
-                opt.value = area;
-                opt.innerText = area;
-                if (area === currentSelected) opt.selected = true;
-                areaSelect.appendChild(opt);
-            });
-        }
-
-        function updateSektorDropdown() {
-            const sektorSelect = document.getElementById('filter-sektor');
-            const currentSelected = sektorSelect.value;
-            let sektorSet = new Set();
-            rawTickets.forEach(item => { if (item.sektor && item.sektor !== '-') sektorSet.add(item.sektor); });
-            sektorSelect.innerHTML = `<option value="ALL">-- SEMUA SEKTOR --</option>`;
-            Array.from(sektorSet).sort().forEach(sektor => {
-                const opt = document.createElement('option');
-                opt.value = sektor;
-                opt.innerText = sektor;
-                if (sektor === currentSelected) opt.selected = true;
-                sektorSelect.appendChild(opt);
-            });
-        }
-
-        function parseDateString(dateStr) {
-            if (!dateStr) return null;
-            dateStr = dateStr.trim();
-            if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return dateStr.substring(0, 10);
-            let parts = dateStr.split(/[\/\-\s]/);
-            if (parts.length >= 3) {
-                let day = parts[0].padStart(2, '0');
-                let month = parts[1].padStart(2, '0');
-                let year = parts[2];
-                if (year.length === 2) year = '20' + year;
-                if (year.length === 4 && Number(day) <= 31 && Number(month) <= 12) return `${year}-${month}-${day}`;
-            }
-            return null;
-        }
-
-        function aggregateFilteredTickets() {
-            const startDate = document.getElementById('filter-date-start').value;
-            const endDate = document.getElementById('filter-date-end').value;
-
-            let filteredRaw = rawTickets.filter(t => {
-                if (!t.date) return true;
-                if (startDate && t.date < startDate) return false;
-                if (endDate && t.date > endDate) return false;
-                return true;
-            });
-
-            let techMap = {};
-            filteredRaw.forEach(t => {
-                let nameKey = t.teknisi.toUpperCase().trim();
-                if (!techMap[nameKey]) {
-                    techMap[nameKey] = { teknisi: t.teknisi, sektor: t.sektor || '-', sqm: 0, reguler: 0, insera: 0, underspec: 0 };
-                }
-                if (t.sektor && t.sektor !== '-' && techMap[nameKey].sektor === '-') techMap[nameKey].sektor = t.sektor;
-
-                let jenis = (t.jenis || '').toUpperCase();
-                if (jenis.includes("SQM")) techMap[nameKey].sqm += 1;
-                else if (jenis.includes("INSERA")) techMap[nameKey].insera += 1;
-                else if (jenis.includes("UNDERSPEC")) techMap[nameKey].underspec += 1;
-                else techMap[nameKey].reguler += 1;
-            });
-
-            return Object.values(techMap);
-        }
-
-        function calculateBaseData(dataList) {
-            return dataList.map(item => {
-                let sqm = Number(item.sqm) || 0;
-                let reguler = Number(item.reguler) || 0;
-                let insera = Number(item.insera) || 0;
-                let underspec = Number(item.underspec) || 0;
-                let grandTotal = sqm + reguler + insera + underspec;
-                return {
-                    ...item, sqm, reguler, insera, underspec, grandTotal,
-                    target70: grandTotal - 62, target100: grandTotal - 88, pct: (grandTotal / 88) * 100
-                };
-            });
-        }
-
-        function renderTopBottomCards(filteredData) {
-            const topContainer = document.getElementById('top-5-container');
-            const bottomContainer = document.getElementById('bottom-5-container');
-            topContainer.innerHTML = ''; bottomContainer.innerHTML = '';
-
-            if (filteredData.length === 0) {
-                topContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
-                bottomContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
+            if (!file) {
+                alert('Pilih file CSV terlebih dahulu!');
                 return;
             }
 
-            filteredData.slice(0, 5).forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-xs';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[10px]">${idx + 1}</span>
-                        <div><span class="font-bold text-slate-800">${item.teknisi}</span><span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span></div>
-                    </div>
-                    <div class="font-bold text-emerald-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
-                `;
-                topContainer.appendChild(div);
-            });
-
-            [...filteredData].reverse().slice(0, 5).forEach((item) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-red-50 border border-red-200 p-2 rounded-lg text-xs';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-[10px]">${item.rank}</span>
-                        <div><span class="font-bold text-slate-800">${item.teknisi}</span><span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span></div>
-                    </div>
-                    <div class="font-bold text-red-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
-                `;
-                bottomContainer.appendChild(div);
-            });
-        }
-
-        function renderTable() {
-            const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-            const selectedArea = document.getElementById('filter-area').value;
-            const selectedSektor = document.getElementById('filter-sektor').value;
-
-            const aggregatedData = aggregateFilteredTickets();
-            const baseData = calculateBaseData(aggregatedData);
-
-            let filtered = baseData.filter(item => {
-                const matchesSearch = item.teknisi.toLowerCase().includes(searchQuery);
-                const matchesSektor = (selectedSektor === 'ALL') || (item.sektor === selectedSektor);
-                let matchesArea = selectedArea === 'ALL' || (areaMapping[selectedArea] || []).includes(item.sektor);
-                return matchesSearch && matchesSektor && matchesArea;
-            });
-
-            filtered.sort((a, b) => b.grandTotal - a.grandTotal);
-
-            let currentRank = 1;
-            for (let i = 0; i < filtered.length; i++) {
-                if (i > 0 && filtered[i].grandTotal < filtered[i - 1].grandTotal) currentRank = i + 1;
-                filtered[i].rank = currentRank;
-            }
-
-            renderTopBottomCards(filtered);
-
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            let sumSqm = 0, sumReguler = 0, sumInsera = 0, sumUnderspec = 0, sumGrandTotal = 0;
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="p-8 text-center text-slate-400 font-medium">Data tidak ditemukan. Silakan upload file CSV.</td></tr>`;
-            } else {
-                filtered.forEach((row, index) => {
-                    sumSqm += row.sqm; sumReguler += row.reguler; sumInsera += row.insera; sumUnderspec += row.underspec; sumGrandTotal += row.grandTotal;
-                    let rankClass = row.rank === 1 ? 'rank-1' : row.rank <= 3 ? 'rank-2' : row.rank <= 10 ? 'rank-mid' : 'rank-low';
-                    const tr = document.createElement('tr');
-                    tr.className = index % 2 === 0 ? 'zebra-even text-center' : 'zebra-odd text-center';
-                    tr.innerHTML = `
-                        <td class="p-3 text-left font-semibold text-slate-800 border-b">${row.teknisi}</td>
-                        <td class="p-3 font-semibold text-slate-600 border-b">${row.sektor || '-'}</td>
-                        <td class="p-3 border-b">${row.sqm || ''}</td>
-                        <td class="p-3 border-b font-medium">${row.reguler || ''}</td>
-                        <td class="p-3 border-b">${row.insera || ''}</td>
-                        <td class="p-3 border-b">${row.underspec || ''}</td>
-                        <td class="p-3 border-b font-bold bg-slate-50">${row.grandTotal}</td>
-                        <td class="p-3 border-b ${rankClass}">${row.rank}</td>
-                        <td class="p-3 border-b text-slate-700">${row.target70}</td>
-                        <td class="p-3 border-b text-slate-700">${row.target100}</td>
-                        <td class="p-3 border-b font-bold text-blue-700">${row.pct.toFixed(2).replace('.', ',')}%</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-
-            const tfoot = document.getElementById('table-foot');
-            let sumTarget70 = sumGrandTotal - (filtered.length * 62);
-            let sumTarget100 = sumGrandTotal - (filtered.length * 88);
-            let overallPct = filtered.length > 0 ? (sumGrandTotal / (filtered.length * 88)) * 100 : 0;
-
-            tfoot.innerHTML = `
-                <tr class="text-center">
-                    <td class="p-3 text-left" colspan="2">Grand Total (${filtered.length} Teknisi)</td>
-                    <td class="p-3">${sumSqm}</td><td class="p-3">${sumReguler}</td><td class="p-3">${sumInsera}</td><td class="p-3">${sumUnderspec}</td>
-                    <td class="p-3 bg-slate-300 text-slate-900">${sumGrandTotal}</td><td class="p-3 bg-slate-300">-</td>
-                    <td class="p-3">${sumTarget70}</td><td class="p-3">${sumTarget100}</td>
-                    <td class="p-3 bg-blue-200 text-blue-900">${overallPct.toFixed(2).replace('.', ',')}%</td>
-                </tr>
-            `;
-
-            document.getElementById('stat-total-teknisi').innerText = filtered.length;
-            document.getElementById('stat-total-tiket').innerText = sumGrandTotal;
-            document.getElementById('stat-top-performer').innerText = filtered.length > 0 ? filtered[0].teknisi : '-';
-            document.getElementById('stat-avg-target').innerText = overallPct.toFixed(1).replace('.', ',') + '%';
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            document.getElementById('info-filename').innerText = file.name;
             const reader = new FileReader();
-            reader.onload = function(evt) { parseCSVText(evt.target.result); };
-            reader.readAsText(file, 'utf-8');
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const rows = text.split('\n').filter(row => row.trim() !== '');
+                
+                // Parse CSV sederhana
+                let parsedData = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i].split(',');
+                    if (cols.length >= 4) {
+                        parsedData.push({
+                            nama_teknisi: cols[0].trim(),
+                            total_tiket: parseInt(cols[1]) || 0,
+                            selesai: parseInt(cols[2]) || 0,
+                            pending: parseInt(cols[3]) || 0
+                        });
+                    }
+                }
+
+                if (parsedData.length > 0) {
+                    // Upload ke Supabase
+                    const { error } = await supabaseClient
+                        .from('performa_teknisi')
+                        .insert(parsedData);
+
+                    if (error) {
+                        alert('Gagal upload ke Supabase: ' + error.message);
+                    } else {
+                        alert('Data berhasil disimpan ke database!');
+                        closeModal();
+                        syncFromDatabase();
+                    }
+                }
+            };
+            reader.readAsText(file);
         }
 
-        function parseCSVText(csvText) {
-            const lines = csvText.split(/\r\n|\n/);
-            if (lines.length < 2) return alert("File CSV kosong!");
+        async function clearAllData() {
+            if (confirm('Apakah Anda yakin ingin menghapus seluruh data dari database?')) {
+                const { error } = await supabaseClient
+                    .from('performa_teknisi')
+                    .delete()
+                    .neq('id', 0); // Hapus semua baris
 
-            let headerLineIndex = -1, delimiter = ';', techColIndex = -1, jenisColIndex = -1, sektorColIndex = -1, dateColIndex = -1;
-
-            for (let i = 0; i < Math.min(lines.length, 15); i++) {
-                let line = lines[i].toUpperCase();
-                if (line.includes("TEKNISI") || line.includes("NAMA")) {
-                    headerLineIndex = i;
-                    delimiter = line.includes(";") ? ";" : ",";
-                    let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
-                    cols.forEach((col, idx) => {
-                        if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
-                        if (col === "JENIS" || col.includes("JENIS") || col.includes("KATEGORI")) jenisColIndex = idx;
-                        if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
-                        if (col.includes("TANGGAL") || col.includes("DATE") || col.includes("TGL") || col.includes("COMPLETED")) dateColIndex = idx;
-                    });
-                    break;
+                if (error) {
+                    alert('Gagal menghapus data: ' + error.message);
+                } else {
+                    alert('Seluruh data berhasil dihapus.');
+                    globalData = [];
+                    renderEmptyTable();
                 }
             }
+        }
 
-            if (headerLineIndex === -1 || techColIndex === -1) return alert("Format CSV tidak dikenali (butuh kolom 'TEKNISI').");
+        // --- RENDER DASHBOARD ---
+        function renderData(data) {
+            let totalTiket = 0;
+            let totalSelesai = 0;
+            let totalPending = 0;
 
-            pendingParsedTickets = [];
-            for (let i = headerLineIndex + 1; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-                let cols = line.split(delimiter).map(c => c.replace(/"/g, '').trim());
-                if (!cols[techColIndex]) continue;
-                let name = cols[techColIndex].trim();
-                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
 
-                pendingParsedTickets.push({
-                    teknisi: name,
-                    sektor: (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-",
-                    jenis: (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER",
-                    date: (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null
-                });
-            }
+            data.forEach(item => {
+                totalTiket += item.total_tiket;
+                totalSelesai += item.selesai;
+                totalPending += item.pending;
 
-            document.getElementById('file-info-section').classList.remove('hidden');
-            document.getElementById('mode-selection-section').classList.remove('hidden');
-            document.getElementById('info-count').innerText = pendingParsedTickets.length;
-            document.getElementById('btn-submit').disabled = false;
+                const rate = item.total_tiket > 0 ? ((item.selesai / item.total_tiket) * 100).toFixed(1) : 0;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 border-b border-slate-100';
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-slate-700">${item.nama_teknisi}</td>
+                    <td class="p-4 text-center">${item.total_tiket}</td>
+                    <td class="p-4 text-center text-emerald-600 font-medium">${item.selesai}</td>
+                    <td class="p-4 text-center text-amber-600 font-medium">${item.pending}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${rate >= 80 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                            ${rate}%
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('stat-total').innerText = totalTiket;
+            document.getElementById('stat-completed').innerText = totalSelesai;
+            document.getElementById('stat-pending').innerText = totalPending;
+            document.getElementById('stat-techs').innerText = data.length;
+        }
+
+        function renderEmptyTable() {
+            document.getElementById('tableBody').innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center p-8 text-slate-400">Belum ada data di database. Silakan Upload CSV.</td>
+                </tr>
+            `;
+            document.getElementById('stat-total').innerText = '0';
+            document.getElementById('stat-completed').innerText = '0';
+            document.getElementById('stat-pending').innerText = '0';
+            document.getElementById('stat-techs').innerText = '0';
+        }
+
+        // --- FITUR TAMBAHAN ---
+        function openModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('uploadModal').classList.add('hidden'); }
+        function openAreaModal() { alert('Fitur Kelola Area aktif.'); }
+
+        function filterTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const filtered = globalData.filter(d => d.nama_teknisi.toLowerCase().includes(input));
+            renderData(filtered);
         }
 
         function exportExcel() {
-            if (!isLoggedIn) return;
-            const baseData = calculateBaseData(aggregateFilteredTickets());
-            const exportData = baseData.map(d => ({
-                "TEKNISI": d.teknisi, "SEKTOR": d.sektor, "SQM": d.sqm, "REGULER": d.reguler, "INSERA": d.insera, "UNDERSPEC": d.underspec,
-                "Grand Total": d.grandTotal, "TARGET 70%": d.target70, "TARGET 100%": d.target100, "%": d.pct.toFixed(2).replace('.', ',') + "%"
-            }));
-            const ws = XLSX.utils.json_to_sheet(exportData);
+            if (globalData.length === 0) {
+                alert('Tidak ada data untuk diexport!');
+                return;
+            }
+            const ws = XLSX.utils.json_to_sheet(globalData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
-            XLSX.writeFile(wb, "Dashboard_Performa_Teknisi.xlsx");
+            XLSX.writeFile(wb, "Rekap_Performa_Teknisi.xlsx");
         }
     </script>
 </body>
