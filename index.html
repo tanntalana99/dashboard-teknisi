@@ -23,6 +23,12 @@
 </head>
 <body class="p-4 md:p-8">
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-white hidden">
+        <i class="fa-solid fa-spinner fa-spin text-5xl mb-3 text-indigo-400"></i>
+        <p id="loading-text" class="font-bold text-base">Menghubungkan ke Google Sheets...</p>
+    </div>
+
     <div class="max-w-7xl mx-auto space-y-6">
 
         <!-- Header -->
@@ -35,8 +41,10 @@
             </div>
             
             <div class="flex flex-wrap gap-2 items-center">
-                <!-- Action Buttons (Hanya muncul jika sudah Login Admin) -->
                 <div id="admin-actions" class="hidden flex flex-wrap gap-2">
+                    <button onclick="syncFromGoogleSheets()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Refresh data dari Spreadsheet">
+                        <i class="fa-solid fa-rotate"></i> Sync Sheets
+                    </button>
                     <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
                         <i class="fa-solid fa-trash-can"></i> Reset Data
                     </button>
@@ -51,10 +59,7 @@
                     </button>
                 </div>
 
-                <!-- Tombol Login / Status User -->
-                <div id="auth-button-container">
-                    <!-- Dynamic Auth Button -->
-                </div>
+                <div id="auth-button-container"></div>
             </div>
         </div>
 
@@ -100,7 +105,6 @@
 
         <!-- Top 5 & Bottom 5 Performance Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Top 5 Performance -->
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                 <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-medal text-emerald-600"></i> Top 5 Performa Tertinggi
@@ -109,7 +113,6 @@
                     <div class="text-xs text-slate-400 italic">Belum ada data...</div>
                 </div>
             </div>
-            <!-- Bottom 5 Performance -->
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                 <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Bottom 5 Performa Terendah
@@ -120,56 +123,51 @@
             </div>
         </div>
 
-        <!-- Controls, Filter Tanggal, Filter Area, Filter Sektor & Search Bar -->
+        <!-- Controls & Filters -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto flex-wrap">
-                
-                <!-- Filter Tanggal Fleksibel -->
                 <div class="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-lg border border-slate-200">
                     <label class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
                         <i class="fa-solid fa-calendar-days text-indigo-600"></i> Tgl:
                     </label>
-                    <input type="date" id="filter-date-start" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700">
+                    <input type="date" id="filter-date-start" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs font-medium text-slate-700">
                     <span class="text-xs font-bold text-slate-400">s/d</span>
-                    <input type="date" id="filter-date-end" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700">
-                    <button onclick="resetDateFilter()" class="text-slate-400 hover:text-red-500 text-xs px-1" title="Reset Filter Tanggal"><i class="fa-solid fa-xmark"></i></button>
+                    <input type="date" id="filter-date-end" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs font-medium text-slate-700">
+                    <button onclick="resetDateFilter()" class="text-slate-400 hover:text-red-500 text-xs px-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
-                <!-- Dropdown Filter Area -->
                 <div class="flex items-center gap-2 w-full md:w-auto">
                     <label for="filter-area" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
                         <i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:
                     </label>
-                    <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white font-medium text-slate-700">
+                    <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">
                         <option value="ALL">-- SEMUA AREA --</option>
                     </select>
                 </div>
 
-                <!-- Dropdown Filter Sektor -->
                 <div class="flex items-center gap-2 w-full md:w-auto">
                     <label for="filter-sektor" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
                         <i class="fa-solid fa-filter text-blue-600"></i> Sektor:
                     </label>
-                    <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-medium text-slate-700">
+                    <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700">
                         <option value="ALL">-- SEMUA SEKTOR --</option>
                     </select>
                 </div>
 
-                <!-- Input Cari Nama -->
                 <div class="relative w-full md:w-48">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
-                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm">
                 </div>
             </div>
 
             <div class="flex items-center gap-3 text-xs text-slate-500">
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-300 rounded-full inline-block"></span> Target Teratas</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded-full inline-block"></span> Menengah</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-red-300 rounded-full inline-block"></span> Perlu Peningkatan</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-300 rounded-full"></span> Target Teratas</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded-full"></span> Menengah</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-red-300 rounded-full"></span> Perlu Peningkatan</span>
             </div>
         </div>
 
-        <!-- Main Data Table Container -->
+        <!-- Main Data Table -->
         <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs md:text-sm">
@@ -183,21 +181,13 @@
                             <th class="p-3 min-w-[100px]">UNDERSPEC</th>
                             <th class="p-3 bg-slate-300 min-w-[100px]">Grand Total</th>
                             <th class="p-3 bg-emerald-100 text-emerald-900 min-w-[70px]">RANK</th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">
-                                TARGET 70%<br><span class="text-[10px] font-normal text-slate-600">= 124 JAM = 62 TIKET</span>
-                            </th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">
-                                TARGET 100%<br><span class="text-[10px] font-normal text-slate-600">= 176 JAM = 88 TIKET</span>
-                            </th>
+                            <th class="p-3 bg-slate-100 min-w-[110px]">TARGET 70%<br><span class="text-[10px] font-normal text-slate-600">= 124 JAM = 62 TIKET</span></th>
+                            <th class="p-3 bg-slate-100 min-w-[110px]">TARGET 100%<br><span class="text-[10px] font-normal text-slate-600">= 176 JAM = 88 TIKET</span></th>
                             <th class="p-3 bg-blue-100 text-blue-900 min-w-[90px]">%</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
-                        <!-- Dynamic Rows -->
-                    </tbody>
-                    <tfoot id="table-foot" class="bg-slate-200 font-bold border-t-2 border-slate-400">
-                        <!-- Dynamic Totals -->
-                    </tfoot>
+                    <tbody id="table-body"></tbody>
+                    <tfoot id="table-foot" class="bg-slate-200 font-bold border-t-2 border-slate-400"></tfoot>
                 </table>
             </div>
         </div>
@@ -211,20 +201,18 @@
                 <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-lock text-blue-600"></i> Login Administrator
                 </h3>
-                <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+                <button onclick="closeLoginModal()" class="text-slate-400 text-xl font-bold">&times;</button>
             </div>
-
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password Admin</label>
-                    <input type="password" id="login-password" onkeypress="handleLoginKeyPress(event)" placeholder="Masukkan password..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <div id="login-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Password salah! Silakan coba lagi.</div>
+                    <input type="password" id="login-password" onkeypress="handleLoginKeyPress(event)" placeholder="Masukkan password..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                    <div id="login-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Password salah!</div>
                 </div>
             </div>
-
             <div class="flex justify-end gap-3 pt-3 border-t">
-                <button onclick="closeLoginModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
-                <button onclick="performLogin()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow transition flex items-center gap-2">
+                <button onclick="closeLoginModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm">Batal</button>
+                <button onclick="performLogin()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2">
                     <i class="fa-solid fa-right-to-bracket"></i> Masuk
                 </button>
             </div>
@@ -238,30 +226,28 @@
                 <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload File CSV Rekap Tiket
                 </h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+                <button onclick="closeModal()" class="text-slate-400 text-xl font-bold">&times;</button>
             </div>
 
-            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-8 text-center bg-slate-50 cursor-pointer transition">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-8 text-center bg-slate-50 cursor-pointer">
                 <i class="fa-solid fa-file-csv text-4xl text-emerald-600 mb-3"></i>
                 <p class="text-slate-700 font-medium text-base">Pilih atau Drag & Drop File CSV / Excel di sini</p>
                 <p class="text-slate-400 text-xs mt-1">Sistem membaca file Rekap-Closing CSV secara otomatis</p>
                 <input type="file" id="file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelect(event)">
             </div>
 
-            <!-- Mode Penggantian Data -->
             <div id="mode-selection-section" class="hidden bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 text-xs">
-                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Dashboard:</div>
+                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Dashboard & Google Sheets:</div>
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="upload-mode" value="replace" checked class="text-blue-600">
-                    <span class="text-slate-700 font-semibold">Gantikan Seluruh Data Dashboard dengan File CSV Ini (Rekomendasi)</span>
+                    <span class="text-slate-700 font-semibold">Gantikan Seluruh Data Sheet DATAUPLOAD dengan File Ini</span>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="upload-mode" value="accumulate" class="text-blue-600">
-                    <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada</span>
+                    <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada di Sheets</span>
                 </label>
             </div>
 
-            <!-- Summary Info -->
             <div id="file-info-section" class="hidden bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-900 flex justify-between items-center">
                 <div>
                     <span class="font-bold" id="info-filename">file.csv</span> — Terbaca <span id="info-count" class="font-bold">0</span> Tiket
@@ -271,34 +257,33 @@
 
             <div class="flex justify-end gap-3 pt-3 border-t">
                 <button onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
-                <button id="btn-submit" onclick="submitData()" disabled class="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-medium shadow transition flex items-center gap-2">
-                    <i class="fa-solid fa-sync"></i> Update Dashboard Sekarang
+                <button id="btn-submit" onclick="submitData()" disabled class="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Google Sheets & Update
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Area Mapping Management Modal -->
+    <!-- Area Mapping Modal -->
     <div id="area-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-map-marked-alt text-amber-600"></i> Pengaturan Flexible Mapping Area
                 </h3>
-                <button onclick="closeAreaModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+                <button onclick="closeAreaModal()" class="text-slate-400 text-xl font-bold">&times;</button>
             </div>
 
-            <!-- Add / Edit Form Area -->
             <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
                 <div class="font-bold text-sm text-slate-700" id="area-form-title">Tambah / Edit Area Baru</div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                         <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Area</label>
-                        <input type="text" id="input-area-name" placeholder="Misal: GLADAK" class="w-full px-3 py-2 border rounded-lg text-xs font-semibold focus:ring-2 focus:ring-amber-500">
+                        <input type="text" id="input-area-name" placeholder="Misal: GLADAK" class="w-full px-3 py-2 border rounded-lg text-xs font-semibold">
                     </div>
                     <div class="md:col-span-2">
                         <label class="text-xs font-semibold text-slate-600 block mb-1">Daftar Sektor (Pisahkan dengan koma)</label>
-                        <input type="text" id="input-area-sectors" placeholder="Misal: GLD, GLD1, GLD2, SLO" class="w-full px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-amber-500">
+                        <input type="text" id="input-area-sectors" placeholder="Misal: GLD, GLD1, GLD2, SLO" class="w-full px-3 py-2 border rounded-lg text-xs">
                     </div>
                 </div>
                 <div class="flex justify-end gap-2">
@@ -307,12 +292,9 @@
                 </div>
             </div>
 
-            <!-- List Area Terdaftar -->
             <div class="space-y-2 max-h-60 overflow-y-auto">
                 <div class="font-bold text-xs text-slate-500 uppercase tracking-wider">Daftar Mapping Area Aktif</div>
-                <div id="area-list-container" class="space-y-2">
-                    <!-- Dynamic List Area -->
-                </div>
+                <div id="area-list-container" class="space-y-2"></div>
             </div>
 
             <div class="flex justify-end pt-3 border-t">
@@ -322,20 +304,21 @@
     </div>
 
     <script>
-        // Data tiket mentah tersimpan di localStorage
+        // === KONFIGURASI GOOGLE APPS SCRIPT ===
+        // PASANG URL WEB APP KAMU DI SINI
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
+
         let rawTickets = JSON.parse(localStorage.getItem('dashboard_raw_tickets_v1')) || [];
         let pendingParsedTickets = [];
 
-        // Mapping Default Area
         let areaMapping = JSON.parse(localStorage.getItem('areaMapping_v1')) || {
             'GLADAK': ['GLD', 'GLD1', 'GLD2', 'SLO'],
             'KARTASURA': ['KRT1', 'KRT2', 'KRT3', 'KRT4'],
             'SOLO KOTA': ['KTO', 'SKH', 'SOP']
         };
 
-        // Status Autentikasi
         let isLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
-        const ADMIN_PASSWORD = 'admin123'; // Password admin default
+        const ADMIN_PASSWORD = 'admin123';
 
         document.addEventListener('DOMContentLoaded', () => {
             const dropZone = document.getElementById('drop-zone');
@@ -355,11 +338,88 @@
 
             updateAuthUI();
             updateAreaDropdown();
-            updateSektorDropdown();
-            renderTable();
+            
+            // Ambil data awal dari Google Sheets
+            syncFromGoogleSheets();
         });
 
-        // --- SISTEM AUTHENTICATION & LOGIN ---
+        function showLoading(msg) {
+            document.getElementById('loading-text').innerText = msg || "Memproses...";
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        // --- DARI/KE GOOGLE SHEETS ---
+        function syncFromGoogleSheets() {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("AKfycbx...")) {
+                renderTable();
+                return;
+            }
+
+            showLoading("Mengambil data terbaru dari Google Sheets...");
+            fetch(GOOGLE_SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        rawTickets = data;
+                        saveDatasetToStorage();
+                        updateSektorDropdown();
+                        renderTable();
+                    }
+                })
+                .catch(err => console.error("Gagal sync dari Google Sheets:", err))
+                .finally(() => hideLoading());
+        }
+
+        function submitData() {
+            if (!isLoggedIn) return;
+            if (pendingParsedTickets.length === 0) {
+                alert("Tidak ada data yang terbaca dari CSV.");
+                return;
+            }
+
+            const mode = document.querySelector('input[name="upload-mode"]:checked').value;
+
+            if (mode === 'replace') {
+                rawTickets = [...pendingParsedTickets];
+            } else {
+                rawTickets = rawTickets.concat(pendingParsedTickets);
+            }
+
+            saveDatasetToStorage();
+            updateSektorDropdown();
+            renderTable();
+            closeModal();
+
+            // Kirim ke Google Sheets
+            if (GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes("AKfycbx...")) {
+                showLoading("Mengirim data ke Google Sheets (DATAUPLOAD)...");
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        mode: mode,
+                        tickets: pendingParsedTickets
+                    })
+                })
+                .then(() => {
+                    alert("Data berhasil tersimpan di Google Sheets dan Dashboard ter-update!");
+                })
+                .catch(err => {
+                    alert("Gagal mengirim ke Google Sheets, tapi data tersimpan lokal di browser.");
+                    console.error(err);
+                })
+                .finally(() => hideLoading());
+            } else {
+                alert("Dashboard berhasil di-update secara lokal! Pasang GOOGLE_SCRIPT_URL untuk auto-sync ke Spreadsheet.");
+            }
+        }
+
+        // --- AUTH & OTHER FUNCTIONS ---
         function updateAuthUI() {
             const adminActions = document.getElementById('admin-actions');
             const authContainer = document.getElementById('auth-button-container');
@@ -367,14 +427,14 @@
             if (isLoggedIn) {
                 adminActions.classList.remove('hidden');
                 authContainer.innerHTML = `
-                    <button onclick="performLogout()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Keluar dari Admin Mode">
+                    <button onclick="performLogout()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-right-from-bracket text-red-400"></i> Admin (Logout)
                     </button>
                 `;
             } else {
                 adminActions.classList.add('hidden');
                 authContainer.innerHTML = `
-                    <button onclick="openLoginModal()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Login untuk mengelola data">
+                    <button onclick="openLoginModal()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-user-lock"></i> Login Admin
                     </button>
                 `;
@@ -388,15 +448,8 @@
             setTimeout(() => document.getElementById('login-password').focus(), 100);
         }
 
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
-        }
-
-        function handleLoginKeyPress(e) {
-            if (e.key === 'Enter') {
-                performLogin();
-            }
-        }
+        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        function handleLoginKeyPress(e) { if (e.key === 'Enter') performLogin(); }
 
         function performLogin() {
             const password = document.getElementById('login-password').value;
@@ -418,14 +471,11 @@
             }
         }
 
-        // --- MANAJEMEN DATA & TABLE ---
-        function saveDatasetToStorage() {
-            localStorage.setItem('dashboard_raw_tickets_v1', JSON.stringify(rawTickets));
-        }
+        function saveDatasetToStorage() { localStorage.setItem('dashboard_raw_tickets_v1', JSON.stringify(rawTickets)); }
 
         function clearAllData() {
             if (!isLoggedIn) return;
-            if (confirm("Apakah kamu yakin ingin menghapus seluruh data dashboard dari memori browser?")) {
+            if (confirm("Apakah kamu yakin ingin menghapus seluruh data dashboard?")) {
                 rawTickets = [];
                 localStorage.removeItem('dashboard_raw_tickets_v1');
                 updateSektorDropdown();
@@ -449,39 +499,16 @@
             pendingParsedTickets = [];
         }
 
-        function closeModal() {
-            document.getElementById('upload-modal').classList.add('hidden');
-        }
-
-        function openAreaModal() {
-            if (!isLoggedIn) return;
-            renderAreaList();
-            document.getElementById('area-modal').classList.remove('hidden');
-        }
-
-        function closeAreaModal() {
-            document.getElementById('area-modal').classList.add('hidden');
-            updateAreaDropdown();
-            renderTable();
-        }
-
-        function resetAreaForm() {
-            document.getElementById('input-area-name').value = '';
-            document.getElementById('input-area-sectors').value = '';
-        }
+        function closeModal() { document.getElementById('upload-modal').classList.add('hidden'); }
+        function openAreaModal() { if (!isLoggedIn) return; renderAreaList(); document.getElementById('area-modal').classList.remove('hidden'); }
+        function closeAreaModal() { document.getElementById('area-modal').classList.add('hidden'); updateAreaDropdown(); renderTable(); }
+        function resetAreaForm() { document.getElementById('input-area-name').value = ''; document.getElementById('input-area-sectors').value = ''; }
 
         function saveAreaMapping() {
             const name = document.getElementById('input-area-name').value.trim().toUpperCase();
             const sectorsRaw = document.getElementById('input-area-sectors').value.trim().toUpperCase();
-
-            if (!name || !sectorsRaw) {
-                alert("Harap isi Nama Area dan Daftar Sektor!");
-                return;
-            }
-
-            const sectorsArr = sectorsRaw.split(',').map(s => s.trim()).filter(s => s !== '');
-            areaMapping[name] = sectorsArr;
-
+            if (!name || !sectorsRaw) return alert("Harap isi Nama Area dan Daftar Sektor!");
+            areaMapping[name] = sectorsRaw.split(',').map(s => s.trim()).filter(s => s !== '');
             localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
             resetAreaForm();
             renderAreaList();
@@ -493,7 +520,7 @@
         }
 
         function deleteArea(areaName) {
-            if (confirm(`Apakah kamu yakin ingin menghapus Area ${areaName}?`)) {
+            if (confirm(`Hapus Area ${areaName}?`)) {
                 delete areaMapping[areaName];
                 localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
                 renderAreaList();
@@ -503,24 +530,16 @@
         function renderAreaList() {
             const container = document.getElementById('area-list-container');
             container.innerHTML = '';
-
             const keys = Object.keys(areaMapping);
-            if (keys.length === 0) {
-                container.innerHTML = `<div class="text-xs text-slate-400 p-2">Belum ada Area yang ditambahkan.</div>`;
-                return;
-            }
-
+            if (keys.length === 0) return container.innerHTML = `<div class="text-xs text-slate-400 p-2">Belum ada Area.</div>`;
             keys.forEach(areaName => {
                 const item = document.createElement('div');
                 item.className = 'flex justify-between items-center bg-slate-100 p-2.5 rounded-lg border text-xs';
                 item.innerHTML = `
-                    <div>
-                        <span class="font-bold text-amber-800">${areaName}</span>
-                        <span class="text-slate-500 ml-2">(${areaMapping[areaName].join(', ')})</span>
-                    </div>
+                    <div><span class="font-bold text-amber-800">${areaName}</span><span class="text-slate-500 ml-2">(${areaMapping[areaName].join(', ')})</span></div>
                     <div class="flex gap-2">
-                        <button onclick="editArea('${areaName}')" class="text-blue-600 hover:text-blue-800 font-bold"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="deleteArea('${areaName}')" class="text-red-600 hover:text-red-800 font-bold"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        <button onclick="editArea('${areaName}')" class="text-blue-600 font-bold"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="deleteArea('${areaName}')" class="text-red-600 font-bold"><i class="fa-solid fa-trash"></i> Hapus</button>
                     </div>
                 `;
                 container.appendChild(item);
@@ -530,7 +549,6 @@
         function updateAreaDropdown() {
             const areaSelect = document.getElementById('filter-area');
             const currentSelected = areaSelect.value;
-
             areaSelect.innerHTML = `<option value="ALL">-- SEMUA AREA --</option>`;
             Object.keys(areaMapping).sort().forEach(area => {
                 const opt = document.createElement('option');
@@ -544,18 +562,10 @@
         function updateSektorDropdown() {
             const sektorSelect = document.getElementById('filter-sektor');
             const currentSelected = sektorSelect.value;
-
             let sektorSet = new Set();
-            rawTickets.forEach(item => {
-                if (item.sektor && item.sektor !== '-') {
-                    sektorSet.add(item.sektor);
-                }
-            });
-
-            let sortedSektor = Array.from(sektorSet).sort();
-
+            rawTickets.forEach(item => { if (item.sektor && item.sektor !== '-') sektorSet.add(item.sektor); });
             sektorSelect.innerHTML = `<option value="ALL">-- SEMUA SEKTOR --</option>`;
-            sortedSektor.forEach(sektor => {
+            Array.from(sektorSet).sort().forEach(sektor => {
                 const opt = document.createElement('option');
                 opt.value = sektor;
                 opt.innerText = sektor;
@@ -567,20 +577,14 @@
         function parseDateString(dateStr) {
             if (!dateStr) return null;
             dateStr = dateStr.trim();
-            
-            if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
-                return dateStr.substring(0, 10);
-            }
-            
+            if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return dateStr.substring(0, 10);
             let parts = dateStr.split(/[\/\-\s]/);
             if (parts.length >= 3) {
                 let day = parts[0].padStart(2, '0');
                 let month = parts[1].padStart(2, '0');
                 let year = parts[2];
                 if (year.length === 2) year = '20' + year;
-                if (year.length === 4 && Number(day) <= 31 && Number(month) <= 12) {
-                    return `${year}-${month}-${day}`;
-                }
+                if (year.length === 4 && Number(day) <= 31 && Number(month) <= 12) return `${year}-${month}-${day}`;
             }
             return null;
         }
@@ -597,23 +601,12 @@
             });
 
             let techMap = {};
-
             filteredRaw.forEach(t => {
                 let nameKey = t.teknisi.toUpperCase().trim();
                 if (!techMap[nameKey]) {
-                    techMap[nameKey] = {
-                        teknisi: t.teknisi,
-                        sektor: t.sektor || '-',
-                        sqm: 0,
-                        reguler: 0,
-                        insera: 0,
-                        underspec: 0
-                    };
+                    techMap[nameKey] = { teknisi: t.teknisi, sektor: t.sektor || '-', sqm: 0, reguler: 0, insera: 0, underspec: 0 };
                 }
-
-                if (t.sektor && t.sektor !== '-' && techMap[nameKey].sektor === '-') {
-                    techMap[nameKey].sektor = t.sektor;
-                }
+                if (t.sektor && t.sektor !== '-' && techMap[nameKey].sektor === '-') techMap[nameKey].sektor = t.sektor;
 
                 let jenis = (t.jenis || '').toUpperCase();
                 if (jenis.includes("SQM")) techMap[nameKey].sqm += 1;
@@ -632,14 +625,9 @@
                 let insera = Number(item.insera) || 0;
                 let underspec = Number(item.underspec) || 0;
                 let grandTotal = sqm + reguler + insera + underspec;
-
-                let target70 = grandTotal - 62;
-                let target100 = grandTotal - 88;
-                let pct = (grandTotal / 88) * 100;
-
                 return {
-                    ...item,
-                    sqm, reguler, insera, underspec, grandTotal, target70, target100, pct
+                    ...item, sqm, reguler, insera, underspec, grandTotal,
+                    target70: grandTotal - 62, target100: grandTotal - 88, pct: (grandTotal / 88) * 100
                 };
             });
         }
@@ -647,9 +635,7 @@
         function renderTopBottomCards(filteredData) {
             const topContainer = document.getElementById('top-5-container');
             const bottomContainer = document.getElementById('bottom-5-container');
-
-            topContainer.innerHTML = '';
-            bottomContainer.innerHTML = '';
+            topContainer.innerHTML = ''; bottomContainer.innerHTML = '';
 
             if (filteredData.length === 0) {
                 topContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
@@ -657,35 +643,26 @@
                 return;
             }
 
-            let top5 = filteredData.slice(0, 5);
-            let bottom5 = [...filteredData].reverse().slice(0, 5);
-
-            top5.forEach((item, idx) => {
+            filteredData.slice(0, 5).forEach((item, idx) => {
                 const div = document.createElement('div');
                 div.className = 'flex justify-between items-center bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-xs';
                 div.innerHTML = `
                     <div class="flex items-center gap-2">
                         <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[10px]">${idx + 1}</span>
-                        <div>
-                            <span class="font-bold text-slate-800">${item.teknisi}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span>
-                        </div>
+                        <div><span class="font-bold text-slate-800">${item.teknisi}</span><span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span></div>
                     </div>
                     <div class="font-bold text-emerald-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
                 `;
                 topContainer.appendChild(div);
             });
 
-            bottom5.forEach((item, idx) => {
+            [...filteredData].reverse().slice(0, 5).forEach((item) => {
                 const div = document.createElement('div');
                 div.className = 'flex justify-between items-center bg-red-50 border border-red-200 p-2 rounded-lg text-xs';
                 div.innerHTML = `
                     <div class="flex items-center gap-2">
                         <span class="w-5 h-5 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-[10px]">${item.rank}</span>
-                        <div>
-                            <span class="font-bold text-slate-800">${item.teknisi}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span>
-                        </div>
+                        <div><span class="font-bold text-slate-800">${item.teknisi}</span><span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span></div>
                     </div>
                     <div class="font-bold text-red-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
                 `;
@@ -704,13 +681,7 @@
             let filtered = baseData.filter(item => {
                 const matchesSearch = item.teknisi.toLowerCase().includes(searchQuery);
                 const matchesSektor = (selectedSektor === 'ALL') || (item.sektor === selectedSektor);
-
-                let matchesArea = true;
-                if (selectedArea !== 'ALL') {
-                    const allowedSectors = areaMapping[selectedArea] || [];
-                    matchesArea = allowedSectors.includes(item.sektor);
-                }
-
+                let matchesArea = selectedArea === 'ALL' || (areaMapping[selectedArea] || []).includes(item.sektor);
                 return matchesSearch && matchesSektor && matchesArea;
             });
 
@@ -718,9 +689,7 @@
 
             let currentRank = 1;
             for (let i = 0; i < filtered.length; i++) {
-                if (i > 0 && filtered[i].grandTotal < filtered[i - 1].grandTotal) {
-                    currentRank = i + 1;
-                }
+                if (i > 0 && filtered[i].grandTotal < filtered[i - 1].grandTotal) currentRank = i + 1;
                 filtered[i].rank = currentRank;
             }
 
@@ -728,39 +697,28 @@
 
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-
             let sumSqm = 0, sumReguler = 0, sumInsera = 0, sumUnderspec = 0, sumGrandTotal = 0;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="p-8 text-center text-slate-400 font-medium">Data tidak ditemukan. Silakan upload file CSV atau sesuaikan filter.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="11" class="p-8 text-center text-slate-400 font-medium">Data tidak ditemukan. Silakan upload file CSV.</td></tr>`;
             } else {
                 filtered.forEach((row, index) => {
-                    sumSqm += row.sqm;
-                    sumReguler += row.reguler;
-                    sumInsera += row.insera;
-                    sumUnderspec += row.underspec;
-                    sumGrandTotal += row.grandTotal;
-
-                    let rankClass = '';
-                    if (row.rank === 1) rankClass = 'rank-1';
-                    else if (row.rank <= 3) rankClass = 'rank-2';
-                    else if (row.rank <= 10) rankClass = 'rank-mid';
-                    else rankClass = 'rank-low';
-
+                    sumSqm += row.sqm; sumReguler += row.reguler; sumInsera += row.insera; sumUnderspec += row.underspec; sumGrandTotal += row.grandTotal;
+                    let rankClass = row.rank === 1 ? 'rank-1' : row.rank <= 3 ? 'rank-2' : row.rank <= 10 ? 'rank-mid' : 'rank-low';
                     const tr = document.createElement('tr');
                     tr.className = index % 2 === 0 ? 'zebra-even text-center' : 'zebra-odd text-center';
                     tr.innerHTML = `
-                        <td class="p-3 text-left font-semibold text-slate-800 border-b border-slate-200">${row.teknisi}</td>
-                        <td class="p-3 font-semibold text-slate-600 border-b border-slate-200">${row.sektor || '-'}</td>
-                        <td class="p-3 border-b border-slate-200">${row.sqm || ''}</td>
-                        <td class="p-3 border-b border-slate-200 font-medium">${row.reguler || ''}</td>
-                        <td class="p-3 border-b border-slate-200">${row.insera || ''}</td>
-                        <td class="p-3 border-b border-slate-200">${row.underspec || ''}</td>
-                        <td class="p-3 border-b border-slate-200 font-bold bg-slate-50">${row.grandTotal}</td>
-                        <td class="p-3 border-b border-slate-200 ${rankClass}">${row.rank}</td>
-                        <td class="p-3 border-b border-slate-200 text-slate-700">${row.target70}</td>
-                        <td class="p-3 border-b border-slate-200 text-slate-700">${row.target100}</td>
-                        <td class="p-3 border-b border-slate-200 font-bold text-blue-700">${row.pct.toFixed(2).replace('.', ',')}%</td>
+                        <td class="p-3 text-left font-semibold text-slate-800 border-b">${row.teknisi}</td>
+                        <td class="p-3 font-semibold text-slate-600 border-b">${row.sektor || '-'}</td>
+                        <td class="p-3 border-b">${row.sqm || ''}</td>
+                        <td class="p-3 border-b font-medium">${row.reguler || ''}</td>
+                        <td class="p-3 border-b">${row.insera || ''}</td>
+                        <td class="p-3 border-b">${row.underspec || ''}</td>
+                        <td class="p-3 border-b font-bold bg-slate-50">${row.grandTotal}</td>
+                        <td class="p-3 border-b ${rankClass}">${row.rank}</td>
+                        <td class="p-3 border-b text-slate-700">${row.target70}</td>
+                        <td class="p-3 border-b text-slate-700">${row.target100}</td>
+                        <td class="p-3 border-b font-bold text-blue-700">${row.pct.toFixed(2).replace('.', ',')}%</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -774,14 +732,9 @@
             tfoot.innerHTML = `
                 <tr class="text-center">
                     <td class="p-3 text-left" colspan="2">Grand Total (${filtered.length} Teknisi)</td>
-                    <td class="p-3">${sumSqm}</td>
-                    <td class="p-3">${sumReguler}</td>
-                    <td class="p-3">${sumInsera}</td>
-                    <td class="p-3">${sumUnderspec}</td>
-                    <td class="p-3 bg-slate-300 text-slate-900">${sumGrandTotal}</td>
-                    <td class="p-3 bg-slate-300">-</td>
-                    <td class="p-3">${sumTarget70}</td>
-                    <td class="p-3">${sumTarget100}</td>
+                    <td class="p-3">${sumSqm}</td><td class="p-3">${sumReguler}</td><td class="p-3">${sumInsera}</td><td class="p-3">${sumUnderspec}</td>
+                    <td class="p-3 bg-slate-300 text-slate-900">${sumGrandTotal}</td><td class="p-3 bg-slate-300">-</td>
+                    <td class="p-3">${sumTarget70}</td><td class="p-3">${sumTarget100}</td>
                     <td class="p-3 bg-blue-200 text-blue-900">${overallPct.toFixed(2).replace('.', ',')}%</td>
                 </tr>
             `;
@@ -795,39 +748,23 @@
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             document.getElementById('info-filename').innerText = file.name;
-
             const reader = new FileReader();
-            reader.onload = function(evt) {
-                const text = evt.target.result;
-                parseCSVText(text);
-            };
+            reader.onload = function(evt) { parseCSVText(evt.target.result); };
             reader.readAsText(file, 'utf-8');
         }
 
-        // Parsing Otomatis CSV
         function parseCSVText(csvText) {
             const lines = csvText.split(/\r\n|\n/);
-            if (lines.length < 2) {
-                alert("File CSV kosong!");
-                return;
-            }
+            if (lines.length < 2) return alert("File CSV kosong!");
 
-            let headerLineIndex = -1;
-            let delimiter = ';';
-            let techColIndex = -1;
-            let jenisColIndex = -1;
-            let sektorColIndex = -1;
-            let dateColIndex = -1;
+            let headerLineIndex = -1, delimiter = ';', techColIndex = -1, jenisColIndex = -1, sektorColIndex = -1, dateColIndex = -1;
 
-            // Cari Baris Header
             for (let i = 0; i < Math.min(lines.length, 15); i++) {
                 let line = lines[i].toUpperCase();
                 if (line.includes("TEKNISI") || line.includes("NAMA")) {
                     headerLineIndex = i;
                     delimiter = line.includes(";") ? ";" : ",";
-
                     let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
                     cols.forEach((col, idx) => {
                         if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
@@ -839,33 +776,22 @@
                 }
             }
 
-            if (headerLineIndex === -1 || techColIndex === -1) {
-                alert("Format file CSV tidak dikenali. Pastikan file rekap memiliki kolom 'TEKNISI'.");
-                return;
-            }
+            if (headerLineIndex === -1 || techColIndex === -1) return alert("Format CSV tidak dikenali (butuh kolom 'TEKNISI').");
 
             pendingParsedTickets = [];
-
-            // Loop seluruh baris tiket
             for (let i = headerLineIndex + 1; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (!line) continue;
-
                 let cols = line.split(delimiter).map(c => c.replace(/"/g, '').trim());
                 if (!cols[techColIndex]) continue;
-
                 let name = cols[techColIndex].trim();
                 if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
 
-                let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
-                let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
-                let dateStr = (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null;
-
                 pendingParsedTickets.push({
                     teknisi: name,
-                    sektor: sektor,
-                    jenis: jenis,
-                    date: dateStr
+                    sektor: (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-",
+                    jenis: (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER",
+                    date: (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null
                 });
             }
 
@@ -875,46 +801,13 @@
             document.getElementById('btn-submit').disabled = false;
         }
 
-        function submitData() {
-            if (!isLoggedIn) return;
-            if (pendingParsedTickets.length === 0) {
-                alert("Tidak ada data yang terbaca dari CSV.");
-                return;
-            }
-
-            const mode = document.querySelector('input[name="upload-mode"]:checked').value;
-
-            if (mode === 'replace') {
-                rawTickets = [...pendingParsedTickets];
-            } else {
-                rawTickets = rawTickets.concat(pendingParsedTickets);
-            }
-
-            saveDatasetToStorage();
-            updateSektorDropdown();
-            renderTable();
-            closeModal();
-            alert("Dashboard berhasil di-update dan tersimpan otomatis!");
-        }
-
         function exportExcel() {
             if (!isLoggedIn) return;
-            const aggregatedData = aggregateFilteredTickets();
-            const baseData = calculateBaseData(aggregatedData);
-            
+            const baseData = calculateBaseData(aggregateFilteredTickets());
             const exportData = baseData.map(d => ({
-                "TEKNISI": d.teknisi,
-                "SEKTOR": d.sektor,
-                "SQM": d.sqm,
-                "REGULER": d.reguler,
-                "INSERA": d.insera,
-                "UNDERSPEC": d.underspec,
-                "Grand Total": d.grandTotal,
-                "TARGET 70%": d.target70,
-                "TARGET 100%": d.target100,
-                "%": d.pct.toFixed(2).replace('.', ',') + "%"
+                "TEKNISI": d.teknisi, "SEKTOR": d.sektor, "SQM": d.sqm, "REGULER": d.reguler, "INSERA": d.insera, "UNDERSPEC": d.underspec,
+                "Grand Total": d.grandTotal, "TARGET 70%": d.target70, "TARGET 100%": d.target100, "%": d.pct.toFixed(2).replace('.', ',') + "%"
             }));
-
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
