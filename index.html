@@ -26,7 +26,7 @@
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-white hidden">
         <i class="fa-solid fa-spinner fa-spin text-5xl mb-3 text-indigo-400"></i>
-        <p id="loading-text" class="font-bold text-base">Menghubungkan ke Google Sheets...</p>
+        <p id="loading-text" class="font-bold text-base">Menghubungkan ke Database MySQL...</p>
     </div>
 
     <div class="max-w-7xl mx-auto space-y-6">
@@ -42,8 +42,8 @@
             
             <div class="flex flex-wrap gap-2 items-center">
                 <div id="admin-actions" class="hidden flex flex-wrap gap-2">
-                    <button onclick="syncFromGoogleSheets()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Refresh data dari Spreadsheet">
-                        <i class="fa-solid fa-rotate"></i> Sync Sheets
+                    <button onclick="syncFromDatabase()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Refresh data dari Database">
+                        <i class="fa-solid fa-rotate"></i> Sync Database
                     </button>
                     <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
                         <i class="fa-solid fa-trash-can"></i> Reset Data
@@ -237,14 +237,14 @@
             </div>
 
             <div id="mode-selection-section" class="hidden bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 text-xs">
-                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Dashboard & Google Sheets:</div>
+                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Database MySQL:</div>
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="upload-mode" value="replace" checked class="text-blue-600">
-                    <span class="text-slate-700 font-semibold">Gantikan Seluruh Data Sheet DATAUPLOAD dengan File Ini</span>
+                    <span class="text-slate-700 font-semibold">Gantikan Seluruh Data di Database dengan File Ini</span>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="upload-mode" value="accumulate" class="text-blue-600">
-                    <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada di Sheets</span>
+                    <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada</span>
                 </label>
             </div>
 
@@ -258,7 +258,7 @@
             <div class="flex justify-end gap-3 pt-3 border-t">
                 <button onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
                 <button id="btn-submit" onclick="submitData()" disabled class="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-medium shadow flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Google Sheets & Update
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Database & Update
                 </button>
             </div>
         </div>
@@ -304,9 +304,8 @@
     </div>
 
     <script>
-        // === KONFIGURASI GOOGLE APPS SCRIPT ===
-        // PASANG URL WEB APP KAMU DI SINI
-        const GOOGLE_SCRIPT_URL = const GOOGLE_SCRIPT_URL = "https://dashboardsagladag.site.je/api.php";
+        // === KONFIGURASI API MYSQL INFINITYFREE ===
+        const API_URL = "https://dashboardsagladag.site.je/api.php";
 
         let rawTickets = JSON.parse(localStorage.getItem('dashboard_raw_tickets_v1')) || [];
         let pendingParsedTickets = [];
@@ -339,8 +338,8 @@
             updateAuthUI();
             updateAreaDropdown();
             
-            // Ambil data awal dari Google Sheets
-            syncFromGoogleSheets();
+            // Ambil data dari MySQL
+            syncFromDatabase();
         });
 
         function showLoading(msg) {
@@ -352,15 +351,11 @@
             document.getElementById('loading-overlay').classList.add('hidden');
         }
 
-        // --- DARI/KE GOOGLE SHEETS ---
-        function syncFromGoogleSheets() {
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("AKfycbx...")) {
-                renderTable();
-                return;
-            }
+        // --- AMBIL DATA DARI MYSQL ---
+        function syncFromDatabase() {
+            showLoading("Mengambil data terbaru dari Database MySQL...");
 
-            showLoading("HSA Gladag sedang Mengambil data terbaru ");
-            fetch(GOOGLE_SCRIPT_URL)
+            fetch(API_URL)
                 .then(res => res.json())
                 .then(data => {
                     if (Array.isArray(data)) {
@@ -370,10 +365,14 @@
                         renderTable();
                     }
                 })
-                .catch(err => console.error("Gagal sync dari Google Sheets:", err))
+                .catch(err => {
+                    console.error("Gagal sync dari Database:", err);
+                    renderTable();
+                })
                 .finally(() => hideLoading());
         }
 
+        // --- KIRIM DATA KE MYSQL ---
         function submitData() {
             if (!isLoggedIn) return;
             if (pendingParsedTickets.length === 0) {
@@ -383,43 +382,34 @@
 
             const mode = document.querySelector('input[name="upload-mode"]:checked').value;
 
-            if (mode === 'replace') {
-                rawTickets = [...pendingParsedTickets];
-            } else {
-                rawTickets = rawTickets.concat(pendingParsedTickets);
-            }
+            showLoading("Mengirim data ke Database MySQL...");
 
-            saveDatasetToStorage();
-            updateSektorDropdown();
-            renderTable();
-            closeModal();
-
-            // Kirim ke Google Sheets
-            if (GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes("AKfycbx...")) {
-                showLoading("Mengirim data ke Google Sheets (DATAUPLOAD)...");
-                fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        mode: mode,
-                        tickets: pendingParsedTickets
-                    })
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mode: mode,
+                    tickets: pendingParsedTickets
                 })
-                .then(() => {
-                    alert("Data berhasil tersimpan di Google Sheets dan Dashboard ter-update!");
-                })
-                .catch(err => {
-                    alert("Gagal mengirim ke Google Sheets, tapi data tersimpan lokal di browser.");
-                    console.error(err);
-                })
-                .finally(() => hideLoading());
-            } else {
-                alert("Dashboard berhasil di-update secara lokal! Pasang GOOGLE_SCRIPT_URL untuk auto-sync ke Spreadsheet.");
-            }
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response.status === 'success') {
+                    alert("Data berhasil tersimpan di Database MySQL!");
+                    closeModal();
+                    syncFromDatabase();
+                } else {
+                    alert("Gagal menyimpan ke Database: " + (response.message || "Error server"));
+                }
+            })
+            .catch(err => {
+                alert("Gagal terhubung ke API MySQL.");
+                console.error(err);
+            })
+            .finally(() => hideLoading());
         }
 
-        // --- AUTH & OTHER FUNCTIONS ---
+        // --- AUTH & LAINNYA ---
         function updateAuthUI() {
             const adminActions = document.getElementById('admin-actions');
             const authContainer = document.getElementById('auth-button-container');
@@ -475,11 +465,21 @@
 
         function clearAllData() {
             if (!isLoggedIn) return;
-            if (confirm("Apakah kamu yakin ingin menghapus seluruh data dashboard?")) {
-                rawTickets = [];
-                localStorage.removeItem('dashboard_raw_tickets_v1');
-                updateSektorDropdown();
-                renderTable();
+            if (confirm("Apakah kamu yakin ingin menghapus seluruh data di Database MySQL?")) {
+                showLoading("Menghapus seluruh data...");
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mode: 'replace', tickets: [] })
+                })
+                .then(() => {
+                    rawTickets = [];
+                    localStorage.removeItem('dashboard_raw_tickets_v1');
+                    updateSektorDropdown();
+                    renderTable();
+                    alert("Seluruh data berhasil dihapus dari Database.");
+                })
+                .finally(() => hideLoading());
             }
         }
 
