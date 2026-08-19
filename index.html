@@ -362,30 +362,53 @@
             loadDataFromSupabase();
         });
 
-        // --- SUPABASE API INTEGRATION ---
+        // --- SUPABASE API INTEGRATION WITH PAGINATION ---
         async function loadDataFromSupabase() {
             try {
-                const response = await fetch(`${SUPABASE_URL}?select=*`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
-                });
+                let allData = [];
+                let page = 0;
+                const pageSize = 1000;
+                let hasMore = true;
 
-                if (response.ok) {
-                    const data = await response.json();
-                    rawTickets = data.map(item => ({
-                        teknisi: item.teknisi,
-                        sektor: item.sektor || '-',
-                        jenis: item.jenis || 'REGULER',
-                        date: item.tanggal
-                    }));
-                    updateSektorDropdown();
-                    renderTable();
-                } else {
-                    console.error("Gagal mengambil data Supabase", await response.text());
+                // Looping fetch bertahap per 1000 baris data
+                while (hasMore) {
+                    const from = page * pageSize;
+                    const to = from + pageSize - 1;
+
+                    const response = await fetch(`${SUPABASE_URL}?select=*`, {
+                        method: 'GET',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Range': `${from}-${to}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        allData = allData.concat(data);
+
+                        if (data.length < pageSize) {
+                            hasMore = false;
+                        } else {
+                            page++;
+                        }
+                    } else {
+                        console.error("Gagal mengambil data Supabase", await response.text());
+                        hasMore = false;
+                    }
                 }
+
+                rawTickets = allData.map(item => ({
+                    teknisi: item.teknisi,
+                    sektor: item.sektor || '-',
+                    jenis: item.jenis || 'REGULER',
+                    date: item.tanggal
+                }));
+
+                updateSektorDropdown();
+                renderTable();
+
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
