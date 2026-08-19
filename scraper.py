@@ -1,49 +1,46 @@
+import os
 import requests
 from bs4 import BeautifulSoup
-import json
-import os
+from supabase import create_client, Client
 
-URL = "https://nucleus.web.id/telkomakses/reporting/rekapclosingsurakarta.php"
-JSON_FILE = "data.json"
+# Ambil credential dari environment variables
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-def fetch_data():
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise ValueError("Supabase URL dan Key tidak ditemukan di environment variables!")
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+URL_NUCLEUS = "https://nucleus.web.id/telkomakses/reporting/rekapclosingsurakarta.php"
+
+def fetch_and_push_to_supabase():
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
     
     try:
-        response = requests.get(URL, headers=headers, timeout=30)
+        response = requests.get(URL_NUCLEUS, headers=headers, timeout=30)
         response.raise_for_status()
     except Exception as e:
-        print(f"Gagal mengambil data: {e}")
+        print(f"Gagal mengambil data dari Nucleus: {e}")
         return
 
     soup = BeautifulSoup(response.text, 'html.parser')
     rows = soup.find_all('tr')
     
-    # 1. Ambil data lama jika ada
-    existing_data = {}
-    if os.path.exists(JSON_FILE):
-        with open(JSON_FILE, 'r', encoding='utf-8') as f:
-            try:
-                records = json.load(f)
-                # Buat dictionary dengan TIKET sebagai Key (Anti-Duplikat)
-                existing_data = {item['tiket']: item for item in records if 'tiket' in item}
-            except json.JSONDecodeError:
-                existing_data = {}
+    records_to_upsert = []
 
-    # 2. Parsing baris tabel baru dari Nucleus
-    count_new = 0
     for row in rows:
         cols = [td.text.strip() for td in row.find_all('td')]
         
-        # Adjust indeks kolom sesuai tabel HTML Nucleus
         if len(cols) >= 9:
-            tiket_id = cols[2] # Kolom TIKET
+            tiket_id = cols[2]
             
-            # Validasi agar bukan header tabel
+            # Abaikan baris header
             if tiket_id and tiket_id.lower() != 'tiket':
-                data_row = {
+                # Sesuaikan nama kunci di bawah dengan NAMA KOLOM di tabel Supabase kamu
+                record = {
                     "jenis": cols[1],
                     "tiket": tiket_id,
                     "nomor_inet": cols[3],
@@ -51,19 +48,17 @@ def fetch_data():
                     "teknisi": cols[5],
                     "nik": cols[6],
                     "perbaikan": cols[7],
-                    "tgl": cols[8]
+                    "tanggal": cols[8] # Sesuaikan nama kolom tanggal di Supabase
                 }
-                
-                # Masukkan/Update data (Nomor TIKET unik mencegah duplikasi)
-                if tiket_id not in existing_data:
-                    count_new += 1
-                existing_data[tiket_id] = data_row
+                records_to_upsert.append(record)
 
-    # 3. Simpan kembali ke file data.json
-    with open(JSON_FILE, 'w', encoding='utf-8') as f:
-        json.dump(list(existing_data.values()), f, indent=2, ensure_ascii=False)
-        
-    print(f"Selesai! Data berhasil diperbarui. Tambahan data baru: {count_new}")
+    if records_to_upsert:
+        print(f"Mengirim {len(records_to_upsert)} data ke Supabase...")
+        # Upsert otomatis memperbarui data jika 'tiket' sudah ada, atau menambah jika baru
+        response = supabase.table("dataupload").upsert(records_to_upsert, on_conflict="tiket").execute()
+        print("Berhasil memasukkan data ke Supabase!")
+    else:
+        print("Tidak ada data yang ditemukan untuk diunggah.")
 
 if __name__ == "__main__":
-    fetch_data()
+    fetch_and_push_to_supabase()
