@@ -32,6 +32,18 @@
                     <i class="fa-solid fa-chart-line"></i> Dashboard Monitoring Performa Teknisi
                 </h1>
                 <p class="text-blue-200 text-sm mt-1">Sistem Otomatisasi Input & Analisa Produktifitas Teknisi | POWERED BY SA GLADAG</p>
+                
+                <!-- Info Last Update & Sync Date -->
+                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                    <span class="bg-blue-900/50 border border-blue-400/30 text-blue-100 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate text-emerald-400 animate-spin" id="sync-spinner"></i>
+                        <span>Last Update: <strong id="info-last-update">-</strong></span>
+                    </span>
+                    <span class="bg-blue-900/50 border border-blue-400/30 text-blue-100 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-range text-amber-300"></i>
+                        <span>Sync Range (3 Bln): <strong id="info-sync-range">-</strong></span>
+                    </span>
+                </div>
             </div>
             
             <div class="flex flex-wrap gap-2 items-center">
@@ -359,23 +371,61 @@
 
             updateAuthUI();
             updateAreaDropdown();
+            
+            // Initial load data
             loadDataFromSupabase();
+
+            // Auto refresh realtime setiap 15 menit (15 * 60 * 1000 ms)
+            setInterval(() => {
+                loadDataFromSupabase();
+            }, 15 * 60 * 1000);
         });
 
-        // --- SUPABASE API INTEGRATION WITH PAGINATION ---
+        // --- HELPER UNTUK WAKTU & RENTANG DATA (3 BULAN TERAKHIR) ---
+        function getThreeMonthsAgoDateString() {
+            const date = new Date();
+            date.setMonth(date.getMonth() - 3);
+            return date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+        }
+
+        function formatDateToIndonesian(dateObj) {
+            return dateObj.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function formatTimeToIndonesian(dateObj) {
+            return dateObj.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }) + ' WIB';
+        }
+
+        // --- SUPABASE API INTEGRATION WITH PAGINATION & FILTER 3 BULAN ---
         async function loadDataFromSupabase() {
+            const spinner = document.getElementById('sync-spinner');
+            if (spinner) spinner.classList.add('animate-spin');
+
             try {
                 let allData = [];
                 let page = 0;
                 const pageSize = 1000;
                 let hasMore = true;
 
-                // Looping fetch bertahap per 1000 baris data
+                // Hitung rentang 3 bulan terakhir
+                const threeMonthsAgo = getThreeMonthsAgoDateString();
+                const todayStr = new Date().toISOString().split('T')[0];
+
+                // Looping fetch bertahap per 1000 baris data dengan filter tanggal >= 3 bulan lalu
                 while (hasMore) {
                     const from = page * pageSize;
                     const to = from + pageSize - 1;
 
-                    const response = await fetch(`${SUPABASE_URL}?select=*`, {
+                    // Menggunakan query filter Supabase: tanggal=gte.{threeMonthsAgo}
+                    const response = await fetch(`${SUPABASE_URL}?select=*&tanggal=gte.${threeMonthsAgo}`, {
                         method: 'GET',
                         headers: {
                             'apikey': SUPABASE_KEY,
@@ -409,8 +459,17 @@
                 updateSektorDropdown();
                 renderTable();
 
+                // Update Info Dashboard Status
+                const now = new Date();
+                const startDateObj = new Date(threeMonthsAgo);
+                
+                document.getElementById('info-last-update').innerText = formatTimeToIndonesian(now);
+                document.getElementById('info-sync-range').innerText = `${formatDateToIndonesian(startDateObj)} s/d ${formatDateToIndonesian(now)}`;
+
             } catch (err) {
                 console.error("Error fetching data:", err);
+            } finally {
+                if (spinner) spinner.classList.remove('animate-spin');
             }
         }
 
