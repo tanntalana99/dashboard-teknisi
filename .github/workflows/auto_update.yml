@@ -2,9 +2,8 @@ name: Auto Update Data Nucleus Every Hour
 
 on:
   schedule:
-    # Jalankan otomatis setiap jam (Menit ke-0)
     - cron: '0 * * * *'
-  workflow_dispatch: # Memungkinkan kamu klik "Run Workflow" secara manual kapan saja
+  workflow_dispatch:
 
 jobs:
   build-and-sync:
@@ -12,24 +11,20 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.x'
 
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests beautifulsoup4
+        pip install requests beautifulsoup4 supabase
 
-    - name: Run Scraper Script
+    - name: Run Scraper and Push to Supabase
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: python scraper.py
-
-    - name: Commit and Push Changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add data.json
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update data dari Nucleus [skip ci]" && git push)
