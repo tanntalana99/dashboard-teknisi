@@ -322,8 +322,12 @@
     </div>
 
     <script>
-        // Data tiket mentah tersimpan di localStorage
-        let rawTickets = JSON.parse(localStorage.getItem('dashboard_raw_tickets_v1')) || [];
+        // Configuration Supabase REST API
+        const SUPABASE_URL = "https://xphudssbidvymyxheeav.supabase.co/rest/v1/dataupload";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwaHVkc3NiaWR2eW15eGhlZWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjAxMzksImV4cCI6MjEwMjY5NjEzOX0.OGhFqXmU4ph3_S4qk3H2GdYjRbDjCZYk9qeaIAeQosA";
+
+        // Memory State
+        let rawTickets = [];
         let pendingParsedTickets = [];
 
         // Mapping Default Area
@@ -355,9 +359,125 @@
 
             updateAuthUI();
             updateAreaDropdown();
-            updateSektorDropdown();
-            renderTable();
+            loadDataFromSupabase();
         });
+
+        // --- SUPABASE API INTEGRATION ---
+        async function loadDataFromSupabase() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}?select=*`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    rawTickets = data.map(item => ({
+                        teknisi: item.teknisi,
+                        sektor: item.sektor || '-',
+                        jenis: item.jenis || 'REGULER',
+                        date: item.tanggal
+                    }));
+                    updateSektorDropdown();
+                    renderTable();
+                } else {
+                    console.error("Gagal mengambil data Supabase", await response.text());
+                }
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            }
+        }
+
+        async function clearAllData() {
+            if (!isLoggedIn) return;
+            if (confirm("Apakah kamu yakin ingin menghapus seluruh data dari Supabase Database?")) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}?id=gt.0`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        rawTickets = [];
+                        updateSektorDropdown();
+                        renderTable();
+                        alert("Seluruh data berhasil dihapus dari database!");
+                    } else {
+                        alert("Gagal menghapus data dari database.");
+                    }
+                } catch (err) {
+                    console.error("Error deleting data:", err);
+                    alert("Terjadi kesalahan koneksi saat menghapus data.");
+                }
+            }
+        }
+
+        async function submitData() {
+            if (!isLoggedIn) return;
+            if (pendingParsedTickets.length === 0) {
+                alert("Tidak ada data yang terbaca dari CSV.");
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+
+            const mode = document.querySelector('input[name="upload-mode"]:checked').value;
+
+            try {
+                // Mode 'replace' menghapus data lama di database
+                if (mode === 'replace') {
+                    await fetch(`${SUPABASE_URL}?id=gt.0`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    });
+                }
+
+                // Format data untuk Supabase
+                const payload = pendingParsedTickets.map(t => ({
+                    teknisi: t.teknisi,
+                    sektor: t.sektor,
+                    jenis: t.jenis,
+                    tanggal: t.date ? t.date : null
+                }));
+
+                // Upload Batch per 500 baris agar ringan
+                const batchSize = 500;
+                for (let i = 0; i < payload.length; i += batchSize) {
+                    const chunk = payload.slice(i, i + batchSize);
+                    await fetch(SUPABASE_URL, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(chunk)
+                    });
+                }
+
+                await loadDataFromSupabase();
+                closeModal();
+                alert("Data berhasil tersimpan ke Supabase!");
+            } catch (err) {
+                console.error("Error submitting data:", err);
+                alert("Gagal menyimpan data ke database!");
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
+            }
+        }
 
         // --- SISTEM AUTHENTICATION & LOGIN ---
         function updateAuthUI() {
@@ -418,21 +538,7 @@
             }
         }
 
-        // --- MANAJEMEN DATA & TABLE ---
-        function saveDatasetToStorage() {
-            localStorage.setItem('dashboard_raw_tickets_v1', JSON.stringify(rawTickets));
-        }
-
-        function clearAllData() {
-            if (!isLoggedIn) return;
-            if (confirm("Apakah kamu yakin ingin menghapus seluruh data dashboard dari memori browser?")) {
-                rawTickets = [];
-                localStorage.removeItem('dashboard_raw_tickets_v1');
-                updateSektorDropdown();
-                renderTable();
-            }
-        }
-
+        // --- MANAJEMEN UI & CONTROL ---
         function resetDateFilter() {
             document.getElementById('filter-date-start').value = '';
             document.getElementById('filter-date-end').value = '';
@@ -873,28 +979,6 @@
             document.getElementById('mode-selection-section').classList.remove('hidden');
             document.getElementById('info-count').innerText = pendingParsedTickets.length;
             document.getElementById('btn-submit').disabled = false;
-        }
-
-        function submitData() {
-            if (!isLoggedIn) return;
-            if (pendingParsedTickets.length === 0) {
-                alert("Tidak ada data yang terbaca dari CSV.");
-                return;
-            }
-
-            const mode = document.querySelector('input[name="upload-mode"]:checked').value;
-
-            if (mode === 'replace') {
-                rawTickets = [...pendingParsedTickets];
-            } else {
-                rawTickets = rawTickets.concat(pendingParsedTickets);
-            }
-
-            saveDatasetToStorage();
-            updateSektorDropdown();
-            renderTable();
-            closeModal();
-            alert("Dashboard berhasil di-update dan tersimpan otomatis!");
         }
 
         function exportExcel() {
