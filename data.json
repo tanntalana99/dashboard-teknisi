@@ -1,0 +1,2982 @@
+[
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52226666",
+    "nomor_inet": "141553104667",
+    "sektor": "BYL",
+    "teknisi": "Redo Andala",
+    "nik": "16994584",
+    "perbaikan": "imbas gamas...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238421",
+    "nomor_inet": "141553117929",
+    "sektor": "BYL",
+    "teknisi": "Redo Andala",
+    "nik": "16994584",
+    "perbaikan": "imbas gamass...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236838",
+    "nomor_inet": "141553107530",
+    "sektor": "BYL",
+    "teknisi": "Redo Andala",
+    "nik": "16994584",
+    "perbaikan": "hidupkan modemmm...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52242806",
+    "nomor_inet": "141553109505",
+    "sektor": "BYL",
+    "teknisi": "Redo Andala",
+    "nik": "16994584",
+    "perbaikan": "ikr ulang...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52226816",
+    "nomor_inet": "141553107332",
+    "sektor": "BYL",
+    "teknisi": "Redo Andala",
+    "nik": "16994584",
+    "perbaikan": "imbas gamas konfirmasi sudah oke...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228059",
+    "nomor_inet": "141566101422",
+    "sektor": "MSO",
+    "teknisi": "HERU PRASETYO",
+    "nik": "15890938",
+    "perbaikan": "141566101422 smv 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52239139",
+    "nomor_inet": "143566101954",
+    "sektor": "MSO",
+    "teknisi": "HERU PRASETYO",
+    "nik": "15890938",
+    "perbaikan": "143566101954 smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236017",
+    "nomor_inet": "143566100491",
+    "sektor": "MSO",
+    "teknisi": "HERU PRASETYO",
+    "nik": "15890938",
+    "perbaikan": "143566100491 seting wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228589",
+    "nomor_inet": "146510100010",
+    "sektor": "KAR",
+    "teknisi": "TUGIYONO",
+    "nik": "15890939",
+    "perbaikan": "setting wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52202511",
+    "nomor_inet": "142510100459",
+    "sektor": "KLX",
+    "teknisi": "ARI SANDHI",
+    "nik": "15890928",
+    "perbaikan": "142510100459 restart ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52207267",
+    "nomor_inet": "142510100716",
+    "sektor": "KAR",
+    "teknisi": "TUGIYONO",
+    "nik": "15890939",
+    "perbaikan": "sambung DC smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52252467",
+    "nomor_inet": "141567103635",
+    "sektor": "KAR",
+    "teknisi": "FERRY BUDIAWAN",
+    "nik": "15890947",
+    "perbaikan": "ganti ont rusak...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51033092",
+    "nomor_inet": "",
+    "sektor": "KAR",
+    "teknisi": "FERRY BUDIAWAN",
+    "nik": "15890947",
+    "perbaikan": "sbdc 3 titik ok...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52246657",
+    "nomor_inet": "142526104532",
+    "sektor": "SOP",
+    "teknisi": "SUKISTONO",
+    "nik": "15894105",
+    "perbaikan": "142526104532 sambung DC smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234125",
+    "nomor_inet": "142526402765",
+    "sektor": "SOP",
+    "teknisi": "SUKISTONO",
+    "nik": "15894105",
+    "perbaikan": "142526402765 tarik precon 135m smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52213002",
+    "nomor_inet": "141567103686",
+    "sektor": "KAR",
+    "teknisi": "SRI YANTO",
+    "nik": "15890929",
+    "perbaikan": "ganti ont sn baru ZTEGDE8ED3AF...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52251708",
+    "nomor_inet": "142567401579",
+    "sektor": "KAR",
+    "teknisi": "SRI YANTO",
+    "nik": "15890929",
+    "perbaikan": "ganti kabel precon 120 mtr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52209443",
+    "nomor_inet": "",
+    "sektor": "KLX",
+    "teknisi": "ARI SANDHI",
+    "nik": "15890928",
+    "perbaikan": "142510103838 ganti precon dan rerute DC smv 3...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52217606",
+    "nomor_inet": "142510103295",
+    "sektor": "KLX",
+    "teknisi": "ARI SANDHI",
+    "nik": "15890928",
+    "perbaikan": "142510103295 SB DC smv 2 dan ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238656",
+    "nomor_inet": "142510101791",
+    "sektor": "KLX",
+    "teknisi": "ARI SANDHI",
+    "nik": "15890928",
+    "perbaikan": "142510100459 restart ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52220445",
+    "nomor_inet": "141550108783",
+    "sektor": "MSO",
+    "teknisi": "WAKHID APRIL RIYANTO",
+    "nik": "15890930",
+    "perbaikan": "sambul dc semove 4 perbaikan bending...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52235070",
+    "nomor_inet": "141550106141",
+    "sektor": "MSO",
+    "teknisi": "WAKHID APRIL RIYANTO",
+    "nik": "15890930",
+    "perbaikan": "konfigulang ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52248514",
+    "nomor_inet": "146550117726",
+    "sektor": "MSO",
+    "teknisi": "WAKHID APRIL RIYANTO",
+    "nik": "15890930",
+    "perbaikan": "konfig ulang ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236542",
+    "nomor_inet": "143550101837",
+    "sektor": "MSO",
+    "teknisi": "WAKHID APRIL RIYANTO",
+    "nik": "15890930",
+    "perbaikan": "sambul dc semove 2 imbas rambas2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52213273",
+    "nomor_inet": "141550103757",
+    "sektor": "MSO",
+    "teknisi": "WAKHID APRIL RIYANTO",
+    "nik": "15890930",
+    "perbaikan": "sambung dc semove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52216848",
+    "nomor_inet": "146550115704",
+    "sektor": "MSO",
+    "teknisi": "WAKHID APRIL RIYANTO",
+    "nik": "15890930",
+    "perbaikan": "sambul dc semove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52227894",
+    "nomor_inet": "146566109446",
+    "sektor": "MSO",
+    "teknisi": "PRIHATMOKO",
+    "nik": "15890935",
+    "perbaikan": "146566109446 call cp restart n sdh normal...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52253331",
+    "nomor_inet": "141566105797",
+    "sektor": "MSO",
+    "teknisi": "PRIHATMOKO",
+    "nik": "15890935",
+    "perbaikan": "141566105797 ganti remoot...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237263",
+    "nomor_inet": "142566100078",
+    "sektor": "MSO",
+    "teknisi": "PRIHATMOKO",
+    "nik": "15890935",
+    "perbaikan": "142566100078 precon 100 m cmv2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52244709",
+    "nomor_inet": "143566101570",
+    "sektor": "MSO",
+    "teknisi": "PRIHATMOKO",
+    "nik": "15890935",
+    "perbaikan": "143566101570 smv2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52250095",
+    "nomor_inet": "0271494462",
+    "sektor": "KAR",
+    "teknisi": "BUDI PRASETYO KURNIAWAN",
+    "nik": "15890943",
+    "perbaikan": "sbdc ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "INC48398051",
+    "nomor_inet": "",
+    "sektor": "KAR",
+    "teknisi": "BUDI PRASETYO KURNIAWAN",
+    "nik": "15890943",
+    "perbaikan": "sbdc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52221765",
+    "nomor_inet": "141567105415",
+    "sektor": "KAR",
+    "teknisi": "BUDI PRASETYO KURNIAWAN",
+    "nik": "15890943",
+    "perbaikan": "gt stb...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237095",
+    "nomor_inet": "142567101780",
+    "sektor": "KAR",
+    "teknisi": "BUDI PRASETYO KURNIAWAN",
+    "nik": "15890943",
+    "perbaikan": "sambul pigtail...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52216336",
+    "nomor_inet": "141504112077",
+    "sektor": "MSO",
+    "teknisi": "ARDHIS IRFANNURDIN NP",
+    "nik": "15894100",
+    "perbaikan": "141504112077 sambul dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52212849",
+    "nomor_inet": "143566104216",
+    "sektor": "MSO",
+    "teknisi": "ARDHIS IRFANNURDIN NP",
+    "nik": "15894100",
+    "perbaikan": "143566104216 gt precon 100 m...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236516",
+    "nomor_inet": "142567102917",
+    "sektor": "KAR",
+    "teknisi": "ISMAIL JUNIARDI",
+    "nik": "15890951",
+    "perbaikan": "sbdc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52222786",
+    "nomor_inet": "141550103397",
+    "sektor": "KLX",
+    "teknisi": "EKO FAJAR ROMADHONI",
+    "nik": "15890933",
+    "perbaikan": "14155010339 sambung dc smov 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52221042",
+    "nomor_inet": "141550100053",
+    "sektor": "KLX",
+    "teknisi": "EKO FAJAR ROMADHONI",
+    "nik": "15890933",
+    "perbaikan": "141550100053 ganti adaptor ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52248259",
+    "nomor_inet": "146550117872",
+    "sektor": "KLX",
+    "teknisi": "EKO FAJAR ROMADHONI",
+    "nik": "15890933",
+    "perbaikan": "146550117872 sambung dc dan omsed odp smov 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52227711",
+    "nomor_inet": "141550103893",
+    "sektor": "KLX",
+    "teknisi": "EKO FAJAR ROMADHONI",
+    "nik": "15890933",
+    "perbaikan": "141550103893 reconek odp dan ganti adapter...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52243475",
+    "nomor_inet": "0271644006",
+    "sektor": "GLD2",
+    "teknisi": "GARDA ANURAGA",
+    "nik": "20931103",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52233876",
+    "nomor_inet": "141504114241",
+    "sektor": "GLD2",
+    "teknisi": "GARDA ANURAGA",
+    "nik": "20931103",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236942",
+    "nomor_inet": "141504116951",
+    "sektor": "GLD1",
+    "teknisi": "YUSACH FIRDAUS",
+    "nik": "20980921",
+    "perbaikan": "sambung dc umbas rabas2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52252319",
+    "nomor_inet": "141504122059",
+    "sektor": "GLD1",
+    "teknisi": "YUSACH FIRDAUS",
+    "nik": "20980921",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52250577.ganti",
+    "nomor_inet": "",
+    "sektor": "GLD1",
+    "teknisi": "YUSACH FIRDAUS",
+    "nik": "20980921",
+    "perbaikan": "rj11...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52235859",
+    "nomor_inet": "141505103036",
+    "sektor": "KRT1",
+    "teknisi": "SUGIYARTO",
+    "nik": "15890986",
+    "perbaikan": "co core...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52236274",
+    "nomor_inet": "141505309755",
+    "sektor": "KRT1",
+    "teknisi": "SUGIYARTO",
+    "nik": "15890986",
+    "perbaikan": "co core...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52236389",
+    "nomor_inet": "141505307532",
+    "sektor": "KRT1",
+    "teknisi": "SUGIYARTO",
+    "nik": "15890986",
+    "perbaikan": "co core...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237163",
+    "nomor_inet": "141505221935",
+    "sektor": "KRT3",
+    "teknisi": "BAGUS SETYA AJI",
+    "nik": "15890985",
+    "perbaikan": "ikr ulang pindah jalur dc smove 1 krikiti tikus...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237265",
+    "nomor_inet": "141505220373",
+    "sektor": "KRT3",
+    "teknisi": "BAGUS SETYA AJI",
+    "nik": "15890985",
+    "perbaikan": "sambul dc smove 1 dc rusak mrepel...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52243500",
+    "nomor_inet": "141505133378",
+    "sektor": "KRT3",
+    "teknisi": "BAGUS SETYA AJI",
+    "nik": "15890985",
+    "perbaikan": "ganti adaptor odp 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52248416",
+    "nomor_inet": "141505214559",
+    "sektor": "KRT3",
+    "teknisi": "FEBRI KURNIAWAN",
+    "nik": "15887365",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52248411",
+    "nomor_inet": "141505597224",
+    "sektor": "KRT3",
+    "teknisi": "FEBRI KURNIAWAN",
+    "nik": "15887365",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52256350",
+    "nomor_inet": "141505597779",
+    "sektor": "KRT3",
+    "teknisi": "FEBRI KURNIAWAN",
+    "nik": "15887365",
+    "perbaikan": "ganti stb&ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52248586",
+    "nomor_inet": "141505112641",
+    "sektor": "KRT3",
+    "teknisi": "FEBRI KURNIAWAN",
+    "nik": "15887365",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237007",
+    "nomor_inet": "141505216962",
+    "sektor": "KRT3",
+    "teknisi": "DANU YULIYANTO",
+    "nik": "16970389",
+    "perbaikan": "ganti ont hidup power 48575443925652BA...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52248427",
+    "nomor_inet": "141505311710",
+    "sektor": "KRT3",
+    "teknisi": "DANU YULIYANTO",
+    "nik": "16970389",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237750",
+    "nomor_inet": "141505218333",
+    "sektor": "KRT3",
+    "teknisi": "DANU YULIYANTO",
+    "nik": "16970389",
+    "perbaikan": "setul wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52249576",
+    "nomor_inet": "141505107965",
+    "sektor": "KRT3",
+    "teknisi": "DANU YULIYANTO",
+    "nik": "16970389",
+    "perbaikan": "sambung ikr smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52193796",
+    "nomor_inet": "",
+    "sektor": "KRT3",
+    "teknisi": "DANU YULIYANTO",
+    "nik": "16970389",
+    "perbaikan": "sambung brencing...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52236287",
+    "nomor_inet": "141505120449",
+    "sektor": "KRT1",
+    "teknisi": "RAMADAN SETYO KUNCORO",
+    "nik": "15890970",
+    "perbaikan": "co core...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52235860",
+    "nomor_inet": "141504133905",
+    "sektor": "KRT1",
+    "teknisi": "RAMADAN SETYO KUNCORO",
+    "nik": "15890970",
+    "perbaikan": "co core...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52254550",
+    "nomor_inet": "142505401324",
+    "sektor": "KRT1",
+    "teknisi": "RAMADAN SETYO KUNCORO",
+    "nik": "15890970",
+    "perbaikan": "reconek odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52207266",
+    "nomor_inet": "141567105284",
+    "sektor": "KAR",
+    "teknisi": "AGUS SETYAWAN",
+    "nik": "25960212",
+    "perbaikan": "sbdc bekas 70m smove 2 kena bego...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237903",
+    "nomor_inet": "141567102648",
+    "sektor": "KAR",
+    "teknisi": "AGUS SETYAWAN",
+    "nik": "25960212",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52204158",
+    "nomor_inet": "142567102534",
+    "sektor": "KAR",
+    "teknisi": "AGUS SETYAWAN",
+    "nik": "25960212",
+    "perbaikan": "temporer rekan b2b distribusi putus tiang ambruk l...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52213993",
+    "nomor_inet": "141567101144",
+    "sektor": "KAR",
+    "teknisi": "AGUS SETYAWAN",
+    "nik": "25960212",
+    "perbaikan": "refisi ikr telpon...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52242397",
+    "nomor_inet": "141505309480",
+    "sektor": "KRT1",
+    "teknisi": "ANDI IRAWAN",
+    "nik": "16921147",
+    "perbaikan": "imbas tebang tebang pohon...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52249535",
+    "nomor_inet": "141505123370",
+    "sektor": "KRT1",
+    "teknisi": "ANDI IRAWAN",
+    "nik": "16921147",
+    "perbaikan": "ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52253192",
+    "nomor_inet": "0271711700",
+    "sektor": "KRT1",
+    "teknisi": "ANDI IRAWAN",
+    "nik": "16921147",
+    "perbaikan": "setul ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52254000",
+    "nomor_inet": "0271726025",
+    "sektor": "KRT1",
+    "teknisi": "ANDI IRAWAN",
+    "nik": "16921147",
+    "perbaikan": "adaptor...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52227403",
+    "nomor_inet": "141505306873",
+    "sektor": "KRT3",
+    "teknisi": "JOKO SUSILO",
+    "nik": "15896990",
+    "perbaikan": "sambung dc smuve 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234220",
+    "nomor_inet": "141505306873",
+    "sektor": "KRT3",
+    "teknisi": "JOKO SUSILO",
+    "nik": "15896990",
+    "perbaikan": "sambul dc smuve 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52231212",
+    "nomor_inet": "141528101170",
+    "sektor": "KRT3",
+    "teknisi": "JOKO SUSILO",
+    "nik": "15896990",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52244207revisi",
+    "nomor_inet": "",
+    "sektor": "KRT3",
+    "teknisi": "JOKO SUSILO",
+    "nik": "15896990",
+    "perbaikan": "ikr smubeb1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52251564",
+    "nomor_inet": "141505216860",
+    "sektor": "KRT3",
+    "teknisi": "JOKO SUSILO",
+    "nik": "15896990",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "141504129129",
+    "nomor_inet": "",
+    "sektor": "GLD2",
+    "teknisi": "DEWA SIHMAWAN",
+    "nik": "0",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "141504112603",
+    "nomor_inet": "",
+    "sektor": "GLD2",
+    "teknisi": "YUSUF HAMDANI",
+    "nik": "20941003",
+    "perbaikan": "revisi odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "142565107002",
+    "nomor_inet": "",
+    "sektor": "SRG",
+    "teknisi": "SUPARNO",
+    "nik": "15890944",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52233475",
+    "nomor_inet": "142565104029",
+    "sektor": "SRG",
+    "teknisi": "HARJANTO",
+    "nik": "15890945",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52215381",
+    "nomor_inet": "143565111463",
+    "sektor": "SRG",
+    "teknisi": "HARJANTO",
+    "nik": "15890945",
+    "perbaikan": "sambung dc Smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51699317",
+    "nomor_inet": "",
+    "sektor": "SRG",
+    "teknisi": "HARJANTO",
+    "nik": "15890945",
+    "perbaikan": "sambung ulang dc Smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "0271697011",
+    "nomor_inet": "",
+    "sektor": "KAR",
+    "teknisi": "AGUS PRIHANTO",
+    "nik": "15890949",
+    "perbaikan": "repair konektor pespon...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52219814",
+    "nomor_inet": "142522107381",
+    "sektor": "KAR",
+    "teknisi": "AGUS PRIHANTO",
+    "nik": "15890949",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "142522100934",
+    "nomor_inet": "",
+    "sektor": "KAR",
+    "teknisi": "AGUS PRIHANTO",
+    "nik": "15890949",
+    "perbaikan": "sambung dc smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52240823",
+    "nomor_inet": "141504100488",
+    "sektor": "GLD1",
+    "teknisi": "FAJAR SIDIQ UTAMA",
+    "nik": "20971058",
+    "perbaikan": "reset dan setting ulang...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237298",
+    "nomor_inet": "141504108190",
+    "sektor": "GLD1",
+    "teknisi": "FAJAR SIDIQ UTAMA",
+    "nik": "20971058",
+    "perbaikan": "ganti power adaptor...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51705236",
+    "nomor_inet": "",
+    "sektor": "GLD1",
+    "teknisi": "FAJAR SIDIQ UTAMA",
+    "nik": "20971058",
+    "perbaikan": "repair odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52240245",
+    "nomor_inet": "141504117821",
+    "sektor": "GLD1",
+    "teknisi": "FAJAR SIDIQ UTAMA",
+    "nik": "20971058",
+    "perbaikan": "repair kabel telpon...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52245150",
+    "nomor_inet": "142526104191",
+    "sektor": "SOP",
+    "teknisi": "TRI AGUS MULYONO",
+    "nik": "15890940",
+    "perbaikan": "142526104191 tambahan akses point paralel plgn ber...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC48282095",
+    "nomor_inet": "",
+    "sektor": "SOP",
+    "teknisi": "TRI AGUS MULYONO",
+    "nik": "15890940",
+    "perbaikan": "142526104277 sambung ulang smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC49790433",
+    "nomor_inet": "",
+    "sektor": "SOP",
+    "teknisi": "TRI AGUS MULYONO",
+    "nik": "15890940",
+    "perbaikan": "142526105182 ganti pightail...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52226592",
+    "nomor_inet": "146504607148",
+    "sektor": "GLD1",
+    "teknisi": "ENDAR SARJIANTO",
+    "nik": "20940759",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52255463",
+    "nomor_inet": "141504100893",
+    "sektor": "GLD1",
+    "teknisi": "ENDAR SARJIANTO",
+    "nik": "20940759",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52241177",
+    "nomor_inet": "0271633919",
+    "sektor": "GLD2",
+    "teknisi": "FEBRIYANTO",
+    "nik": "19930325",
+    "perbaikan": "sambung dc dan ganti adaptor ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52243571",
+    "nomor_inet": "0271651925",
+    "sektor": "GLD2",
+    "teknisi": "FEBRIYANTO",
+    "nik": "19930325",
+    "perbaikan": "revisi ikr sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52245470",
+    "nomor_inet": "141505308142",
+    "sektor": "KRT2",
+    "teknisi": "WAHYU AGUNG",
+    "nik": "15890969",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51705100",
+    "nomor_inet": "",
+    "sektor": "KRT2",
+    "teknisi": "WAHYU AGUNG",
+    "nik": "15890969",
+    "perbaikan": "ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52255246",
+    "nomor_inet": "141505303189",
+    "sektor": "KRT2",
+    "teknisi": "WAHYU AGUNG",
+    "nik": "15890969",
+    "perbaikan": "ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52248317",
+    "nomor_inet": "141505309455",
+    "sektor": "KRT3",
+    "teknisi": "M. AGUS EKO BASHORI",
+    "nik": "15890977",
+    "perbaikan": "ganti pasword wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52243509",
+    "nomor_inet": "141505310994",
+    "sektor": "KRT3",
+    "teknisi": "M. AGUS EKO BASHORI",
+    "nik": "15890977",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52244320",
+    "nomor_inet": "141505593049",
+    "sektor": "KRT4",
+    "teknisi": "ALEX MURYADI",
+    "nik": "16930266",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52244925",
+    "nomor_inet": "141505598433",
+    "sektor": "KRT4",
+    "teknisi": "ALEX MURYADI",
+    "nik": "16930266",
+    "perbaikan": "reconek odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52245113",
+    "nomor_inet": "141567105421",
+    "sektor": "KRT4",
+    "teknisi": "ALEX MURYADI",
+    "nik": "16930266",
+    "perbaikan": "reconek odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52254432",
+    "nomor_inet": "141505596077",
+    "sektor": "KRT4",
+    "teknisi": "ALEX MURYADI",
+    "nik": "16930266",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52246372",
+    "nomor_inet": "141505305400",
+    "sektor": "KRT4",
+    "teknisi": "ALEX MURYADI",
+    "nik": "16930266",
+    "perbaikan": "setting ulang wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52247082",
+    "nomor_inet": "141505306320",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "ganti ont dualband...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52245342",
+    "nomor_inet": "141505116727",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "sambung in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52240349",
+    "nomor_inet": "142505110513",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52239094",
+    "nomor_inet": "141505120969",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52241706",
+    "nomor_inet": "141505600750",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52237029",
+    "nomor_inet": "141505215908",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "sambung in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52240425",
+    "nomor_inet": "141505102436",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52245857",
+    "nomor_inet": "141505116950",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "sambung in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52247076",
+    "nomor_inet": "142505110713",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52241779",
+    "nomor_inet": "141505120792",
+    "sektor": "KRT1",
+    "teknisi": "ANSOR PRAYITNO",
+    "nik": "16000474",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51705826",
+    "nomor_inet": "",
+    "sektor": "KRT2",
+    "teknisi": "TRI JOKO SUSATYO",
+    "nik": "15890968",
+    "perbaikan": "rekonek odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52246434",
+    "nomor_inet": "141505600494",
+    "sektor": "KRT2",
+    "teknisi": "TRI JOKO SUSATYO",
+    "nik": "15890968",
+    "perbaikan": "call cp layanan sudah normal kembali...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52230233",
+    "nomor_inet": "142505102306",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52226290",
+    "nomor_inet": "141505307193",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52226288",
+    "nomor_inet": "141505595824",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52100334",
+    "nomor_inet": "",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52243822",
+    "nomor_inet": "141505599979",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "1-SGQXZPS",
+    "nomor_inet": "",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "1-SGQL3F4",
+    "nomor_inet": "",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52226155",
+    "nomor_inet": "141505306287",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52226152",
+    "nomor_inet": "141505599979",
+    "sektor": "KRT4",
+    "teknisi": "TRI HARTONO",
+    "nik": "15890976",
+    "perbaikan": "sambng in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52242953",
+    "nomor_inet": "141505216411",
+    "sektor": "KRT4",
+    "teknisi": "AGUNG SUPRIANTO",
+    "nik": "15890964",
+    "perbaikan": "Sambung ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52249971",
+    "nomor_inet": "02717685888",
+    "sektor": "KRT4",
+    "teknisi": "AGUNG SUPRIANTO",
+    "nik": "15890964",
+    "perbaikan": "ganti ont indikator lampu telepon matot...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237885",
+    "nomor_inet": "142505403959",
+    "sektor": "KRT4",
+    "teknisi": "AGUNG SUPRIANTO",
+    "nik": "15890964",
+    "perbaikan": "Risetul ont seting ap Rev kabel LAN...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52249519",
+    "nomor_inet": "141505307855",
+    "sektor": "KRT4",
+    "teknisi": "AGUNG SUPRIANTO",
+    "nik": "15890964",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52250115",
+    "nomor_inet": "141505101088",
+    "sektor": "KRT4",
+    "teknisi": "JOKO PRANOWO",
+    "nik": "15890961",
+    "perbaikan": "ganti power adaptor...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52251729",
+    "nomor_inet": "142505401749",
+    "sektor": "KRT4",
+    "teknisi": "JOKO PRANOWO",
+    "nik": "15890961",
+    "perbaikan": "sambung brancing...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234725",
+    "nomor_inet": "141505117060",
+    "sektor": "KRT4",
+    "teknisi": "JOKO PRANOWO",
+    "nik": "15890961",
+    "perbaikan": "sambung in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52223498",
+    "nomor_inet": "141505107377",
+    "sektor": "KRT4",
+    "teknisi": "JOKO PRANOWO",
+    "nik": "15890961",
+    "perbaikan": "risetul ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52242007",
+    "nomor_inet": "142505105058",
+    "sektor": "KRT4",
+    "teknisi": "JOKO PRANOWO",
+    "nik": "15890961",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52245421",
+    "nomor_inet": "141505306030",
+    "sektor": "KRT4",
+    "teknisi": "JOKO PRANOWO",
+    "nik": "15890961",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52249520",
+    "nomor_inet": "142528401705",
+    "sektor": "KRT4",
+    "teknisi": "NANANG PRAKOSO",
+    "nik": "15890960",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52231074",
+    "nomor_inet": "141505304359",
+    "sektor": "KRT4",
+    "teknisi": "NANANG PRAKOSO",
+    "nik": "15890960",
+    "perbaikan": "sambung dc smv1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52249603",
+    "nomor_inet": "141505214805",
+    "sektor": "KRT4",
+    "teknisi": "NANANG PRAKOSO",
+    "nik": "15890960",
+    "perbaikan": "adaptor odc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228347",
+    "nomor_inet": "141505304723",
+    "sektor": "KRT4",
+    "teknisi": "NANANG PRAKOSO",
+    "nik": "15890960",
+    "perbaikan": "sambung dc smv1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52249987",
+    "nomor_inet": "142505402946",
+    "sektor": "KRT1",
+    "teknisi": "MARIYANTO",
+    "nik": "15890966",
+    "perbaikan": "smbung dc smove2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52259599",
+    "nomor_inet": "141505218985",
+    "sektor": "KRT1",
+    "teknisi": "MARIYANTO",
+    "nik": "15890966",
+    "perbaikan": "pindah perangkat ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52259426",
+    "nomor_inet": "141566105143",
+    "sektor": "KRT1",
+    "teknisi": "MARIYANTO",
+    "nik": "15890966",
+    "perbaikan": "setul wifi+pindah perangkat ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234148",
+    "nomor_inet": "141505303871",
+    "sektor": "KRT1",
+    "teknisi": "MARIYANTO",
+    "nik": "15890966",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52245083",
+    "nomor_inet": "141505596900",
+    "sektor": "KRT4",
+    "teknisi": "SRI MULADI",
+    "nik": "15890957",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52254235",
+    "nomor_inet": "141505601826",
+    "sektor": "KRT4",
+    "teknisi": "SRI MULADI",
+    "nik": "15890957",
+    "perbaikan": "sambul dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52254430",
+    "nomor_inet": "142505401840",
+    "sektor": "KRT4",
+    "teknisi": "SRI MULADI",
+    "nik": "15890957",
+    "perbaikan": "rev ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52234639",
+    "nomor_inet": "141505312804",
+    "sektor": "KRT4",
+    "teknisi": "SRI MULADI",
+    "nik": "15890957",
+    "perbaikan": "ganti adaptor in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52244909",
+    "nomor_inet": "141505600351",
+    "sektor": "KRT4",
+    "teknisi": "SRI MULADI",
+    "nik": "15890957",
+    "perbaikan": "reconnect odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52245090",
+    "nomor_inet": "141505214395",
+    "sektor": "KRT4",
+    "teknisi": "SRI MULADI",
+    "nik": "15890957",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52247274",
+    "nomor_inet": "143565112901",
+    "sektor": "SRG",
+    "teknisi": "KASDI",
+    "nik": "15890953",
+    "perbaikan": "sambung DC smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52235589",
+    "nomor_inet": "143565103743",
+    "sektor": "SRG",
+    "teknisi": "KASDI",
+    "nik": "15890953",
+    "perbaikan": "ganti pasive spliter 1:8 ,1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234172",
+    "nomor_inet": "143565103013",
+    "sektor": "SRG",
+    "teknisi": "KASDI",
+    "nik": "15890953",
+    "perbaikan": "sambung DC smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "143555104008",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "UDI TYAS ARINTA",
+    "nik": "16880469",
+    "perbaikan": "laporan langsung sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228595",
+    "nomor_inet": "141555102350",
+    "sektor": "SKH",
+    "teknisi": "UDI TYAS ARINTA",
+    "nik": "16880469",
+    "perbaikan": "ganti adaptor power ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "143555104257",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "UDI TYAS ARINTA",
+    "nik": "16880469",
+    "perbaikan": "laporan langsung sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC49554911",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52260193",
+    "nomor_inet": "143555103561",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "config ulang ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "141555102684",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "ganti power adaptor ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228348",
+    "nomor_inet": "146555109771",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "revisi ikr & settul ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "141555107437",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "ganti power adaptor ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "141555104162",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228855",
+    "nomor_inet": "141555103366",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "settul ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "143555103555",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "MUHAMMAD FAUZAN ZAKY",
+    "nik": "16030762",
+    "perbaikan": "settul ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52248903",
+    "nomor_inet": "142554104015",
+    "sektor": "WNG",
+    "teknisi": "EDI SUSANTO",
+    "nik": "15890989",
+    "perbaikan": "smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51699142",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "EDI SUSANTO",
+    "nik": "15890989",
+    "perbaikan": "sambung dc smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52245958",
+    "nomor_inet": "142554102580",
+    "sektor": "WNG",
+    "teknisi": "EDI SUSANTO",
+    "nik": "15890989",
+    "perbaikan": "ganti stb...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51699123",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "TRI BUDI HARIYANTORO",
+    "nik": "15894018",
+    "perbaikan": "sambul dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52241367",
+    "nomor_inet": "141554103005",
+    "sektor": "WNG",
+    "teknisi": "TRI BUDI HARIYANTORO",
+    "nik": "15894018",
+    "perbaikan": "ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52247041",
+    "nomor_inet": "142554403652",
+    "sektor": "WNG",
+    "teknisi": "TRI BUDI HARIYANTORO",
+    "nik": "15894018",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52251666",
+    "nomor_inet": "142554400917",
+    "sektor": "WNG",
+    "teknisi": "TRI BUDI HARIYANTORO",
+    "nik": "15894018",
+    "perbaikan": "ganti stb ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52253772",
+    "nomor_inet": "141554102502",
+    "sektor": "WNG",
+    "teknisi": "TRI BUDI HARIYANTORO",
+    "nik": "15894018",
+    "perbaikan": "sambul dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52252117",
+    "nomor_inet": "142554104479",
+    "sektor": "WNG",
+    "teknisi": "YUDI KRISTANTO",
+    "nik": "15890981",
+    "perbaikan": "sambul dc sisa smv3 adptr1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52246215",
+    "nomor_inet": "143554101663",
+    "sektor": "WNG",
+    "teknisi": "YUDI KRISTANTO",
+    "nik": "15890981",
+    "perbaikan": "sambul dc sisa smv2 ikr pindah router ke dekat tv...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51699133",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "YUDI KRISTANTO",
+    "nik": "15890981",
+    "perbaikan": "reconect adpter...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC46156950",
+    "nomor_inet": "141554100612",
+    "sektor": "WNG",
+    "teknisi": "YUDI KRISTANTO",
+    "nik": "15890981",
+    "perbaikan": "sambul dc sisa smv2 ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238476",
+    "nomor_inet": "141554103067",
+    "sektor": "WNG",
+    "teknisi": "YUDI KRISTANTO",
+    "nik": "15890981",
+    "perbaikan": "sambul dc smv2 ikr kabel renovasi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52211920",
+    "nomor_inet": "142554102877",
+    "sektor": "WNG",
+    "teknisi": "ARIES WIJAYANTO",
+    "nik": "15890963",
+    "perbaikan": "sambul...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52240544",
+    "nomor_inet": "142554105884",
+    "sektor": "WNG",
+    "teknisi": "ARIES WIJAYANTO",
+    "nik": "15890963",
+    "perbaikan": "ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "142554104823",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "ARIES WIJAYANTO",
+    "nik": "15890963",
+    "perbaikan": "sambul...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52247132",
+    "nomor_inet": "142554100370",
+    "sektor": "WNG",
+    "teknisi": "ARIES WIJAYANTO",
+    "nik": "15890963",
+    "perbaikan": "ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52188414",
+    "nomor_inet": "141550106819",
+    "sektor": "KLX",
+    "teknisi": "TARI NGATIMIN",
+    "nik": "15884852",
+    "perbaikan": "config ulang ont  pasca berhenti berlangganan...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52218528",
+    "nomor_inet": "141550105232",
+    "sektor": "KLX",
+    "teknisi": "TARI NGATIMIN",
+    "nik": "15884852",
+    "perbaikan": "sambung dc smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52233644",
+    "nomor_inet": "141550110279",
+    "sektor": "KLX",
+    "teknisi": "TARI NGATIMIN",
+    "nik": "15884852",
+    "perbaikan": "sambung dc smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52240119",
+    "nomor_inet": "142523108340",
+    "sektor": "WNG",
+    "teknisi": "DARYADI",
+    "nik": "15890996",
+    "perbaikan": "smv 1 co odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "142523109666",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "DARYADI",
+    "nik": "15890996",
+    "perbaikan": "smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "INC51254163",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "DARYADI",
+    "nik": "15890996",
+    "perbaikan": "smv 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52253973",
+    "nomor_inet": "146523603098",
+    "sektor": "WNG",
+    "teknisi": "DARYADI",
+    "nik": "15890996",
+    "perbaikan": "smv 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52249072",
+    "nomor_inet": "146554109492",
+    "sektor": "WNG",
+    "teknisi": "RACHMAD PRIAMBODO",
+    "nik": "16932234",
+    "perbaikan": "ganti ont ZTEGDE8ED860...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52256919",
+    "nomor_inet": "141554100869",
+    "sektor": "WNG",
+    "teknisi": "RACHMAD PRIAMBODO",
+    "nik": "16932234",
+    "perbaikan": "sambung dc smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52252349",
+    "nomor_inet": "146554109632",
+    "sektor": "WNG",
+    "teknisi": "RACHMAD PRIAMBODO",
+    "nik": "16932234",
+    "perbaikan": "sambung dc smv 2 dan ganti ont FHTTC05AFEDE...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52193881",
+    "nomor_inet": "",
+    "sektor": "DLG",
+    "teknisi": "AGUS TRIYANTO",
+    "nik": "0",
+    "perbaikan": "sambung dc 2 titik...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237641",
+    "nomor_inet": "143592105248",
+    "sektor": "DLG",
+    "teknisi": "AGUS TRIYANTO",
+    "nik": "0",
+    "perbaikan": "config ulang +AP plgn bermasalah...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238385",
+    "nomor_inet": "143592102786",
+    "sektor": "DLG",
+    "teknisi": "AGUS TRIYANTO",
+    "nik": "0",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "146517100664",
+    "nomor_inet": "",
+    "sektor": "WNG",
+    "teknisi": "NESA ALBINAWAN",
+    "nik": "16230003",
+    "perbaikan": "ganti dc bekas 50m, smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "141553112964",
+    "nomor_inet": "",
+    "sektor": "BYL",
+    "teknisi": "Bayu Yudhantara",
+    "nik": "16994978",
+    "perbaikan": "creatul ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52244548",
+    "nomor_inet": "",
+    "sektor": "BYL",
+    "teknisi": "Bayu Yudhantara",
+    "nik": "16994978",
+    "perbaikan": "sambung dc imbas rambas rambas...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52222474",
+    "nomor_inet": "141553115606",
+    "sektor": "BYL",
+    "teknisi": "Bayu Yudhantara",
+    "nik": "16994978",
+    "perbaikan": "ganti stb baru...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52230530",
+    "nomor_inet": "141527110748",
+    "sektor": "SLO",
+    "teknisi": "BAYU ANDITYA",
+    "nik": "16012663",
+    "perbaikan": "Sambung ulang Dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234265",
+    "nomor_inet": "146527602655",
+    "sektor": "SLO",
+    "teknisi": "BAYU ANDITYA",
+    "nik": "16012663",
+    "perbaikan": "Sambung ulang Dc Ganti soc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237534",
+    "nomor_inet": "141527107297",
+    "sektor": "SLO",
+    "teknisi": "BAYU ANDITYA",
+    "nik": "16012663",
+    "perbaikan": "Setting ulang ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "146527604413",
+    "nomor_inet": "",
+    "sektor": "SLO",
+    "teknisi": "BAYU ANDITYA",
+    "nik": "16012663",
+    "perbaikan": "Sambung ulang Dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52223508",
+    "nomor_inet": "146527604992",
+    "sektor": "SLO",
+    "teknisi": "BAYU ANDITYA",
+    "nik": "16012663",
+    "perbaikan": "sambung ulang dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52227034",
+    "nomor_inet": "141528112085",
+    "sektor": "KTO",
+    "teknisi": "Eldi Febri Al Mustofa",
+    "nik": "16982938",
+    "perbaikan": "sambung ulang dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "2089370506",
+    "nomor_inet": "",
+    "sektor": "KTO",
+    "teknisi": "Eldi Febri Al Mustofa",
+    "nik": "16982938",
+    "perbaikan": "ganti pethcore...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234124",
+    "nomor_inet": "146528603052",
+    "sektor": "KTO",
+    "teknisi": "Eldi Febri Al Mustofa",
+    "nik": "16982938",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52239702",
+    "nomor_inet": "141550106824",
+    "sektor": "KLX",
+    "teknisi": "SUPRIYADI",
+    "nik": "",
+    "perbaikan": "omset odp terdekat smove 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52215779",
+    "nomor_inet": "146550118694",
+    "sektor": "KLX",
+    "teknisi": "SUPRIYADI",
+    "nik": "",
+    "perbaikan": "ganti adaptor power ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52217550",
+    "nomor_inet": "146550114355",
+    "sektor": "KLX",
+    "teknisi": "SUPRIYADI",
+    "nik": "",
+    "perbaikan": "sambung dc smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52220996",
+    "nomor_inet": "146550114747",
+    "sektor": "KLX",
+    "teknisi": "SUPRIYADI",
+    "nik": "",
+    "perbaikan": "sambung dc smove 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236589",
+    "nomor_inet": "141553106326",
+    "sektor": "BYL",
+    "teknisi": "Bagus",
+    "nik": "",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52240609",
+    "nomor_inet": "141553103061",
+    "sektor": "BYL",
+    "teknisi": "Bagus",
+    "nik": "",
+    "perbaikan": "smbng dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52220385",
+    "nomor_inet": "141504110250",
+    "sektor": "GLD2",
+    "teknisi": "Budiarta",
+    "nik": "",
+    "perbaikan": "reset dan setting ulang wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236253",
+    "nomor_inet": "142555106681",
+    "sektor": "SKH",
+    "teknisi": "MUHAMAT MUCLI GOZALI",
+    "nik": "15890980",
+    "perbaikan": "ont ZTEGDE8F587D...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52239202",
+    "nomor_inet": "0271652357",
+    "sektor": "GLD2",
+    "teknisi": "LUQMAN HAKIM PRAKASITA",
+    "nik": "20971078",
+    "perbaikan": "tarik ulang dc sebagian 75m...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52246607",
+    "nomor_inet": "146504604705",
+    "sektor": "GLD1",
+    "teknisi": "HASNAN ABID",
+    "nik": "20960922",
+    "perbaikan": "config ulang...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52240230",
+    "nomor_inet": "142505401146",
+    "sektor": "KRT3",
+    "teknisi": "TEGUH PRASETIAWAN",
+    "nik": "25950215",
+    "perbaikan": "rev ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52243508",
+    "nomor_inet": "142505104897",
+    "sektor": "KRT3",
+    "teknisi": "TEGUH PRASETIAWAN",
+    "nik": "25950215",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52240481",
+    "nomor_inet": "146527604908",
+    "sektor": "SLO",
+    "teknisi": "MARTINUS REMI HENDRIANTO",
+    "nik": "26010015",
+    "perbaikan": "repair odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "0271624780",
+    "nomor_inet": "",
+    "sektor": "SLO",
+    "teknisi": "MARTINUS REMI HENDRIANTO",
+    "nik": "26010015",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238364",
+    "nomor_inet": "146527602759",
+    "sektor": "SLO",
+    "teknisi": "MARTINUS REMI HENDRIANTO",
+    "nik": "26010015",
+    "perbaikan": "ganti ont premium...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "UNDERSPEC",
+    "tiket": "143565103743",
+    "nomor_inet": "",
+    "sektor": "SRG",
+    "teknisi": "Nesa",
+    "nik": "16230003",
+    "perbaikan": "reconect port odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52232603",
+    "nomor_inet": "143565103013",
+    "sektor": "SRG",
+    "teknisi": "Nesa",
+    "nik": "16230003",
+    "perbaikan": "revisi ikr,smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238695",
+    "nomor_inet": "146552109194",
+    "sektor": "CEP",
+    "teknisi": "SUMIRAN",
+    "nik": "15884907",
+    "perbaikan": "setul PC dan wifi...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52243342",
+    "nomor_inet": "143552100647",
+    "sektor": "CEP",
+    "teknisi": "SUMIRAN",
+    "nik": "15884907",
+    "perbaikan": "sambul dc smuff 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52234081",
+    "nomor_inet": "142552103077",
+    "sektor": "CEP",
+    "teknisi": "SUMIRAN",
+    "nik": "15884907",
+    "perbaikan": "sambung dc 30M, smuff 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236638",
+    "nomor_inet": "142552102638",
+    "sektor": "CEP",
+    "teknisi": "AANG AGUSTINA",
+    "nik": "15884868",
+    "perbaikan": "pindah jalur dc imbas layangan + revisi sambungan ...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52218451",
+    "nomor_inet": "142552100197",
+    "sektor": "CEP",
+    "teknisi": "AANG AGUSTINA",
+    "nik": "15884868",
+    "perbaikan": "sambung dc smuf 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52246213",
+    "nomor_inet": "141569105899",
+    "sektor": "BLO",
+    "teknisi": "DIKI PRAYOGO",
+    "nik": "16992902",
+    "perbaikan": "ganti dc 10,m smuff 3...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237025",
+    "nomor_inet": "141569113248",
+    "sektor": "BLO",
+    "teknisi": "DIKI PRAYOGO",
+    "nik": "16992902",
+    "perbaikan": "sambung dc smuff 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52223537",
+    "nomor_inet": "141569105440",
+    "sektor": "BLO",
+    "teknisi": "DIKI PRAYOGO",
+    "nik": "16992902",
+    "perbaikan": "restard ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238409",
+    "nomor_inet": "141569109959",
+    "sektor": "BLO",
+    "teknisi": "DIKI PRAYOGO",
+    "nik": "16992902",
+    "perbaikan": "sambung dc smuff 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52245451",
+    "nomor_inet": "141569112505",
+    "sektor": "BLO",
+    "teknisi": "DIKI PRAYOGO",
+    "nik": "16992902",
+    "perbaikan": "ganti dc 20,m smuff 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52247935",
+    "nomor_inet": "141569108459",
+    "sektor": "BLO",
+    "teknisi": "DIKI PRAYOGO",
+    "nik": "16992902",
+    "perbaikan": "pindah ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238811",
+    "nomor_inet": "142519100774",
+    "sektor": "BLO",
+    "teknisi": "YOYOK KUSNANDAR",
+    "nik": "16890022",
+    "perbaikan": "Ganti ONT...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52233431",
+    "nomor_inet": "142519103814",
+    "sektor": "BLO",
+    "teknisi": "YOYOK KUSNANDAR",
+    "nik": "16890022",
+    "perbaikan": "Sambung DC, Smoove : 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238306",
+    "nomor_inet": "146569100360",
+    "sektor": "BLO",
+    "teknisi": "SANDHYKA FANNY NUGROHO",
+    "nik": "16010782",
+    "perbaikan": "sambung dc smuf 5...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52218120",
+    "nomor_inet": "141569104223",
+    "sektor": "BLO",
+    "teknisi": "SANDHYKA FANNY NUGROHO",
+    "nik": "16010782",
+    "perbaikan": "restrats ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52254321",
+    "nomor_inet": "",
+    "sektor": "B2B KERTEN",
+    "teknisi": "SIGIT WIDIARTO",
+    "nik": "19880027",
+    "perbaikan": "sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52221730",
+    "nomor_inet": "141568106589",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "ganti ONT/ yuda...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52235752",
+    "nomor_inet": "142568101216",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ agung...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238156",
+    "nomor_inet": "141568105391",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "reset ONT/ yuda...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC50605920",
+    "nomor_inet": "",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "revisi sambungan dc/ bagas...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52223890",
+    "nomor_inet": "141568110412",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ yuda...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51477285",
+    "nomor_inet": "",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "revisi sambungan/ roni...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52137880",
+    "nomor_inet": "142509107091",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ tegar...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51698699",
+    "nomor_inet": "",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ agung...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51698298",
+    "nomor_inet": "",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "revisi sambungan dc/ bagas...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236102",
+    "nomor_inet": "146509109418",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ tegar...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52245149",
+    "nomor_inet": "141568103546",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "ganti ONT/ yuda...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52129731",
+    "nomor_inet": "",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ roni...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52244220",
+    "nomor_inet": "142516104439",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "sambung DC/ kurnia...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC48403061",
+    "nomor_inet": "",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "revisi sambungan dc/ bagas...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52222447",
+    "nomor_inet": "142509104343",
+    "sektor": "PWB",
+    "teknisi": "HERI PURWADI",
+    "nik": "16922287",
+    "perbaikan": "ganti ONT/ tegar...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52250623",
+    "nomor_inet": "142515101187",
+    "sektor": "PWB",
+    "teknisi": "AGUS RATRI PURNOMO",
+    "nik": "15881276",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52227713",
+    "nomor_inet": "146504604010",
+    "sektor": "MSO",
+    "teknisi": "PRABUANA TRIATMAJA PUTRA",
+    "nik": "16023310",
+    "perbaikan": "146504604010 smv1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52228131",
+    "nomor_inet": "146566602964",
+    "sektor": "MSO",
+    "teknisi": "PRABUANA TRIATMAJA PUTRA",
+    "nik": "16023310",
+    "perbaikan": "146566602964 sambul DC smv2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52217542",
+    "nomor_inet": "141566104154",
+    "sektor": "MSO",
+    "teknisi": "PRABUANA TRIATMAJA PUTRA",
+    "nik": "16023310",
+    "perbaikan": "141566104154 sambul DC smv1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52237359",
+    "nomor_inet": "146566600044",
+    "sektor": "MSO",
+    "teknisi": "PRABUANA TRIATMAJA PUTRA",
+    "nik": "16023310",
+    "perbaikan": "146566600044 Gantipower ADP...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52236117",
+    "nomor_inet": "146566109715",
+    "sektor": "MSO",
+    "teknisi": "PRABUANA TRIATMAJA PUTRA",
+    "nik": "16023310",
+    "perbaikan": "146566109715 ganti ONT...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52247853",
+    "nomor_inet": "141566103151",
+    "sektor": "MSO",
+    "teknisi": "PRABUANA TRIATMAJA PUTRA",
+    "nik": "16023310",
+    "perbaikan": "141566103151 create ulang...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52241083",
+    "nomor_inet": "146504604010",
+    "sektor": "MSO",
+    "teknisi": "HAFIDZ FARIYANTO",
+    "nik": "16974717",
+    "perbaikan": "146504604010 smv 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC52235068",
+    "nomor_inet": "",
+    "sektor": "MSO",
+    "teknisi": "HAFIDZ FARIYANTO",
+    "nik": "16974717",
+    "perbaikan": "143566101306 sambul dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52219646",
+    "nomor_inet": "141566105631",
+    "sektor": "MSO",
+    "teknisi": "HAFIDZ FARIYANTO",
+    "nik": "16974717",
+    "perbaikan": "141566105631 smv 1...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52239107",
+    "nomor_inet": "142518100897",
+    "sektor": "SOP",
+    "teknisi": "YUNIES R",
+    "nik": "16023309",
+    "perbaikan": "142518100897 ganti adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52224967",
+    "nomor_inet": "142518102837",
+    "sektor": "SOP",
+    "teknisi": "YUNIES R",
+    "nik": "16023309",
+    "perbaikan": "142518102837 sambung dc smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52211620",
+    "nomor_inet": "142518103316",
+    "sektor": "SOP",
+    "teknisi": "YUNIES R",
+    "nik": "16023309",
+    "perbaikan": "142518103316 co odp ke bkg-fa/101...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52239010",
+    "nomor_inet": "146518609664",
+    "sektor": "SOP",
+    "teknisi": "YUNIES R",
+    "nik": "16023309",
+    "perbaikan": "146518609664 sambung ujung...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52239236",
+    "nomor_inet": "142518101054",
+    "sektor": "SOP",
+    "teknisi": "YUNIES R",
+    "nik": "16023309",
+    "perbaikan": "142518101054 ganti adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52240226",
+    "nomor_inet": "142518102391",
+    "sektor": "SOP",
+    "teknisi": "YUNIES R",
+    "nik": "16023309",
+    "perbaikan": "142518102391 sambung dc smv 2...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52248643",
+    "nomor_inet": "143555103713",
+    "sektor": "SKH",
+    "teknisi": "ARIF YUNANTO",
+    "nik": "199110077",
+    "perbaikan": "sambung in odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC51109104",
+    "nomor_inet": "142517100792",
+    "sektor": "WNG",
+    "teknisi": "BAYU NURCAHYO",
+    "nik": "26990051",
+    "perbaikan": ",ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52249362",
+    "nomor_inet": "142554400221",
+    "sektor": "WNG",
+    "teknisi": "BAYU NURCAHYO",
+    "nik": "26990051",
+    "perbaikan": ",ganti stb karna rusak...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "143555104304",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "WISNHU PRAHASTA YULIASTAMA",
+    "nik": "26990069",
+    "perbaikan": "laporan langsung sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "142555107785",
+    "nomor_inet": "",
+    "sektor": "SKH",
+    "teknisi": "WISNHU PRAHASTA YULIASTAMA",
+    "nik": "26990069",
+    "perbaikan": "laporan langsung sambung dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52252091",
+    "nomor_inet": "142505402596",
+    "sektor": "KRT2",
+    "teknisi": "KORI SETIAWAN",
+    "nik": "25020292",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52252808",
+    "nomor_inet": "141505303846",
+    "sektor": "KRT2",
+    "teknisi": "KORI SETIAWAN",
+    "nik": "25020292",
+    "perbaikan": "ganti ont hidup power ZTEGDE8FAB82...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "adaptor",
+    "nomor_inet": "",
+    "sektor": "KRT2",
+    "teknisi": "KORI SETIAWAN",
+    "nik": "25020292",
+    "perbaikan": "...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52252188",
+    "nomor_inet": "141505108465",
+    "sektor": "KRT2",
+    "teknisi": "KORI SETIAWAN",
+    "nik": "25020292",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52252089",
+    "nomor_inet": "141505221260",
+    "sektor": "KRT2",
+    "teknisi": "KORI SETIAWAN",
+    "nik": "25020292",
+    "perbaikan": "adaptor odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52251390",
+    "nomor_inet": "141505104776",
+    "sektor": "KRT2",
+    "teknisi": "KORI SETIAWAN",
+    "nik": "25020292",
+    "perbaikan": "adaptor ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52241654",
+    "nomor_inet": "146505600187",
+    "sektor": "KRT2",
+    "teknisi": "AZZAR SEPTIAWAN SADONO",
+    "nik": "25920140",
+    "perbaikan": "risetul ont....",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52251736",
+    "nomor_inet": "141505121378",
+    "sektor": "KRT2",
+    "teknisi": "AZZAR SEPTIAWAN SADONO",
+    "nik": "25920140",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52247080",
+    "nomor_inet": "142505401750",
+    "sektor": "KRT1",
+    "teknisi": "RAHMAT SHOLEH",
+    "nik": "25790035",
+    "perbaikan": "Reconnect odp...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52236279",
+    "nomor_inet": "141505121506",
+    "sektor": "KRT1",
+    "teknisi": "RAHMAT SHOLEH",
+    "nik": "25790035",
+    "perbaikan": "sambung IN ODP...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "SQM",
+    "tiket": "INC52235856",
+    "nomor_inet": "142505110032",
+    "sektor": "KRT1",
+    "teknisi": "RAHMAT SHOLEH",
+    "nik": "25790035",
+    "perbaikan": "sambung IN ODP...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52254800",
+    "nomor_inet": "141505307387",
+    "sektor": "KRT1",
+    "teknisi": "RAHMAT SHOLEH",
+    "nik": "25790035",
+    "perbaikan": "ganti patchord/kejepit...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "INSERA",
+    "tiket": "INC51475895",
+    "nomor_inet": "",
+    "sektor": "GLD2",
+    "teknisi": "ADHAN ASHARI SURYA PUTRA",
+    "nik": "19950257",
+    "perbaikan": "sambung dc revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52219457",
+    "nomor_inet": "146504602883",
+    "sektor": "GLD2",
+    "teknisi": "ANTONIUS",
+    "nik": "18890009",
+    "perbaikan": "ganti ont...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52222931",
+    "nomor_inet": "141553117332",
+    "sektor": "BYL",
+    "teknisi": "AZIS MAULANA",
+    "nik": "16994830",
+    "perbaikan": "smbng dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52222701",
+    "nomor_inet": "141553118274",
+    "sektor": "BYL",
+    "teknisi": "AZIS MAULANA",
+    "nik": "16994830",
+    "perbaikan": "smbng dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52235117",
+    "nomor_inet": "141553111132",
+    "sektor": "BYL",
+    "teknisi": "AZIS MAULANA",
+    "nik": "16994830",
+    "perbaikan": "smbng dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52250999",
+    "nomor_inet": "141553109966",
+    "sektor": "BYL",
+    "teknisi": "AZIS MAULANA",
+    "nik": "16994830",
+    "perbaikan": "smbng dc tikus...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52238468",
+    "nomor_inet": "141553108250",
+    "sektor": "BYL",
+    "teknisi": "AZIS MAULANA",
+    "nik": "16994830",
+    "perbaikan": "smbng dc...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52241424",
+    "nomor_inet": "142528403456",
+    "sektor": "KTO",
+    "teknisi": "Baruna",
+    "nik": "16961604",
+    "perbaikan": "revisi ikr...",
+    "tgl": "19/08/2026"
+  },
+  {
+    "jenis": "REGULER",
+    "tiket": "INC52253045",
+    "nomor_inet": "141528112188",
+    "sektor": "KTO",
+    "teknisi": "Baruna",
+    "nik": "16961604",
+    "perbaikan": "revisi di odp ft @El_diwait...",
+    "tgl": "19/08/2026"
+  }
+]
