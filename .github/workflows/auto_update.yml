@@ -1,18 +1,18 @@
-name: Auto Update Data Nucleus Every Hour
+#name: Auto Update Data Nucleus Every Hour
 
 on:
-  schedule:
+  #schedule:
     - cron: '0 * * * *'
   workflow_dispatch:
 
-permissions:
+#permissions:
   contents: write
 
-jobs:
+#jobs:
   build-and-sync:
     runs-on: ubuntu-latest
 
-    steps:
+    #steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
