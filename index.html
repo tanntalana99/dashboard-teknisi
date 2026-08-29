@@ -1040,29 +1040,86 @@
             document.getElementById('btn-submit').disabled = false;
         }
 
-        // Fungsi Export Excel Publik (Dapat dipanggil baik saat Login maupun tidak)
-        function exportExcel() {
-            const aggregatedData = aggregateFilteredTickets();
-            const baseData = calculateBaseData(aggregatedData);
-            
-            const exportData = baseData.map(d => ({
-                "TEKNISI": d.teknisi,
-                "SEKTOR": d.sektor,
-                "SQM": d.sqm,
-                "REGULER": d.reguler,
-                "INSERA": d.insera,
-                "UNDERSPEC": d.underspec,
-                "Grand Total": d.grandTotal,
-                "TARGET 70%": d.target70,
-                "TARGET 100%": d.target100,
-                "%": d.pct.toFixed(2).replace('.', ',') + "%"
-            }));
+        // Fungsi Export Excel Publik (Sesuai Filter & Info Tanggal)
+function exportExcel() {
+    const startDate = document.getElementById('filter-date-start').value;
+    const endDate = document.getElementById('filter-date-end').value;
+    const selectedArea = document.getElementById('filter-area').value;
+    const selectedSektor = document.getElementById('filter-sektor').value;
+    const searchQuery = document.getElementById('search-input').value.trim();
 
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
-            XLSX.writeFile(wb, "Dashboard_Performa_Teknisi.xlsx");
+    // Cek apakah pengguna sedang menerapkan filter
+    const isFiltered = startDate || endDate || selectedArea !== 'ALL' || selectedSektor !== 'ALL' || searchQuery !== '';
+
+    // Peringatan jika belum memfilter data
+    if (!isFiltered) {
+        const confirmDownload = confirm("Anda belum memfilter data, apakah akan lanjut download semua data dalam 3 bulan terakhir?");
+        if (!confirmDownload) {
+            return; // Batalkan proses jika memilih 'Tidak' / Cancel
         }
+    }
+
+    // Mengambil data yang sudah terfilter sesuai kondisi tampilan tabel saat ini
+    const aggregatedData = aggregateFilteredTickets();
+    const baseData = calculateBaseData(aggregatedData);
+
+    let filtered = baseData.filter(item => {
+        const matchesSearch = item.teknisi.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSektor = (selectedSektor === 'ALL') || (item.sektor === selectedSektor);
+
+        let matchesArea = true;
+        if (selectedArea !== 'ALL') {
+            const allowedSectors = areaMapping[selectedArea] || [];
+            matchesArea = allowedSectors.includes(item.sektor);
+        }
+
+        return matchesSearch && matchesSektor && matchesArea;
+    });
+
+    if (filtered.length === 0) {
+        alert("Tidak ada data yang tersedia untuk diunduh sesuai filter saat ini.");
+        return;
+    }
+
+    // Menentukan teks Keterangan Periode Tanggal untuk kolom Excel
+    let periodeInfo = "Semua Tanggal (3 Bulan Terakhir)";
+    if (startDate && endDate) {
+        periodeInfo = `${startDate} s/d ${endDate}`;
+    } else if (startDate) {
+        periodeInfo = `Mulai ${startDate}`;
+    } else if (endDate) {
+        periodeInfo = `Sampai ${endDate}`;
+    }
+
+    // Mapping data ke struktur Excel dengan kolom tambahan "PERIODE TANGGAL"
+    const exportData = filtered.map(d => ({
+        "PERIODE TANGGAL": periodeInfo,
+        "TEKNISI": d.teknisi,
+        "SEKTOR": d.sektor,
+        "SQM": d.sqm,
+        "REGULER": d.reguler,
+        "INSERA": d.insera,
+        "UNDERSPEC": d.underspec,
+        "Grand Total": d.grandTotal,
+        "TARGET 70%": d.target70,
+        "TARGET 100%": d.target100,
+        "%": d.pct.toFixed(2).replace('.', ',') + "%"
+    }));
+
+    // Proses Pembuatan & Unduh File Excel
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
+
+    // Nama File Dinamis Berdasarkan Filter Tanggal
+    let fileName = "Dashboard_Performa_Teknisi";
+    if (startDate || endDate) {
+        fileName += `_${startDate || 'awal'}_sbd_${endDate || 'akhir'}`;
+    }
+    fileName += ".xlsx";
+
+    XLSX.writeFile(wb, fileName);
+}
     </script>
 </body>
 </html>
