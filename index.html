@@ -1040,7 +1040,7 @@
             document.getElementById('btn-submit').disabled = false;
         }
 
-        // Fungsi Export Excel Publik (Sesuai Filter & Info Tanggal)
+        // Fungsi Export Excel Publik (Detail Per Tiket Sesuai Filter)
 function exportExcel() {
     const startDate = document.getElementById('filter-date-start').value;
     const endDate = document.getElementById('filter-date-end').value;
@@ -1051,68 +1051,77 @@ function exportExcel() {
     // Cek apakah pengguna sedang menerapkan filter
     const isFiltered = startDate || endDate || selectedArea !== 'ALL' || selectedSektor !== 'ALL' || searchQuery !== '';
 
-    // Peringatan jika belum memfilter data
+    // Konfirmasi jika belum menerapkan filter
     if (!isFiltered) {
         const confirmDownload = confirm("Anda belum memfilter data, apakah akan lanjut download semua data dalam 3 bulan terakhir?");
         if (!confirmDownload) {
-            return; // Batalkan proses jika memilih 'Tidak' / Cancel
+            return; // Batalkan jika memilih 'Tidak' / Cancel
         }
     }
 
-    // Mengambil data yang sudah terfilter sesuai kondisi tampilan tabel saat ini
-    const aggregatedData = aggregateFilteredTickets();
-    const baseData = calculateBaseData(aggregatedData);
-
-    let filtered = baseData.filter(item => {
-        const matchesSearch = item.teknisi.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesSektor = (selectedSektor === 'ALL') || (item.sektor === selectedSektor);
-
-        let matchesArea = true;
-        if (selectedArea !== 'ALL') {
-            const allowedSectors = areaMapping[selectedArea] || [];
-            matchesArea = allowedSectors.includes(item.sektor);
+    // Filter data mentah tiket (rawTickets) sesuai kriteria yang aktif
+    let filteredTickets = rawTickets.filter(t => {
+        // Filter Tanggal
+        if (t.date) {
+            if (startDate && t.date < startDate) return false;
+            if (endDate && t.date > endDate) return false;
         }
 
-        return matchesSearch && matchesSektor && matchesArea;
+        // Filter Nama Teknisi / Pencarian
+        if (searchQuery && !t.teknisi.toLowerCase().includes(searchQuery.toLowerCase())) {
+            return false;
+        }
+
+        // Filter Sektor
+        if (selectedSektor !== 'ALL' && t.sektor !== selectedSektor) {
+            return false;
+        }
+
+        // Filter Area
+        if (selectedArea !== 'ALL') {
+            const allowedSectors = areaMapping[selectedArea] || [];
+            if (!allowedSectors.includes(t.sektor)) {
+                return false;
+            }
+        }
+
+        return true;
     });
 
-    if (filtered.length === 0) {
-        alert("Tidak ada data yang tersedia untuk diunduh sesuai filter saat ini.");
+    if (filteredTickets.length === 0) {
+        alert("Tidak ada detail data tiket yang tersedia untuk diunduh sesuai filter saat ini.");
         return;
     }
 
-    // Menentukan teks Keterangan Periode Tanggal untuk kolom Excel
-    let periodeInfo = "Semua Tanggal (3 Bulan Terakhir)";
-    if (startDate && endDate) {
-        periodeInfo = `${startDate} s/d ${endDate}`;
-    } else if (startDate) {
-        periodeInfo = `Mulai ${startDate}`;
-    } else if (endDate) {
-        periodeInfo = `Sampai ${endDate}`;
-    }
+    // Mapping data ke format kolom yang diminta
+    const exportData = filteredTickets.map((t, index) => {
+        // Format TGL (DD/MM/YYYY)
+        let formattedDate = t.date || '';
+        if (t.date && t.date.includes('-')) {
+            const [year, month, day] = t.date.split('-');
+            formattedDate = `${day}/${month}/${year}`;
+        }
 
-    // Mapping data ke struktur Excel dengan kolom tambahan "PERIODE TANGGAL"
-    const exportData = filtered.map(d => ({
-        "PERIODE TANGGAL": periodeInfo,
-        "TEKNISI": d.teknisi,
-        "SEKTOR": d.sektor,
-        "SQM": d.sqm,
-        "REGULER": d.reguler,
-        "INSERA": d.insera,
-        "UNDERSPEC": d.underspec,
-        "Grand Total": d.grandTotal,
-        "TARGET 70%": d.target70,
-        "TARGET 100%": d.target100,
-        "%": d.pct.toFixed(2).replace('.', ',') + "%"
-    }));
+        return {
+            "NO": index + 1,
+            "JENIS": t.jenis || 'REGULER',
+            "TIKET": t.tiket || t.no_tiket || '-',
+            "NOMOR INET": t.nomor_inet || t.inet || '-',
+            "SEKTOR": t.sektor || '-',
+            "TEKNISI": t.teknisi || '-',
+            "NIK": t.nik || '-',
+            "PERBAIKAN": t.perbaikan || t.keterangan || '-',
+            "TGL": formattedDate
+        };
+    });
 
-    // Proses Pembuatan & Unduh File Excel
+    // Proses Pembuatan & Unduh File Excel (.xlsx)
     const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
+    XLSX.utils.book_append_sheet(wb, ws, "Detail Tiket");
 
-    // Nama File Dinamis Berdasarkan Filter Tanggal
-    let fileName = "Dashboard_Performa_Teknisi";
+    // Nama File Dinamis
+    let fileName = "Detail_Tiket_Teknisi";
     if (startDate || endDate) {
         fileName += `_${startDate || 'awal'}_sbd_${endDate || 'akhir'}`;
     }
