@@ -27,22 +27,22 @@
 
         <!-- Header -->
         <div class="bg-gradient-to-r from-red-600 to-rose-800 text-white rounded-xl p-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
-    <div class="flex items-center gap-3">
-        <!-- Logo dari Google Drive -->
-        <img src="https://lh3.googleusercontent.com/d/1jGWo55nUfNKfipDRCDRanY1qGzS9mI1m" 
-             alt="Logo Telkom Akses" 
-             class="h-10 w-auto bg-white p-1 rounded-lg shadow-sm object-contain">
-        
-        <div>
-            <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
-                Dashboard Monitoring Performa Teknisi
-            </h1>
-            <p class="text-red-100 text-sm mt-1">Sistem Analisa Produktifitas Teknisi | POWERED BY SA GLADAG</p>
-        </div>
-    </div>
+            <div class="flex items-center gap-3">
+                <!-- Logo dari Google Drive -->
+                <img src="https://lh3.googleusercontent.com/d/1jGWo55nUfNKfipDRCDRanY1qGzS9mI1m" 
+                     alt="Logo Telkom Akses" 
+                     class="h-10 w-auto bg-white p-1 rounded-lg shadow-sm object-contain">
+                
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                        Dashboard Monitoring Performa Teknisi
+                    </h1>
+                    <p class="text-red-100 text-sm mt-1">Sistem Analisa Produktifitas Teknisi | POWERED BY SA GLADAG</p>
+                </div>
+            </div>
             
             <div class="flex flex-wrap gap-2 items-center">
-                <!-- Action Buttons (Hanya muncul jika sudah Login Admin) -->
+                <!-- Action Buttons Admin (Hanya muncul jika sudah Login Admin) -->
                 <div id="admin-actions" class="hidden flex flex-wrap gap-2">
                     <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
                         <i class="fa-solid fa-trash-can"></i> Reset Data
@@ -53,10 +53,12 @@
                     <button onclick="openModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
                         <i class="fa-solid fa-file-upload"></i> Upload CSV
                     </button>
-                    <button onclick="exportExcel()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-excel"></i> Export Excel
-                    </button>
                 </div>
+
+                <!-- Tombol Export Excel Publik (Dapat diakses oleh siapa saja) -->
+                <button onclick="exportExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Download Data ke Excel">
+                    <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
 
                 <!-- Tombol Login / Status User -->
                 <div id="auth-button-container">
@@ -167,6 +169,11 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
                     <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
+
+                <!-- Tombol Download XLSX di Area Filter -->
+                <button onclick="exportExcel()" class="w-full md:w-auto bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-2 rounded-lg text-xs font-medium shadow flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-download"></i> Download .XLSX
+                </button>
             </div>
 
             <div class="flex items-center gap-3 text-xs text-slate-500">
@@ -510,40 +517,28 @@
         }
 
         async function loadDataFromGitHub() {
-    try {
-        // Panggil file data.json dari GitHub Pages / Raw URL
-        const response = await fetch('data.json'); 
-        const data = await response.json();
-        
-        // Render data ke tabel Dashboard kamu
-        renderTable(data);
-    } catch (error) {
-        console.error("Gagal memuat data JSON:", error);
-    }
-}
+            try {
+                const response = await fetch('data.json'); 
+                const data = await response.json();
+                renderTable(data);
+            } catch (error) {
+                console.error("Gagal memuat data JSON:", error);
+            }
+        }
 
-// Fungsi untuk memuat data dari data.json
-async function loadDataFromJSON() {
-    try {
-        // Mencegah browser melakukan caching agar data selalu segar
-        const response = await fetch('data.json?v=' + new Date().getTime());
-        const data = await response.json();
-        
-        console.log("Data berhasil dimuat:", data);
-        
-        // Panggil fungsi render tabel kamu di sini
-        renderTable(data); 
-        
-    } catch (error) {
-        console.error("Gagal mengambil data dari data.json:", error);
-    }
-}
+        async function loadDataFromJSON() {
+            try {
+                const response = await fetch('data.json?v=' + new Date().getTime());
+                const data = await response.json();
+                console.log("Data berhasil dimuat:", data);
+                renderTable(data); 
+            } catch (error) {
+                console.error("Gagal mengambil data dari data.json:", error);
+            }
+        }
 
-// Jalankan fungsi saat halaman HTML selesai dimuat
-document.addEventListener('DOMContentLoaded', loadDataFromJSON);
-        
-// Panggil fungsi saat halaman selesai dimuat
-document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
+        document.addEventListener('DOMContentLoaded', loadDataFromJSON);
+        document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
 
         // --- SISTEM AUTHENTICATION & LOGIN ---
         function updateAuthUI() {
@@ -993,7 +988,6 @@ document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
             let sektorColIndex = -1;
             let dateColIndex = -1;
 
-            // Cari Baris Header
             for (let i = 0; i < Math.min(lines.length, 15); i++) {
                 let line = lines[i].toUpperCase();
                 if (line.includes("TEKNISI") || line.includes("NAMA")) {
@@ -1018,7 +1012,6 @@ document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
 
             pendingParsedTickets = [];
 
-            // Loop seluruh baris tiket
             for (let i = headerLineIndex + 1; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (!line) continue;
@@ -1047,8 +1040,8 @@ document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
             document.getElementById('btn-submit').disabled = false;
         }
 
+        // Fungsi Export Excel Publik (Dapat dipanggil baik saat Login maupun tidak)
         function exportExcel() {
-            if (!isLoggedIn) return;
             const aggregatedData = aggregateFilteredTickets();
             const baseData = calculateBaseData(aggregatedData);
             
