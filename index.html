@@ -376,57 +376,211 @@
             loadDataFromSupabase();
         });
 
-        // --- SUPABASE API INTEGRATION WITH PAGINATION ---
-        async function loadDataFromSupabase() {
-            try {
-                let allData = [];
-                let page = 0;
-                const pageSize = 1000;
-                let hasMore = true;
+        // 1. UPDATE: Mengambil seluruh data dari Supabase
+async function loadDataFromSupabase() {
+    try {
+        let allData = [];
+        let page = 0;
+        const pageSize = 1000;
+        let hasMore = true;
 
-                // Looping fetch bertahap per 1000 baris data
-                while (hasMore) {
-                    const from = page * pageSize;
-                    const to = from + pageSize - 1;
+        while (hasMore) {
+            const from = page * pageSize;
+            const to = from + pageSize - 1;
 
-                    const response = await fetch(`${SUPABASE_URL}?select=*`, {
-                        method: 'GET',
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Range': `${from}-${to}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        allData = allData.concat(data);
-
-                        if (data.length < pageSize) {
-                            hasMore = false;
-                        } else {
-                            page++;
-                        }
-                    } else {
-                        console.error("Gagal mengambil data Supabase", await response.text());
-                        hasMore = false;
-                    }
+            const response = await fetch(`${SUPABASE_URL}?select=*`, {
+                method: 'GET',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Range': `${from}-${to}`
                 }
+            });
 
-                rawTickets = allData.map(item => ({
-                    teknisi: item.teknisi,
-                    sektor: item.sektor || '-',
-                    jenis: item.jenis || 'REGULER',
-                    date: item.tanggal
-                }));
+            if (response.ok) {
+                const data = await response.json();
+                allData = allData.concat(data);
 
-                updateSektorDropdown();
-                renderTable();
-
-            } catch (err) {
-                console.error("Error fetching data:", err);
+                if (data.length < pageSize) {
+                    hasMore = false;
+                } else {
+                    page++;
+                }
+            } else {
+                console.error("Gagal mengambil data Supabase", await response.text());
+                hasMore = false;
             }
         }
+
+        // Simpan seluruh detail ke rawTickets
+        rawTickets = allData.map(item => ({
+            teknisi: item.teknisi || '-',
+            sektor: item.sektor || '-',
+            jenis: item.jenis || 'REGULER',
+            date: item.tanggal || null,
+            tiket: item.tiket || '',
+            nomor_inet: item.nomor_inet || '',
+            nik: item.nik || '',
+            perbaikan: item.perbaikan || ''
+        }));
+
+        updateSektorDropdown();
+        renderTable();
+
+    } catch (err) {
+        console.error("Error fetching data:", err);
+    }
+}
+
+// 2. UPDATE: Pembacaan CSV Menyeluruh (Sesuai Header Kamu)
+function parseCSVText(csvText) {
+    const lines = csvText.split(/\r\n|\n/);
+    if (lines.length < 2) {
+        alert("File CSV kosong!");
+        return;
+    }
+
+    let headerLineIndex = -1;
+    let delimiter = ';';
+    
+    // Index Kolom
+    let techColIndex = -1;
+    let jenisColIndex = -1;
+    let sektorColIndex = -1;
+    let dateColIndex = -1;
+    let tiketColIndex = -1;
+    let inetColIndex = -1;
+    let nikColIndex = -1;
+    let perbaikanColIndex = -1;
+
+    for (let i = 0; i < Math.min(lines.length, 15); i++) {
+        let line = lines[i].toUpperCase();
+        if (line.includes("TEKNISI") || line.includes("NAMA")) {
+            headerLineIndex = i;
+            delimiter = line.includes(";") ? ";" : ",";
+
+            let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
+            cols.forEach((col, idx) => {
+                if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
+                if (col === "JENIS" || col.includes("JENIS")) jenisColIndex = idx;
+                if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
+                if (col.includes("TGL") || col.includes("TANGGAL") || col.includes("DATE")) dateColIndex = idx;
+                if (col.includes("TIKET")) tiketColIndex = idx;
+                if (col.includes("INET") || col.includes("NOMOR INET")) inetColIndex = idx;
+                if (col.includes("NIK")) nikColIndex = idx;
+                if (col.includes("KETERANGAN") || col.includes("PERBAIKAN")) perbaikanColIndex = idx;
+            });
+            break;
+        }
+    }
+
+    if (headerLineIndex === -1 || techColIndex === -1) {
+        alert("Format file CSV tidak dikenali. Pastikan file rekap memiliki kolom 'TEKNISI'.");
+        return;
+    }
+
+    pendingParsedTickets = [];
+
+    for (let i = headerLineIndex + 1; i < lines.length; i++) {
+        let line = lines[i].trim();
+        if (!line) continue;
+
+        // Bersihkan tanda kutip ganda berlebih
+        let cols = line.split(delimiter).map(c => c.replace(/^"|"$/g, '').trim());
+        if (!cols[techColIndex]) continue;
+
+        let name = cols[techColIndex].trim();
+        if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
+
+        let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
+        let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
+        let dateStr = (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null;
+        let tiket = (tiketColIndex !== -1 && cols[tiketColIndex]) ? cols[tiketColIndex] : "";
+        let inet = (inetColIndex !== -1 && cols[inetColIndex]) ? cols[inetColIndex] : "";
+        let nik = (nikColIndex !== -1 && cols[nikColIndex]) ? cols[nikColIndex] : "";
+        let perbaikan = (perbaikanColIndex !== -1 && cols[perbaikanColIndex]) ? cols[perbaikanColIndex] : "";
+
+        pendingParsedTickets.push({
+            teknisi: name,
+            sektor: sektor,
+            jenis: jenis,
+            date: dateStr,
+            tiket: tiket,
+            nomor_inet: inet,
+            nik: nik,
+            perbaikan: perbaikan
+        });
+    }
+
+    document.getElementById('file-info-section').classList.remove('hidden');
+    document.getElementById('mode-selection-section').classList.remove('hidden');
+    document.getElementById('info-count').innerText = pendingParsedTickets.length;
+    document.getElementById('btn-submit').disabled = false;
+}
+
+// 3. UPDATE: Mengirim Seluruh Detail Kolom ke Supabase
+async function submitData() {
+    if (!isLoggedIn) return;
+    if (pendingParsedTickets.length === 0) {
+        alert("Tidak ada data yang terbaca dari CSV.");
+        return;
+    }
+
+    const btnSubmit = document.getElementById('btn-submit');
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+
+    const mode = document.querySelector('input[name="upload-mode"]:checked').value;
+
+    try {
+        if (mode === 'replace') {
+            await fetch(`${SUPABASE_URL}?id=gt.0`, {
+                method: 'DELETE',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
+        }
+
+        // Format payload lengkap menyesuaikan kolom di Supabase
+        const payload = pendingParsedTickets.map(t => ({
+            teknisi: t.teknisi,
+            sektor: t.sektor,
+            jenis: t.jenis,
+            tanggal: t.date ? t.date : null,
+            tiket: t.tiket || null,
+            nomor_inet: t.nomor_inet || null,
+            nik: t.nik || null,
+            perbaikan: t.perbaikan || null
+        }));
+
+        const batchSize = 500;
+        for (let i = 0; i < payload.length; i += batchSize) {
+            const chunk = payload.slice(i, i + batchSize);
+            await fetch(SUPABASE_URL, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify(chunk)
+            });
+        }
+
+        await loadDataFromSupabase();
+        closeModal();
+        alert("Data detail berhasil tersimpan ke Supabase!");
+    } catch (err) {
+        console.error("Error submitting data:", err);
+        alert("Gagal menyimpan data ke database!");
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
+    }
+}
 
         async function clearAllData() {
             if (!isLoggedIn) return;
