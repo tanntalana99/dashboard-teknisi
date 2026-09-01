@@ -1048,28 +1048,76 @@ document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
         }
 
         function exportExcel() {
-            if (!isLoggedIn) return;
-            const aggregatedData = aggregateFilteredTickets();
-            const baseData = calculateBaseData(aggregatedData);
-            
-            const exportData = baseData.map(d => ({
-                "TEKNISI": d.teknisi,
-                "SEKTOR": d.sektor,
-                "SQM": d.sqm,
-                "REGULER": d.reguler,
-                "INSERA": d.insera,
-                "UNDERSPEC": d.underspec,
-                "Grand Total": d.grandTotal,
-                "TARGET 70%": d.target70,
-                "TARGET 100%": d.target100,
-                "%": d.pct.toFixed(2).replace('.', ',') + "%"
-            }));
+    const startDate = document.getElementById('filter-date-start').value;
+    const endDate = document.getElementById('filter-date-end').value;
+    const selectedArea = document.getElementById('filter-area').value;
+    const selectedSektor = document.getElementById('filter-sektor').value;
+    const searchQuery = document.getElementById('search-input').value.trim();
 
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Performa Teknisi");
-            XLSX.writeFile(wb, "Dashboard_Performa_Teknisi.xlsx");
+    // Filter data tiket mentah (rawTickets) sesuai filter yang aktif di UI
+    let filteredTickets = rawTickets.filter(t => {
+        if (t.date) {
+            if (startDate && t.date < startDate) return false;
+            if (endDate && t.date > endDate) return false;
         }
+
+        if (searchQuery && !t.teknisi.toLowerCase().includes(searchQuery.toLowerCase())) {
+            return false;
+        }
+
+        if (selectedSektor !== 'ALL' && t.sektor !== selectedSektor) {
+            return false;
+        }
+
+        if (selectedArea !== 'ALL') {
+            const allowedSectors = areaMapping[selectedArea] || [];
+            if (!allowedSectors.includes(t.sektor)) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
+    if (filteredTickets.length === 0) {
+        alert("Tidak ada detail data tiket yang tersedia untuk diunduh sesuai filter.");
+        return;
+    }
+
+    // Pemetaan data per baris tiket lengkap dengan nomor tiket INCxxxxx
+    const exportData = filteredTickets.map((t, index) => {
+        let formattedDate = t.date || '';
+        if (t.date && t.date.includes('-')) {
+            const [year, month, day] = t.date.split('-');
+            formattedDate = `${day}/${month}/${year}`;
+        }
+
+        return {
+            "NO": index + 1,
+            "JENIS": t.jenis || 'REGULER',
+            "TIKET": t.tiket || '-',         // Menampilkan nomor tiket INCxxxxx
+            "NOMOR INET": t.nomor_inet || '-', // Menampilkan nomor inet
+            "SEKTOR": t.sektor || '-',
+            "TEKNISI": t.teknisi || '-',
+            "NIK": t.nik || '-',
+            "PERBAIKAN": t.perbaikan || '-',
+            "TGL": formattedDate
+        };
+    });
+
+    // Proses Export ke file XLSX menggunakan SheetJS
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Detail Tiket");
+
+    let fileName = "Detail_Tiket_Teknisi";
+    if (startDate || endDate) {
+        fileName += `_${startDate || 'awal'}_sbd_${endDate || 'akhir'}`;
+    }
+    fileName += ".xlsx";
+
+    XLSX.writeFile(wb, fileName);
+}
     </script>
 </body>
 </html>
