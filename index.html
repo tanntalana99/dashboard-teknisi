@@ -4,466 +4,523 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Performa Teknisi</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS untuk Parsing Excel (.xlsx, .xls) & CSV -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome Font CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS CDN for Excel Export & Import -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background-color: #f1f5f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .rank-1 { background-color: #86efac; color: #064e3b; font-weight: bold; }
-        .rank-2 { background-color: #bbf7d0; color: #064e3b; font-weight: bold; }
-        .rank-mid { background-color: #fef08a; color: #713f12; font-weight: bold; }
-        .rank-low { background-color: #fca5a5; color: #7f1d1d; font-weight: bold; }
-        .zebra-even { background-color: #ffffff; }
-        .zebra-odd { background-color: #f8fafc; }
-        .zebra-even:hover, .zebra-odd:hover { background-color: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-gray-100 text-gray-800">
 
-    <div class="max-w-7xl mx-auto space-y-6">
-
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-red-600 to-rose-800 text-white rounded-xl p-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
-    <div class="flex items-center gap-3">
-        <!-- Logo dari Google Drive -->
-        <img src="https://lh3.googleusercontent.com/d/1jGWo55nUfNKfipDRCDRanY1qGzS9mI1m" 
-             alt="Logo Telkom Akses" 
-             class="h-10 w-auto bg-white p-1 rounded-lg shadow-sm object-contain">
-        
-        <div>
-            <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
-                Dashboard Monitoring Performa Teknisi
-            </h1>
-            <p class="text-red-100 text-sm mt-1">Sistem Analisa Produktifitas Teknisi | POWERED BY SA GLADAG</p>
-        </div>
-    </div>
-            
-            <div class="flex flex-wrap gap-2 items-center">
-                <!-- Action Buttons (Hanya muncul jika sudah Login Admin) -->
-                <div id="admin-actions" class="hidden flex flex-wrap gap-2">
-                    <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Hapus seluruh data ter-save">
-                        <i class="fa-solid fa-trash-can"></i> Reset Data
-                    </button>
-                    <button onclick="openAreaModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-layer-group"></i> Kelola Mapping Area
-                    </button>
-                    <button onclick="openModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-upload"></i> Upload CSV
-                    </button>
-                    <button onclick="exportExcel()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-excel"></i> Export Excel
-                    </button>
+    <!-- Header Navbar -->
+    <header class="bg-red-700 text-white p-4 shadow-md">
+        <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-chart-line text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Dashboard Monitoring Performa Teknisi</h1>
+                    <p class="text-xs text-red-200">Sistem Analisa Produktifitas Teknisi | POWERED BY SA GLADAG</p>
                 </div>
-
-                <!-- Tombol Login / Status User -->
-                <div id="auth-button-container">
-                    <!-- Dynamic Auth Button -->
-                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2" id="nav-actions">
+                <button onclick="openModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded shadow transition flex items-center gap-1">
+                    <i class="fa-solid fa-file-upload"></i> Upload CSV
+                </button>
+                <button onclick="exportExcel()" class="bg-white text-red-700 hover:bg-red-50 text-xs px-3 py-2 rounded shadow font-semibold transition flex items-center gap-1">
+                    <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
             </div>
         </div>
+    </header>
 
-        <!-- KPI Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-users"></i>
-                </div>
+    <!-- Main Content Container -->
+    <main class="container mx-auto p-4 space-y-6">
+
+        <!-- Metrics Overview Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                <div class="bg-blue-100 text-blue-600 p-3 rounded-lg"><i class="fa-solid fa-users text-xl"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Teknisi</div>
-                    <div id="stat-total-teknisi" class="text-2xl font-bold text-slate-800">0</div>
+                    <p class="text-xs text-gray-500 font-medium uppercase">Total Teknisi</p>
+                    <h3 class="text-2xl font-bold" id="stat-total-teknisi">0</h3>
                 </div>
             </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-ticket"></i>
-                </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg"><i class="fa-solid fa-ticket text-xl"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tiket Completed</div>
-                    <div id="stat-total-tiket" class="text-2xl font-bold text-slate-800">0</div>
+                    <p class="text-xs text-gray-500 font-medium uppercase">Total Tiket Completed</p>
+                    <h3 class="text-2xl font-bold" id="stat-total-tiket">0</h3>
                 </div>
             </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                <div class="bg-emerald-100 text-emerald-600 p-3 rounded-lg"><i class="fa-solid fa-trophy text-xl"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Performer</div>
-                    <div id="stat-top-performer" class="text-lg font-bold text-slate-800 truncate max-w-[150px]">-</div>
+                    <p class="text-xs text-gray-500 font-medium uppercase">Top Performer</p>
+                    <h3 class="text-lg font-bold truncate max-w-[150px]" id="stat-top-performer">-</h3>
                 </div>
             </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
-                    <i class="fa-solid fa-chart-pie"></i>
-                </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                <div class="bg-amber-100 text-amber-600 p-3 rounded-lg"><i class="fa-solid fa-chart-pie text-xl"></i></div>
                 <div>
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rata-rata % Target</div>
-                    <div id="stat-avg-target" class="text-2xl font-bold text-slate-800">0%</div>
+                    <p class="text-xs text-gray-500 font-medium uppercase">Rata-rata % Target</p>
+                    <h3 class="text-2xl font-bold" id="stat-avg-target">0%</h3>
                 </div>
             </div>
         </div>
 
-        <!-- Top 5 & Bottom 5 Performance Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Top 5 Performance -->
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-medal text-emerald-600"></i> Top 5 Performa Tertinggi
-                </h3>
-                <div id="top-5-container" class="space-y-2">
-                    <div class="text-xs text-slate-400 italic">Belum ada data...</div>
-                </div>
-            </div>
-            <!-- Bottom 5 Performance -->
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Bottom 5 Performa Terendah
-                </h3>
-                <div id="bottom-5-container" class="space-y-2">
-                    <div class="text-xs text-slate-400 italic">Belum ada data...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controls, Filter Tanggal, Filter Area, Filter Sektor & Search Bar -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto flex-wrap">
-                
-                <!-- Filter Tanggal Fleksibel -->
-                <div class="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-lg border border-slate-200">
-                    <label class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-calendar-days text-indigo-600"></i> Tgl:
-                    </label>
-                    <input type="date" id="filter-date-start" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700">
-                    <span class="text-xs font-bold text-slate-400">s/d</span>
-                    <input type="date" id="filter-date-end" onchange="renderTable()" class="px-2 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700">
-                    <button onclick="resetDateFilter()" class="text-slate-400 hover:text-red-500 text-xs px-1" title="Reset Filter Tanggal"><i class="fa-solid fa-xmark"></i></button>
+        <!-- Filter Controls Section -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                <div class="flex items-center gap-2 text-xs font-semibold text-gray-600">
+                    <i class="fa-solid fa-calendar text-red-600"></i> TGL:
+                    <input type="date" id="filter-date-start" onchange="renderDashboard()" class="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-red-500">
+                    <span>s/d</span>
+                    <input type="date" id="filter-date-end" onchange="renderDashboard()" class="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-red-500">
                 </div>
 
-                <!-- Dropdown Filter Area -->
-                <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-area" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-map-location-dot text-amber-600"></i> Area:
-                    </label>
-                    <select id="filter-area" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white font-medium text-slate-700">
-                        <option value="ALL">-- SEMUA AREA --</option>
-                    </select>
-                </div>
-
-                <!-- Dropdown Filter Sektor -->
-                <div class="flex items-center gap-2 w-full md:w-auto">
-                    <label for="filter-sektor" class="text-xs font-bold text-slate-600 uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-filter text-blue-600"></i> Sektor:
-                    </label>
-                    <select id="filter-sektor" onchange="renderTable()" class="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-medium text-slate-700">
+                <div class="flex items-center gap-2 text-xs font-semibold text-gray-600">
+                    <i class="fa-solid fa-map-location-dot text-red-600"></i> SEKTOR:
+                    <select id="filter-sektor" onchange="renderDashboard()" class="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-red-500">
                         <option value="ALL">-- SEMUA SEKTOR --</option>
                     </select>
                 </div>
-
-                <!-- Input Cari Nama -->
-                <div class="relative w-full md:w-48">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
-                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari teknisi..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                </div>
             </div>
 
-            <div class="flex items-center gap-3 text-xs text-slate-500">
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-300 rounded-full inline-block"></span> Target Teratas</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded-full inline-block"></span> Menengah</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-red-300 rounded-full inline-block"></span> Perlu Peningkatan</span>
+            <div class="w-full lg:w-64">
+                <div class="relative">
+                    <input type="text" id="search-input" onkeyup="renderDashboard()" placeholder="Cari nama teknisi..." class="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-gray-400 text-xs"></i>
+                </div>
             </div>
         </div>
 
-        <!-- Main Data Table Container -->
-        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+        <!-- Data Table Section -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="font-bold text-gray-700 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-table text-red-600"></i> Data Rekapitutasi Performa Teknisi
+                </h2>
+                <span id="data-status-info" class="text-xs text-gray-500 font-normal">Loading data...</span>
+            </div>
+            
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs md:text-sm">
-                    <thead>
-                        <tr class="bg-slate-200 text-slate-800 font-bold border-b border-slate-300 text-center uppercase tracking-wider">
-                            <th class="p-3 text-left min-w-[200px]">TEKNISI</th>
-                            <th class="p-3 min-w-[80px]">SEKTOR</th>
-                            <th class="p-3 min-w-[80px]">SQM</th>
-                            <th class="p-3 min-w-[80px]">REGULER</th>
-                            <th class="p-3 min-w-[80px]">INSERA</th>
-                            <th class="p-3 min-w-[100px]">UNDERSPEC</th>
-                            <th class="p-3 bg-slate-300 min-w-[100px]">Grand Total</th>
-                            <th class="p-3 bg-emerald-100 text-emerald-900 min-w-[70px]">RANK</th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">
-                                TARGET 70%<br><span class="text-[10px] font-normal text-slate-600">= 124 JAM = 62 TIKET</span>
-                            </th>
-                            <th class="p-3 bg-slate-100 min-w-[110px]">
-                                TARGET 100%<br><span class="text-[10px] font-normal text-slate-600">= 176 JAM = 88 TIKET</span>
-                            </th>
-                            <th class="p-3 bg-blue-100 text-blue-900 min-w-[90px]">%</th>
+                <table class="w-full text-left text-xs text-gray-600 border-collapse">
+                    <thead class="bg-gray-100 text-gray-700 font-bold uppercase border-b border-gray-200">
+                        <tr>
+                            <th class="p-3 text-center">No</th>
+                            <th class="p-3">Teknisi</th>
+                            <th class="p-3">Sektor</th>
+                            <th class="p-3 text-center">SQM</th>
+                            <th class="p-3 text-center">Reguler</th>
+                            <th class="p-3 text-center">Insera</th>
+                            <th class="p-3 text-center">Underspec</th>
+                            <th class="p-3 text-center bg-gray-200">Grand Total</th>
+                            <th class="p-3 text-center">Rank</th>
+                            <th class="p-3 text-center">% Achievement</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
-                        <!-- Dynamic Rows -->
+                    <tbody id="table-body" class="divide-y divide-gray-100">
+                        <!-- Data rows rendered dynamically via JavaScript -->
                     </tbody>
-                    <tfoot id="table-foot" class="bg-slate-200 font-bold border-t-2 border-slate-400">
-                        <!-- Dynamic Totals -->
-                    </tfoot>
                 </table>
             </div>
         </div>
 
-    </div>
+    </main>
 
-    <!-- Login Modal -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5">
+    <!-- Modal Upload CSV -->
+    <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6 space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-lock text-blue-600"></i> Login Administrator
-                </h3>
-                <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+                <h3 class="font-bold text-gray-800 text-base"><i class="fa-solid fa-cloud-arrow-up text-red-600 mr-1"></i> Upload File Data Tiket</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg">&times;</button>
             </div>
+            
+            <div class="space-y-3">
+                <label class="block text-xs font-semibold text-gray-700">Pilih File CSV Rekap:</label>
+                <input type="file" id="csv-file-input" accept=".csv" class="block w-full text-xs text-gray-500 border border-gray-300 rounded-lg cursor-pointer p-2 bg-gray-50 focus:outline-none">
+                
+                <div id="file-info-section" class="hidden text-xs bg-blue-50 border border-blue-200 text-blue-700 p-2.5 rounded-lg">
+                    Tersedia <span font-bold id="info-count">0</span> baris data tiket terdeteksi dalam file.
+                </div>
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password Admin</label>
-                    <input type="password" id="login-password" onkeypress="handleLoginKeyPress(event)" placeholder="Masukkan password..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <div id="login-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Password salah! Silakan coba lagi.</div>
+                <div id="mode-selection-section" class="space-y-2 hidden border-t pt-3">
+                    <p class="text-xs font-semibold text-gray-700">Pilih Metode Upload:</p>
+                    <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                        <input type="radio" name="upload-mode" value="replace" checked class="text-red-600 focus:ring-red-500">
+                        <span><strong>Ganti Semua Data (Replace)</strong> - Rekomendasi</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                        <input type="radio" name="upload-mode" value="append" class="text-red-600 focus:ring-red-500">
+                        <span><strong>Tambahkan Data (Append)</strong></span>
+                    </label>
                 </div>
             </div>
 
-            <div class="flex justify-end gap-3 pt-3 border-t">
-                <button onclick="closeLoginModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
-                <button onclick="performLogin()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow transition flex items-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> Masuk
+            <div class="flex justify-end gap-2 border-t pt-3">
+                <button onclick="closeModal()" class="px-3 py-1.5 text-xs rounded bg-gray-200 hover:bg-gray-300 font-medium">Batal</button>
+                <button id="btn-submit" disabled onclick="submitData()" class="px-4 py-1.5 text-xs rounded bg-red-600 hover:bg-red-700 text-white font-medium disabled:opacity-50">
+                    Update Dashboard Sekarang
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Upload Modal -->
-    <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-6">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload File CSV Rekap Tiket
-                </h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-
-            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-8 text-center bg-slate-50 cursor-pointer transition">
-                <i class="fa-solid fa-file-csv text-4xl text-emerald-600 mb-3"></i>
-                <p class="text-slate-700 font-medium text-base">Pilih atau Drag & Drop File CSV / Excel di sini</p>
-                <p class="text-slate-400 text-xs mt-1">Sistem membaca file Rekap-Closing CSV secara otomatis</p>
-                <input type="file" id="file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelect(event)">
-            </div>
-
-            <!-- Mode Penggantian Data -->
-            <div id="mode-selection-section" class="hidden bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 text-xs">
-                <div class="font-bold text-slate-800 mb-1">Pilih Mode Pembaharuan Dashboard:</div>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="upload-mode" value="replace" checked class="text-blue-600">
-                    <span class="text-slate-700 font-semibold">Gantikan Seluruh Data Dashboard dengan File CSV Ini (Rekomendasi)</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="upload-mode" value="accumulate" class="text-blue-600">
-                    <span class="text-slate-700">Tambahkan / Akumulasikan ke Data yang Sudah Ada</span>
-                </label>
-            </div>
-
-            <!-- Summary Info -->
-            <div id="file-info-section" class="hidden bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-900 flex justify-between items-center">
-                <div>
-                    <span class="font-bold" id="info-filename">file.csv</span> — Terbaca <span id="info-count" class="font-bold">0</span> Tiket
-                </div>
-                <span class="bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded text-[10px]" id="info-status">Siap Di-update</span>
-            </div>
-
-            <div class="flex justify-end gap-3 pt-3 border-t">
-                <button onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium">Batal</button>
-                <button id="btn-submit" onclick="submitData()" disabled class="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-lg text-sm font-medium shadow transition flex items-center gap-2">
-                    <i class="fa-solid fa-sync"></i> Update Dashboard Sekarang
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Area Mapping Management Modal -->
-    <div id="area-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-map-marked-alt text-amber-600"></i> Pengaturan Flexible Mapping Area
-                </h3>
-                <button onclick="closeAreaModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-
-            <!-- Add / Edit Form Area -->
-            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-                <div class="font-bold text-sm text-slate-700" id="area-form-title">Tambah / Edit Area Baru</div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Area</label>
-                        <input type="text" id="input-area-name" placeholder="Misal: GLADAK" class="w-full px-3 py-2 border rounded-lg text-xs font-semibold focus:ring-2 focus:ring-amber-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-xs font-semibold text-slate-600 block mb-1">Daftar Sektor (Pisahkan dengan koma)</label>
-                        <input type="text" id="input-area-sectors" placeholder="Misal: GLD, GLD1, GLD2, SLO" class="w-full px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-amber-500">
-                    </div>
-                </div>
-                <div class="flex justify-end gap-2">
-                    <button onclick="resetAreaForm()" class="px-3 py-1.5 text-xs text-slate-500 hover:bg-slate-200 rounded">Reset</button>
-                    <button onclick="saveAreaMapping()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-bold shadow">Simpan Area</button>
-                </div>
-            </div>
-
-            <!-- List Area Terdaftar -->
-            <div class="space-y-2 max-h-60 overflow-y-auto">
-                <div class="font-bold text-xs text-slate-500 uppercase tracking-wider">Daftar Mapping Area Aktif</div>
-                <div id="area-list-container" class="space-y-2">
-                    <!-- Dynamic List Area -->
-                </div>
-            </div>
-
-            <div class="flex justify-end pt-3 border-t">
-                <button onclick="closeAreaModal()" class="px-5 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium">Selesai</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Application Script -->
     <script>
-        // Configuration Supabase REST API
         const SUPABASE_URL = "https://xphudssbidvymyxheeav.supabase.co/rest/v1/dataupload";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwaHVkc3NiaWR2eW15eGhlZWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjAxMzksImV4cCI6MjEwMjY5NjEzOX0.OGhFqXmU4ph3_S4qk3H2GdYjRbDjCZYk9qeaIAeQosA";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwaHVkc3NiaWR2eW15eGhlZWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzOTA0MzIsImV4cCI6MjA3MTk2NjQzMn0.X-aE_ePjY9fTq3uK7B5_v4PjQ1lK3Z6K-y4uW3B8U4o";
 
-        // Memory State
         let rawTickets = [];
         let pendingParsedTickets = [];
 
-        // Mapping Default Area
-        let areaMapping = JSON.parse(localStorage.getItem('areaMapping_v1')) || {
-            'GLADAK ALL': ['GLD', 'GLD1', 'GLD2', 'SLO'],
-            'GLD': ['GLD', 'GLD1', 'GLD2'],
-            'SLO': ['SLO']
-        };
-
-        // Status Autentikasi
-        let isLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
-        const ADMIN_PASSWORD = 'admin123'; // Password admin default
-
         document.addEventListener('DOMContentLoaded', () => {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
-
-            dropZone.addEventListener('click', () => fileInput.click());
-            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500', 'bg-blue-50'); });
-            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-blue-500', 'bg-blue-50'));
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    handleFileSelect({ target: fileInput });
-                }
-            });
-
-            updateAuthUI();
-            updateAreaDropdown();
             loadDataFromSupabase();
+
+            document.getElementById('csv-file-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    parseCSVText(evt.target.result);
+                };
+                reader.readAsText(file);
+            });
         });
 
-        // --- SUPABASE API INTEGRATION WITH PAGINATION ---
+        // 1. Fetch seluruh data dari Supabase menggunakan Pagination Loop
         async function loadDataFromSupabase() {
+            document.getElementById('data-status-info').innerText = "Memuat seluruh data tiket...";
+            rawTickets = [];
+            
+            let from = 0;
+            const step = 1000;
+            let hasMore = true;
+
             try {
-                let allData = [];
-                let page = 0;
-                const pageSize = 1000;
-                let hasMore = true;
-
-                // Looping fetch bertahap per 1000 baris data
                 while (hasMore) {
-                    const from = page * pageSize;
-                    const to = from + pageSize - 1;
-
-                    const response = await fetch(`${SUPABASE_URL}?select=*`, {
-                        method: 'GET',
+                    const response = await fetch(`${SUPABASE_URL}?select=*&order=id.asc`, {
                         headers: {
                             'apikey': SUPABASE_KEY,
                             'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Range': `${from}-${to}`
+                            'Range': `${from}-${from + step - 1}`
                         }
                     });
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        allData = allData.concat(data);
+                    if (!response.ok) break;
 
-                        if (data.length < pageSize) {
-                            hasMore = false;
-                        } else {
-                            page++;
-                        }
+                    const data = await response.json();
+                    if (data.length > 0) {
+                        rawTickets = rawTickets.concat(data);
+                        from += step;
+                        document.getElementById('data-status-info').innerText = `Terunduh ${rawTickets.length} data...`;
+                        if (data.length < step) hasMore = false;
                     } else {
-                        console.error("Gagal mengambil data Supabase", await response.text());
                         hasMore = false;
                     }
                 }
 
-                rawTickets = allData.map(item => ({
-                    teknisi: item.teknisi,
-                    sektor: item.sektor || '-',
-                    jenis: item.jenis || 'REGULER',
-                    date: item.tanggal
-                }));
-
-                updateSektorDropdown();
-                renderTable();
-
+                document.getElementById('data-status-info').innerText = `Total ${rawTickets.length} tiket dimuat`;
+                populateSektorDropdown();
+                renderDashboard();
             } catch (err) {
-                console.error("Error fetching data:", err);
+                console.error("Gagal memuat data dari Supabase:", err);
+                document.getElementById('data-status-info').innerText = "Gagal memuat data!";
             }
         }
 
-        async function clearAllData() {
-            if (!isLoggedIn) return;
-            if (confirm("Apakah kamu yakin ingin menghapus seluruh data dari Supabase Database?")) {
-                try {
-                    const response = await fetch(`${SUPABASE_URL}?id=gt.0`, {
-                        method: 'DELETE',
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`
-                        }
-                    });
+        function populateSektorDropdown() {
+            const select = document.getElementById('filter-sektor');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="ALL">-- SEMUA SEKTOR --</option>';
 
-                    if (response.ok) {
-                        rawTickets = [];
-                        updateSektorDropdown();
-                        renderTable();
-                        alert("Seluruh data berhasil dihapus dari database!");
-                    } else {
-                        alert("Gagal menghapus data dari database.");
-                    }
-                } catch (err) {
-                    console.error("Error deleting data:", err);
-                    alert("Terjadi kesalahan koneksi saat menghapus data.");
+            const sektorSet = new Set();
+            rawTickets.forEach(t => {
+                if (t.sektor && t.sektor !== '-') sektorSet.add(t.sektor.toUpperCase());
+            });
+
+            Array.from(sektorSet).sort().forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s;
+                select.appendChild(opt);
+            });
+
+            select.value = currentVal;
+        }
+
+        // 2. Format Date Standardizer (YYYY-MM-DD)
+        function parseDateString(str) {
+            if (!str) return null;
+            str = str.trim();
+            if (str.includes('/')) {
+                const parts = str.split(' ')[0].split('/');
+                if (parts.length === 3) {
+                    const day = parts[0].padStart(2, '0');
+                    const month = parts[1].padStart(2, '0');
+                    const year = parts[2];
+                    return `${year}-${month}-${day}`;
                 }
+            } else if (str.includes('-')) {
+                return str.split(' ')[0];
             }
+            return null;
         }
 
-        async function submitData() {
-            if (!isLoggedIn) return;
-            if (pendingParsedTickets.length === 0) {
-                alert("Tidak ada data yang terbaca dari CSV.");
+        // 3. Render Rekap Dashboard UI
+        function renderDashboard() {
+            const startDate = document.getElementById('filter-date-start').value;
+            const endDate = document.getElementById('filter-date-end').value;
+            const selectedSektor = document.getElementById('filter-sektor').value;
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+
+            let filtered = rawTickets.filter(t => {
+                if (t.tanggal) {
+                    const tDate = t.tanggal.split('T')[0];
+                    if (startDate && tDate < startDate) return false;
+                    if (endDate && tDate > endDate) return false;
+                }
+                if (selectedSektor !== 'ALL' && (t.sektor || '').toUpperCase() !== selectedSektor) return false;
+                if (searchQuery && !(t.teknisi || '').toLowerCase().includes(searchQuery)) return false;
+                return true;
+            });
+
+            const techMap = {};
+            filtered.forEach(t => {
+                const techName = t.teknisi ? t.teknisi.toUpperCase().trim() : 'UNKNOWN';
+                if (!techMap[techName]) {
+                    techMap[techName] = {
+                        nama: techName,
+                        sektor: t.sektor || '-',
+                        sqm: 0,
+                        reguler: 0,
+                        insera: 0,
+                        underspec: 0,
+                        total: 0
+                    };
+                }
+
+                const j = (t.jenis || '').toUpperCase();
+                if (j.includes('SQM')) techMap[techName].sqm++;
+                else if (j.includes('REGULER')) techMap[techName].reguler++;
+                else if (j.includes('INSERA')) techMap[techName].insera++;
+                else if (j.includes('UNDERSPEC')) techMap[techName].underspec++;
+                else techMap[techName].reguler++;
+
+                techMap[techName].total++;
+            });
+
+            let techList = Object.values(techMap).sort((a, b) => b.total - a.total);
+
+            // Update Header Stats
+            document.getElementById('stat-total-teknisi').innerText = techList.length;
+            document.getElementById('stat-total-tiket').innerText = filtered.length;
+            document.getElementById('stat-top-performer').innerText = techList.length > 0 ? techList[0].nama : '-';
+
+            const targetVal = 10; 
+            let totalAch = 0;
+            techList.forEach(t => {
+                totalAch += (t.total / targetVal) * 100;
+            });
+            const avgAch = techList.length > 0 ? (totalAch / techList.length).toFixed(1) : 0;
+            document.getElementById('stat-avg-target').innerText = `${avgAch}%`;
+
+            // Render Table Rows
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (techList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-gray-400">Tidak ada data yang sesuai filter</td></tr>`;
                 return;
             }
 
+            techList.forEach((t, idx) => {
+                const ach = ((t.total / targetVal) * 100).toFixed(1);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 border-b border-gray-100";
+                tr.innerHTML = `
+                    <td class="p-3 text-center font-medium">${idx + 1}</td>
+                    <td class="p-3 font-semibold text-gray-800">${t.nama}</td>
+                    <td class="p-3"><span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[10px] font-bold">${t.sektor}</span></td>
+                    <td class="p-3 text-center">${t.sqm}</td>
+                    <td class="p-3 text-center">${t.reguler}</td>
+                    <td class="p-3 text-center">${t.insera}</td>
+                    <td class="p-3 text-center">${t.underspec}</td>
+                    <td class="p-3 text-center font-bold bg-gray-50 text-red-600">${t.total}</td>
+                    <td class="p-3 text-center font-bold">${idx + 1}</td>
+                    <td class="p-3 text-center font-bold ${ach >= 100 ? 'text-emerald-600' : 'text-amber-600'}">${ach}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 4. Export Excel function: Mengunduh Seluruh 23.000+ Data Detail Tiket (Termasuk INCxxxxx)
+        function exportExcel() {
+            const startDate = document.getElementById('filter-date-start').value;
+            const endDate = document.getElementById('filter-date-end').value;
+            const selectedSektor = document.getElementById('filter-sektor').value;
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+
+            // Filter rawTickets sesuai filter yang aktif di UI
+            let filteredTickets = rawTickets.filter(t => {
+                if (t.tanggal) {
+                    const tDate = t.tanggal.split('T')[0];
+                    if (startDate && tDate < startDate) return false;
+                    if (endDate && tDate > endDate) return false;
+                }
+                if (selectedSektor !== 'ALL' && (t.sektor || '').toUpperCase() !== selectedSektor) return false;
+                if (searchQuery && !(t.teknisi || '').toLowerCase().includes(searchQuery)) return false;
+                return true;
+            });
+
+            if (filteredTickets.length === 0) {
+                alert("Tidak ada detail data tiket yang tersedia untuk diunduh.");
+                return;
+            }
+
+            // Map seluruh atribut ke sheet Excel
+            const exportData = filteredTickets.map((t, index) => {
+                let formattedDate = t.tanggal || '';
+                if (formattedDate && formattedDate.includes('-')) {
+                    const parts = formattedDate.split('T')[0].split('-');
+                    formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                }
+
+                return {
+                    "NO": index + 1,
+                    "JENIS": t.jenis || 'REGULER',
+                    "TIKET": t.tiket || '-',
+                    "NOMOR INET": t.nomor_inet || '-',
+                    "SEKTOR": t.sektor || '-',
+                    "TEKNISI": t.teknisi || '-',
+                    "NIK": t.nik || '-',
+                    "KETERANGAN": t.perbaikan || '-',
+                    "TGL": formattedDate
+                };
+            });
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Detail Tiket");
+
+            let fileName = "Rekap_Detail_Tiket_Teknisi";
+            if (startDate || endDate) {
+                fileName += `_${startDate || 'Awal'}_sbd_${endDate || 'Akhir'}`;
+            }
+            fileName += ".xlsx";
+
+            XLSX.writeFile(wb, fileName);
+        }
+
+        // Modal Helpers
+        function openModal() {
+            document.getElementById('uploadModal').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('uploadModal').classList.add('hidden');
+        }
+
+        // 5. Parser CSV robust & kebal baris judul atas
+        function parseCSVText(csvText) {
+            const lines = csvText.split(/\r\n|\n/);
+            if (lines.length < 2) {
+                alert("File CSV kosong!");
+                return;
+            }
+
+            let headerLineIndex = -1;
+            let delimiter = ';';
+            
+            let techColIndex = -1, jenisColIndex = -1, sektorColIndex = -1;
+            let dateColIndex = -1, tiketColIndex = -1, inetColIndex = -1;
+            let nikColIndex = -1, perbaikanColIndex = -1;
+
+            for (let i = 0; i < Math.min(lines.length, 25); i++) {
+                let line = lines[i].toUpperCase();
+                if (line.includes("TEKNISI") || line.includes("NAMA")) {
+                    headerLineIndex = i;
+                    delimiter = line.includes(";") ? ";" : ",";
+
+                    let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
+                    cols.forEach((col, idx) => {
+                        if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
+                        if (col === "JENIS" || col.includes("JENIS")) jenisColIndex = idx;
+                        if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
+                        if (col.includes("TGL") || col.includes("TANGGAL") || col.includes("DATE")) dateColIndex = idx;
+                        if (col.includes("TIKET")) tiketColIndex = idx;
+                        if (col.includes("INET") || col.includes("NOMOR INET")) inetColIndex = idx;
+                        if (col.includes("NIK")) nikColIndex = idx;
+                        if (col.includes("KETERANGAN") || col.includes("PERBAIKAN")) perbaikanColIndex = idx;
+                    });
+                    break;
+                }
+            }
+
+            if (headerLineIndex === -1 || techColIndex === -1) {
+                alert("Format file CSV tidak dikenali. Pastikan file memiliki kolom 'TEKNISI'.");
+                return;
+            }
+
+            pendingParsedTickets = [];
+
+            for (let i = headerLineIndex + 1; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) continue;
+
+                let cols = line.split(delimiter).map(c => c.replace(/^"|"$/g, '').trim());
+                if (!cols[techColIndex]) continue;
+
+                let name = cols[techColIndex].trim();
+                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
+
+                let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
+                let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
+                let dateStr = (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null;
+                let tiket = (tiketColIndex !== -1 && cols[tiketColIndex]) ? cols[tiketColIndex] : "";
+                let inet = (inetColIndex !== -1 && cols[inetColIndex]) ? cols[inetColIndex] : "";
+                let nik = (nikColIndex !== -1 && cols[nikColIndex]) ? cols[nikColIndex] : "";
+                let perbaikan = (perbaikanColIndex !== -1 && cols[perbaikanColIndex]) ? cols[perbaikanColIndex] : "";
+
+                pendingParsedTickets.push({
+                    teknisi: name,
+                    sektor: sektor,
+                    jenis: jenis,
+                    date: dateStr,
+                    tiket: tiket,
+                    nomor_inet: inet,
+                    nik: nik,
+                    perbaikan: perbaikan
+                });
+            }
+
+            document.getElementById('file-info-section').classList.remove('hidden');
+            document.getElementById('mode-selection-section').classList.remove('hidden');
+            document.getElementById('info-count').innerText = pendingParsedTickets.length;
+            document.getElementById('btn-submit').disabled = false;
+        }
+
+        // 6. Submit Batching Function (Max 200 data/request)
+        async function submitData() {
+            if (pendingParsedTickets.length === 0) return;
+
             const btnSubmit = document.getElementById('btn-submit');
             btnSubmit.disabled = true;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
 
             const mode = document.querySelector('input[name="upload-mode"]:checked').value;
 
             try {
-                // Mode 'replace' menghapus data lama di database
                 if (mode === 'replace') {
+                    btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Clearing data...`;
                     await fetch(`${SUPABASE_URL}?id=gt.0`, {
                         method: 'DELETE',
                         headers: {
@@ -473,19 +530,26 @@
                     });
                 }
 
-                // Format data untuk Supabase
                 const payload = pendingParsedTickets.map(t => ({
                     teknisi: t.teknisi,
                     sektor: t.sektor,
                     jenis: t.jenis,
-                    tanggal: t.date ? t.date : null
+                    tanggal: t.date ? t.date : null,
+                    tiket: t.tiket || null,
+                    nomor_inet: t.nomor_inet || null,
+                    nik: t.nik || null,
+                    perbaikan: t.perbaikan || null
                 }));
 
-                // Upload Batch per 500 baris agar ringan
-                const batchSize = 500;
+                const batchSize = 200;
+                const totalBatches = Math.ceil(payload.length / batchSize);
+
                 for (let i = 0; i < payload.length; i += batchSize) {
+                    const currentBatch = Math.floor(i / batchSize) + 1;
+                    btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading ${i}/${payload.length} data (${currentBatch}/${totalBatches})...`;
+
                     const chunk = payload.slice(i, i + batchSize);
-                    await fetch(SUPABASE_URL, {
+                    const res = await fetch(SUPABASE_URL, {
                         method: 'POST',
                         headers: {
                             'apikey': SUPABASE_KEY,
@@ -495,719 +559,24 @@
                         },
                         body: JSON.stringify(chunk)
                     });
+
+                    if (!res.ok) {
+                        console.error("Batch Failed:", i, await res.text());
+                    }
                 }
 
+                btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Reloading...`;
                 await loadDataFromSupabase();
                 closeModal();
-                alert("Data berhasil tersimpan ke Supabase!");
+                alert(`Berhasil mengunggah ${pendingParsedTickets.length} data tiket ke Supabase!`);
             } catch (err) {
                 console.error("Error submitting data:", err);
                 alert("Gagal menyimpan data ke database!");
             } finally {
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
+                btnSubmit.innerHTML = `Update Dashboard Sekarang`;
             }
         }
-
-        async function loadDataFromGitHub() {
-    try {
-        // Panggil file data.json dari GitHub Pages / Raw URL
-        const response = await fetch('data.json'); 
-        const data = await response.json();
-        
-        // Render data ke tabel Dashboard kamu
-        renderTable(data);
-    } catch (error) {
-        console.error("Gagal memuat data JSON:", error);
-    }
-}
-
-// Fungsi untuk memuat data dari data.json
-async function loadDataFromJSON() {
-    try {
-        // Mencegah browser melakukan caching agar data selalu segar
-        const response = await fetch('data.json?v=' + new Date().getTime());
-        const data = await response.json();
-        
-        console.log("Data berhasil dimuat:", data);
-        
-        // Panggil fungsi render tabel kamu di sini
-        renderTable(data); 
-        
-    } catch (error) {
-        console.error("Gagal mengambil data dari data.json:", error);
-    }
-}
-
-// Jalankan fungsi saat halaman HTML selesai dimuat
-document.addEventListener('DOMContentLoaded', loadDataFromJSON);
-        
-// Panggil fungsi saat halaman selesai dimuat
-document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
-
-        // --- SISTEM AUTHENTICATION & LOGIN ---
-        function updateAuthUI() {
-            const adminActions = document.getElementById('admin-actions');
-            const authContainer = document.getElementById('auth-button-container');
-
-            if (isLoggedIn) {
-                adminActions.classList.remove('hidden');
-                authContainer.innerHTML = `
-                    <button onclick="performLogout()" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Keluar dari Admin Mode">
-                        <i class="fa-solid fa-right-from-bracket text-red-400"></i> Admin (Logout)
-                    </button>
-                `;
-            } else {
-                adminActions.classList.add('hidden');
-                authContainer.innerHTML = `
-                    <button onclick="openLoginModal()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg shadow font-medium text-xs flex items-center gap-2 transition" title="Login untuk mengelola data">
-                        <i class="fa-solid fa-user-lock"></i> Login Admin
-                    </button>
-                `;
-            }
-        }
-
-        function openLoginModal() {
-            document.getElementById('login-password').value = '';
-            document.getElementById('login-error').classList.add('hidden');
-            document.getElementById('login-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('login-password').focus(), 100);
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
-        }
-
-        function handleLoginKeyPress(e) {
-            if (e.key === 'Enter') {
-                performLogin();
-            }
-        }
-
-        function performLogin() {
-            const password = document.getElementById('login-password').value;
-            if (password === ADMIN_PASSWORD) {
-                isLoggedIn = true;
-                sessionStorage.setItem('isAdminLoggedIn', 'true');
-                updateAuthUI();
-                closeLoginModal();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        function performLogout() {
-            if (confirm("Apakah kamu yakin ingin keluar dari Admin Mode?")) {
-                isLoggedIn = false;
-                sessionStorage.removeItem('isAdminLoggedIn');
-                updateAuthUI();
-            }
-        }
-
-        // --- MANAJEMEN UI & CONTROL ---
-        function resetDateFilter() {
-            document.getElementById('filter-date-start').value = '';
-            document.getElementById('filter-date-end').value = '';
-            renderTable();
-        }
-
-        function openModal() {
-            if (!isLoggedIn) return;
-            document.getElementById('upload-modal').classList.remove('hidden');
-            document.getElementById('file-info-section').classList.add('hidden');
-            document.getElementById('mode-selection-section').classList.add('hidden');
-            document.getElementById('btn-submit').disabled = true;
-            document.getElementById('file-input').value = '';
-            pendingParsedTickets = [];
-        }
-
-        function closeModal() {
-            document.getElementById('upload-modal').classList.add('hidden');
-        }
-
-        function openAreaModal() {
-            if (!isLoggedIn) return;
-            renderAreaList();
-            document.getElementById('area-modal').classList.remove('hidden');
-        }
-
-        function closeAreaModal() {
-            document.getElementById('area-modal').classList.add('hidden');
-            updateAreaDropdown();
-            renderTable();
-        }
-
-        function resetAreaForm() {
-            document.getElementById('input-area-name').value = '';
-            document.getElementById('input-area-sectors').value = '';
-        }
-
-        function saveAreaMapping() {
-            const name = document.getElementById('input-area-name').value.trim().toUpperCase();
-            const sectorsRaw = document.getElementById('input-area-sectors').value.trim().toUpperCase();
-
-            if (!name || !sectorsRaw) {
-                alert("Harap isi Nama Area dan Daftar Sektor!");
-                return;
-            }
-
-            const sectorsArr = sectorsRaw.split(',').map(s => s.trim()).filter(s => s !== '');
-            areaMapping[name] = sectorsArr;
-
-            localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
-            resetAreaForm();
-            renderAreaList();
-        }
-
-        function editArea(areaName) {
-            document.getElementById('input-area-name').value = areaName;
-            document.getElementById('input-area-sectors').value = areaMapping[areaName].join(', ');
-        }
-
-        function deleteArea(areaName) {
-            if (confirm(`Apakah kamu yakin ingin menghapus Area ${areaName}?`)) {
-                delete areaMapping[areaName];
-                localStorage.setItem('areaMapping_v1', JSON.stringify(areaMapping));
-                renderAreaList();
-            }
-        }
-
-        function renderAreaList() {
-            const container = document.getElementById('area-list-container');
-            container.innerHTML = '';
-
-            const keys = Object.keys(areaMapping);
-            if (keys.length === 0) {
-                container.innerHTML = `<div class="text-xs text-slate-400 p-2">Belum ada Area yang ditambahkan.</div>`;
-                return;
-            }
-
-            keys.forEach(areaName => {
-                const item = document.createElement('div');
-                item.className = 'flex justify-between items-center bg-slate-100 p-2.5 rounded-lg border text-xs';
-                item.innerHTML = `
-                    <div>
-                        <span class="font-bold text-amber-800">${areaName}</span>
-                        <span class="text-slate-500 ml-2">(${areaMapping[areaName].join(', ')})</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="editArea('${areaName}')" class="text-blue-600 hover:text-blue-800 font-bold"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="deleteArea('${areaName}')" class="text-red-600 hover:text-red-800 font-bold"><i class="fa-solid fa-trash"></i> Hapus</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function updateAreaDropdown() {
-            const areaSelect = document.getElementById('filter-area');
-            const currentSelected = areaSelect.value;
-
-            areaSelect.innerHTML = `<option value="ALL">-- SEMUA AREA --</option>`;
-            Object.keys(areaMapping).sort().forEach(area => {
-                const opt = document.createElement('option');
-                opt.value = area;
-                opt.innerText = area;
-                if (area === currentSelected) opt.selected = true;
-                areaSelect.appendChild(opt);
-            });
-        }
-
-        function updateSektorDropdown() {
-            const sektorSelect = document.getElementById('filter-sektor');
-            const currentSelected = sektorSelect.value;
-
-            let sektorSet = new Set();
-            rawTickets.forEach(item => {
-                if (item.sektor && item.sektor !== '-') {
-                    sektorSet.add(item.sektor);
-                }
-            });
-
-            let sortedSektor = Array.from(sektorSet).sort();
-
-            sektorSelect.innerHTML = `<option value="ALL">-- SEMUA SEKTOR --</option>`;
-            sortedSektor.forEach(sektor => {
-                const opt = document.createElement('option');
-                opt.value = sektor;
-                opt.innerText = sektor;
-                if (sektor === currentSelected) opt.selected = true;
-                sektorSelect.appendChild(opt);
-            });
-        }
-
-        function parseDateString(dateStr) {
-            if (!dateStr) return null;
-            dateStr = dateStr.trim();
-            
-            if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
-                return dateStr.substring(0, 10);
-            }
-            
-            let parts = dateStr.split(/[\/\-\s]/);
-            if (parts.length >= 3) {
-                let day = parts[0].padStart(2, '0');
-                let month = parts[1].padStart(2, '0');
-                let year = parts[2];
-                if (year.length === 2) year = '20' + year;
-                if (year.length === 4 && Number(day) <= 31 && Number(month) <= 12) {
-                    return `${year}-${month}-${day}`;
-                }
-            }
-            return null;
-        }
-
-        function aggregateFilteredTickets() {
-            const startDate = document.getElementById('filter-date-start').value;
-            const endDate = document.getElementById('filter-date-end').value;
-
-            let filteredRaw = rawTickets.filter(t => {
-                if (!t.date) return true;
-                if (startDate && t.date < startDate) return false;
-                if (endDate && t.date > endDate) return false;
-                return true;
-            });
-
-            let techMap = {};
-
-            filteredRaw.forEach(t => {
-                let nameKey = t.teknisi.toUpperCase().trim();
-                if (!techMap[nameKey]) {
-                    techMap[nameKey] = {
-                        teknisi: t.teknisi,
-                        sektor: t.sektor || '-',
-                        sqm: 0,
-                        reguler: 0,
-                        insera: 0,
-                        underspec: 0
-                    };
-                }
-
-                if (t.sektor && t.sektor !== '-' && techMap[nameKey].sektor === '-') {
-                    techMap[nameKey].sektor = t.sektor;
-                }
-
-                let jenis = (t.jenis || '').toUpperCase();
-                if (jenis.includes("SQM")) techMap[nameKey].sqm += 1;
-                else if (jenis.includes("INSERA")) techMap[nameKey].insera += 1;
-                else if (jenis.includes("UNDERSPEC")) techMap[nameKey].underspec += 1;
-                else techMap[nameKey].reguler += 1;
-            });
-
-            return Object.values(techMap);
-        }
-
-        function calculateBaseData(dataList) {
-            return dataList.map(item => {
-                let sqm = Number(item.sqm) || 0;
-                let reguler = Number(item.reguler) || 0;
-                let insera = Number(item.insera) || 0;
-                let underspec = Number(item.underspec) || 0;
-                let grandTotal = sqm + reguler + insera + underspec;
-
-                let target70 = grandTotal - 62;
-                let target100 = grandTotal - 88;
-                let pct = (grandTotal / 88) * 100;
-
-                return {
-                    ...item,
-                    sqm, reguler, insera, underspec, grandTotal, target70, target100, pct
-                };
-            });
-        }
-
-        function renderTopBottomCards(filteredData) {
-            const topContainer = document.getElementById('top-5-container');
-            const bottomContainer = document.getElementById('bottom-5-container');
-
-            topContainer.innerHTML = '';
-            bottomContainer.innerHTML = '';
-
-            if (filteredData.length === 0) {
-                topContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
-                bottomContainer.innerHTML = `<div class="text-xs text-slate-400 italic">Tidak ada data</div>`;
-                return;
-            }
-
-            let top5 = filteredData.slice(0, 5);
-            let bottom5 = [...filteredData].reverse().slice(0, 5);
-
-            top5.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-xs';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[10px]">${idx + 1}</span>
-                        <div>
-                            <span class="font-bold text-slate-800">${item.teknisi}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span>
-                        </div>
-                    </div>
-                    <div class="font-bold text-emerald-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
-                `;
-                topContainer.appendChild(div);
-            });
-
-            bottom5.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-red-50 border border-red-200 p-2 rounded-lg text-xs';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-[10px]">${item.rank}</span>
-                        <div>
-                            <span class="font-bold text-slate-800">${item.teknisi}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(${item.sektor || '-'})</span>
-                        </div>
-                    </div>
-                    <div class="font-bold text-red-800">${item.grandTotal} Tiket <span class="text-[10px] font-normal">(${item.pct.toFixed(1).replace('.', ',')}%)</span></div>
-                `;
-                bottomContainer.appendChild(div);
-            });
-        }
-
-        function renderTable() {
-            const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-            const selectedArea = document.getElementById('filter-area').value;
-            const selectedSektor = document.getElementById('filter-sektor').value;
-
-            const aggregatedData = aggregateFilteredTickets();
-            const baseData = calculateBaseData(aggregatedData);
-
-            let filtered = baseData.filter(item => {
-                const matchesSearch = item.teknisi.toLowerCase().includes(searchQuery);
-                const matchesSektor = (selectedSektor === 'ALL') || (item.sektor === selectedSektor);
-
-                let matchesArea = true;
-                if (selectedArea !== 'ALL') {
-                    const allowedSectors = areaMapping[selectedArea] || [];
-                    matchesArea = allowedSectors.includes(item.sektor);
-                }
-
-                return matchesSearch && matchesSektor && matchesArea;
-            });
-
-            filtered.sort((a, b) => b.grandTotal - a.grandTotal);
-
-            let currentRank = 1;
-            for (let i = 0; i < filtered.length; i++) {
-                if (i > 0 && filtered[i].grandTotal < filtered[i - 1].grandTotal) {
-                    currentRank = i + 1;
-                }
-                filtered[i].rank = currentRank;
-            }
-
-            renderTopBottomCards(filtered);
-
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-
-            let sumSqm = 0, sumReguler = 0, sumInsera = 0, sumUnderspec = 0, sumGrandTotal = 0;
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="p-8 text-center text-slate-400 font-medium">Data tidak ditemukan. Silakan upload file CSV atau sesuaikan filter.</td></tr>`;
-            } else {
-                filtered.forEach((row, index) => {
-                    sumSqm += row.sqm;
-                    sumReguler += row.reguler;
-                    sumInsera += row.insera;
-                    sumUnderspec += row.underspec;
-                    sumGrandTotal += row.grandTotal;
-
-                    let rankClass = '';
-                    if (row.rank === 1) rankClass = 'rank-1';
-                    else if (row.rank <= 3) rankClass = 'rank-2';
-                    else if (row.rank <= 10) rankClass = 'rank-mid';
-                    else rankClass = 'rank-low';
-
-                    const tr = document.createElement('tr');
-                    tr.className = index % 2 === 0 ? 'zebra-even text-center' : 'zebra-odd text-center';
-                    tr.innerHTML = `
-                        <td class="p-3 text-left font-semibold text-slate-800 border-b border-slate-200">${row.teknisi}</td>
-                        <td class="p-3 font-semibold text-slate-600 border-b border-slate-200">${row.sektor || '-'}</td>
-                        <td class="p-3 border-b border-slate-200">${row.sqm || ''}</td>
-                        <td class="p-3 border-b border-slate-200 font-medium">${row.reguler || ''}</td>
-                        <td class="p-3 border-b border-slate-200">${row.insera || ''}</td>
-                        <td class="p-3 border-b border-slate-200">${row.underspec || ''}</td>
-                        <td class="p-3 border-b border-slate-200 font-bold bg-slate-50">${row.grandTotal}</td>
-                        <td class="p-3 border-b border-slate-200 ${rankClass}">${row.rank}</td>
-                        <td class="p-3 border-b border-slate-200 text-slate-700">${row.target70}</td>
-                        <td class="p-3 border-b border-slate-200 text-slate-700">${row.target100}</td>
-                        <td class="p-3 border-b border-slate-200 font-bold text-blue-700">${row.pct.toFixed(2).replace('.', ',')}%</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-
-            const tfoot = document.getElementById('table-foot');
-            let sumTarget70 = sumGrandTotal - (filtered.length * 62);
-            let sumTarget100 = sumGrandTotal - (filtered.length * 88);
-            let overallPct = filtered.length > 0 ? (sumGrandTotal / (filtered.length * 88)) * 100 : 0;
-
-            tfoot.innerHTML = `
-                <tr class="text-center">
-                    <td class="p-3 text-left" colspan="2">Grand Total (${filtered.length} Teknisi)</td>
-                    <td class="p-3">${sumSqm}</td>
-                    <td class="p-3">${sumReguler}</td>
-                    <td class="p-3">${sumInsera}</td>
-                    <td class="p-3">${sumUnderspec}</td>
-                    <td class="p-3 bg-slate-300 text-slate-900">${sumGrandTotal}</td>
-                    <td class="p-3 bg-slate-300">-</td>
-                    <td class="p-3">${sumTarget70}</td>
-                    <td class="p-3">${sumTarget100}</td>
-                    <td class="p-3 bg-blue-200 text-blue-900">${overallPct.toFixed(2).replace('.', ',')}%</td>
-                </tr>
-            `;
-
-            document.getElementById('stat-total-teknisi').innerText = filtered.length;
-            document.getElementById('stat-total-tiket').innerText = sumGrandTotal;
-            document.getElementById('stat-top-performer').innerText = filtered.length > 0 ? filtered[0].teknisi : '-';
-            document.getElementById('stat-avg-target').innerText = overallPct.toFixed(1).replace('.', ',') + '%';
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            document.getElementById('info-filename').innerText = file.name;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const text = evt.target.result;
-                parseCSVText(text);
-            };
-            reader.readAsText(file, 'utf-8');
-        }
-
-        // 1. Fungsi Parser CSV yang Kebal Header Judul & Tanda Kutip
-function parseCSVText(csvText) {
-    const lines = csvText.split(/\r\n|\n/);
-    if (lines.length < 2) {
-        alert("File CSV kosong!");
-        return;
-    }
-
-    let headerLineIndex = -1;
-    let delimiter = ';';
-    
-    let techColIndex = -1;
-    let jenisColIndex = -1;
-    let sektorColIndex = -1;
-    let dateColIndex = -1;
-    let tiketColIndex = -1;
-    let inetColIndex = -1;
-    let nikColIndex = -1;
-    let perbaikanColIndex = -1;
-
-    // Scan hingga 20 baris pertama untuk mencari baris header
-    for (let i = 0; i < Math.min(lines.length, 20); i++) {
-        let line = lines[i].toUpperCase();
-        if (line.includes("TEKNISI") || line.includes("NAMA")) {
-            headerLineIndex = i;
-            delimiter = line.includes(";") ? ";" : ",";
-
-            let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
-            cols.forEach((col, idx) => {
-                if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
-                if (col === "JENIS" || col.includes("JENIS")) jenisColIndex = idx;
-                if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
-                if (col.includes("TGL") || col.includes("TANGGAL") || col.includes("DATE")) dateColIndex = idx;
-                if (col.includes("TIKET")) tiketColIndex = idx;
-                if (col.includes("INET") || col.includes("NOMOR INET")) inetColIndex = idx;
-                if (col.includes("NIK")) nikColIndex = idx;
-                if (col.includes("KETERANGAN") || col.includes("PERBAIKAN")) perbaikanColIndex = idx;
-            });
-            break;
-        }
-    }
-
-    if (headerLineIndex === -1 || techColIndex === -1) {
-        alert("Format file CSV tidak dikenali. Pastikan file memiliki kolom 'TEKNISI'.");
-        return;
-    }
-
-    pendingParsedTickets = [];
-
-    for (let i = headerLineIndex + 1; i < lines.length; i++) {
-        let line = lines[i].trim();
-        if (!line) continue;
-
-        let cols = line.split(delimiter).map(c => c.replace(/^"|"$/g, '').trim());
-        if (!cols[techColIndex]) continue;
-
-        let name = cols[techColIndex].trim();
-        if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
-
-        let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
-        let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
-        let dateStr = (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null;
-        let tiket = (tiketColIndex !== -1 && cols[tiketColIndex]) ? cols[tiketColIndex] : "";
-        let inet = (inetColIndex !== -1 && cols[inetColIndex]) ? cols[inetColIndex] : "";
-        let nik = (nikColIndex !== -1 && cols[nikColIndex]) ? cols[nikColIndex] : "";
-        let perbaikan = (perbaikanColIndex !== -1 && cols[perbaikanColIndex]) ? cols[perbaikanColIndex] : "";
-
-        pendingParsedTickets.push({
-            teknisi: name,
-            sektor: sektor,
-            jenis: jenis,
-            date: dateStr,
-            tiket: tiket,
-            nomor_inet: inet,
-            nik: nik,
-            perbaikan: perbaikan
-        });
-    }
-
-    document.getElementById('file-info-section').classList.remove('hidden');
-    document.getElementById('mode-selection-section').classList.remove('hidden');
-    document.getElementById('info-count').innerText = pendingParsedTickets.length;
-    document.getElementById('btn-submit').disabled = false;
-}
-
-// 2. Fungsi Submit Data dengan Batch Send 200 Data & Progress Indicator
-async function submitData() {
-    if (!isLoggedIn) return;
-    if (pendingParsedTickets.length === 0) {
-        alert("Tidak ada data yang terbaca dari CSV.");
-        return;
-    }
-
-    const btnSubmit = document.getElementById('btn-submit');
-    btnSubmit.disabled = true;
-
-    const mode = document.querySelector('input[name="upload-mode"]:checked').value;
-
-    try {
-        if (mode === 'replace') {
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Membersihkan data lama...`;
-            await fetch(`${SUPABASE_URL}?id=gt.0`, {
-                method: 'DELETE',
-                headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_KEY}`
-                }
-            });
-        }
-
-        const payload = pendingParsedTickets.map(t => ({
-            teknisi: t.teknisi,
-            sektor: t.sektor,
-            jenis: t.jenis,
-            tanggal: t.date ? t.date : null,
-            tiket: t.tiket || null,
-            nomor_inet: t.nomor_inet || null,
-            nik: t.nik || null,
-            perbaikan: t.perbaikan || null
-        }));
-
-        // Ukuran batch dikurangi ke 200 agar aman mengirim 23.000+ data tanpa rejected oleh Supabase
-        const batchSize = 200;
-        const totalBatches = Math.ceil(payload.length / batchSize);
-
-        for (let i = 0; i < payload.length; i += batchSize) {
-            const currentBatch = Math.floor(i / batchSize) + 1;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim ${i}/${payload.length} data (${currentBatch}/${totalBatches})...`;
-
-            const chunk = payload.slice(i, i + batchSize);
-            const res = await fetch(SUPABASE_URL, {
-                method: 'POST',
-                headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
-                },
-                body: JSON.stringify(chunk)
-            });
-
-            if (!res.ok) {
-                console.error("Gagal di batch:", i, await res.text());
-            }
-        }
-
-        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memuat ulang dashboard...`;
-        await loadDataFromSupabase();
-        closeModal();
-        alert(`Berhasil mengunggah ${pendingParsedTickets.length} data tiket ke Supabase!`);
-    } catch (err) {
-        console.error("Error submitting data:", err);
-        alert("Gagal menyimpan data ke database!");
-    } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
-    }
-}
-
-        function exportExcel() {
-    const startDate = document.getElementById('filter-date-start').value;
-    const endDate = document.getElementById('filter-date-end').value;
-    const selectedArea = document.getElementById('filter-area').value;
-    const selectedSektor = document.getElementById('filter-sektor').value;
-    const searchQuery = document.getElementById('search-input').value.trim();
-
-    // Filter data tiket mentah (rawTickets) sesuai filter yang aktif di UI
-    let filteredTickets = rawTickets.filter(t => {
-        if (t.date) {
-            if (startDate && t.date < startDate) return false;
-            if (endDate && t.date > endDate) return false;
-        }
-
-        if (searchQuery && !t.teknisi.toLowerCase().includes(searchQuery.toLowerCase())) {
-            return false;
-        }
-
-        if (selectedSektor !== 'ALL' && t.sektor !== selectedSektor) {
-            return false;
-        }
-
-        if (selectedArea !== 'ALL') {
-            const allowedSectors = areaMapping[selectedArea] || [];
-            if (!allowedSectors.includes(t.sektor)) {
-                return false;
-            }
-        }
-
-        return true;
-    });
-
-    if (filteredTickets.length === 0) {
-        alert("Tidak ada detail data tiket yang tersedia untuk diunduh sesuai filter.");
-        return;
-    }
-
-    // Pemetaan data per baris tiket lengkap dengan nomor tiket INCxxxxx
-    const exportData = filteredTickets.map((t, index) => {
-        let formattedDate = t.date || '';
-        if (t.date && t.date.includes('-')) {
-            const [year, month, day] = t.date.split('-');
-            formattedDate = `${day}/${month}/${year}`;
-        }
-
-        return {
-            "NO": index + 1,
-            "JENIS": t.jenis || 'REGULER',
-            "TIKET": t.tiket || '-',         // Menampilkan nomor tiket INCxxxxx
-            "NOMOR INET": t.nomor_inet || '-', // Menampilkan nomor inet
-            "SEKTOR": t.sektor || '-',
-            "TEKNISI": t.teknisi || '-',
-            "NIK": t.nik || '-',
-            "PERBAIKAN": t.perbaikan || '-',
-            "TGL": formattedDate
-        };
-    });
-
-    // Proses Export ke file XLSX menggunakan SheetJS
-    const ws = XLSX.utils.json_to_sheet(exportData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Detail Tiket");
-
-    let fileName = "Detail_Tiket_Teknisi";
-    if (startDate || endDate) {
-        fileName += `_${startDate || 'awal'}_sbd_${endDate || 'akhir'}`;
-    }
-    fileName += ".xlsx";
-
-    XLSX.writeFile(wb, fileName);
-}
     </script>
 </body>
 </html>
