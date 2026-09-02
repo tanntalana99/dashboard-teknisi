@@ -978,74 +978,164 @@ document.addEventListener('DOMContentLoaded', loadDataFromGitHub);
             reader.readAsText(file, 'utf-8');
         }
 
-        // Parsing Otomatis CSV
-        function parseCSVText(csvText) {
-            const lines = csvText.split(/\r\n|\n/);
-            if (lines.length < 2) {
-                alert("File CSV kosong!");
-                return;
-            }
+        // 1. Fungsi Parser CSV yang Kebal Header Judul & Tanda Kutip
+function parseCSVText(csvText) {
+    const lines = csvText.split(/\r\n|\n/);
+    if (lines.length < 2) {
+        alert("File CSV kosong!");
+        return;
+    }
 
-            let headerLineIndex = -1;
-            let delimiter = ';';
-            let techColIndex = -1;
-            let jenisColIndex = -1;
-            let sektorColIndex = -1;
-            let dateColIndex = -1;
+    let headerLineIndex = -1;
+    let delimiter = ';';
+    
+    let techColIndex = -1;
+    let jenisColIndex = -1;
+    let sektorColIndex = -1;
+    let dateColIndex = -1;
+    let tiketColIndex = -1;
+    let inetColIndex = -1;
+    let nikColIndex = -1;
+    let perbaikanColIndex = -1;
 
-            // Cari Baris Header
-            for (let i = 0; i < Math.min(lines.length, 15); i++) {
-                let line = lines[i].toUpperCase();
-                if (line.includes("TEKNISI") || line.includes("NAMA")) {
-                    headerLineIndex = i;
-                    delimiter = line.includes(";") ? ";" : ",";
+    // Scan hingga 20 baris pertama untuk mencari baris header
+    for (let i = 0; i < Math.min(lines.length, 20); i++) {
+        let line = lines[i].toUpperCase();
+        if (line.includes("TEKNISI") || line.includes("NAMA")) {
+            headerLineIndex = i;
+            delimiter = line.includes(";") ? ";" : ",";
 
-                    let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
-                    cols.forEach((col, idx) => {
-                        if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
-                        if (col === "JENIS" || col.includes("JENIS") || col.includes("KATEGORI")) jenisColIndex = idx;
-                        if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
-                        if (col.includes("TANGGAL") || col.includes("DATE") || col.includes("TGL") || col.includes("COMPLETED")) dateColIndex = idx;
-                    });
-                    break;
-                }
-            }
-
-            if (headerLineIndex === -1 || techColIndex === -1) {
-                alert("Format file CSV tidak dikenali. Pastikan file rekap memiliki kolom 'TEKNISI'.");
-                return;
-            }
-
-            pendingParsedTickets = [];
-
-            // Loop seluruh baris tiket
-            for (let i = headerLineIndex + 1; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-
-                let cols = line.split(delimiter).map(c => c.replace(/"/g, '').trim());
-                if (!cols[techColIndex]) continue;
-
-                let name = cols[techColIndex].trim();
-                if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
-
-                let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
-                let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
-                let dateStr = (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null;
-
-                pendingParsedTickets.push({
-                    teknisi: name,
-                    sektor: sektor,
-                    jenis: jenis,
-                    date: dateStr
-                });
-            }
-
-            document.getElementById('file-info-section').classList.remove('hidden');
-            document.getElementById('mode-selection-section').classList.remove('hidden');
-            document.getElementById('info-count').innerText = pendingParsedTickets.length;
-            document.getElementById('btn-submit').disabled = false;
+            let cols = lines[i].split(delimiter).map(c => c.replace(/"/g, '').trim().toUpperCase());
+            cols.forEach((col, idx) => {
+                if (col.includes("TEKNISI") || col.includes("NAMA")) techColIndex = idx;
+                if (col === "JENIS" || col.includes("JENIS")) jenisColIndex = idx;
+                if (col.includes("SEKTOR") || col.includes("STO") || col.includes("AREA")) sektorColIndex = idx;
+                if (col.includes("TGL") || col.includes("TANGGAL") || col.includes("DATE")) dateColIndex = idx;
+                if (col.includes("TIKET")) tiketColIndex = idx;
+                if (col.includes("INET") || col.includes("NOMOR INET")) inetColIndex = idx;
+                if (col.includes("NIK")) nikColIndex = idx;
+                if (col.includes("KETERANGAN") || col.includes("PERBAIKAN")) perbaikanColIndex = idx;
+            });
+            break;
         }
+    }
+
+    if (headerLineIndex === -1 || techColIndex === -1) {
+        alert("Format file CSV tidak dikenali. Pastikan file memiliki kolom 'TEKNISI'.");
+        return;
+    }
+
+    pendingParsedTickets = [];
+
+    for (let i = headerLineIndex + 1; i < lines.length; i++) {
+        let line = lines[i].trim();
+        if (!line) continue;
+
+        let cols = line.split(delimiter).map(c => c.replace(/^"|"$/g, '').trim());
+        if (!cols[techColIndex]) continue;
+
+        let name = cols[techColIndex].trim();
+        if (!name || name.toUpperCase().includes("GRAND TOTAL") || name.toUpperCase().includes("TOTAL")) continue;
+
+        let jenis = (jenisColIndex !== -1 && cols[jenisColIndex]) ? cols[jenisColIndex].toUpperCase() : "REGULER";
+        let sektor = (sektorColIndex !== -1 && cols[sektorColIndex]) ? cols[sektorColIndex].toUpperCase() : "-";
+        let dateStr = (dateColIndex !== -1 && cols[dateColIndex]) ? parseDateString(cols[dateColIndex]) : null;
+        let tiket = (tiketColIndex !== -1 && cols[tiketColIndex]) ? cols[tiketColIndex] : "";
+        let inet = (inetColIndex !== -1 && cols[inetColIndex]) ? cols[inetColIndex] : "";
+        let nik = (nikColIndex !== -1 && cols[nikColIndex]) ? cols[nikColIndex] : "";
+        let perbaikan = (perbaikanColIndex !== -1 && cols[perbaikanColIndex]) ? cols[perbaikanColIndex] : "";
+
+        pendingParsedTickets.push({
+            teknisi: name,
+            sektor: sektor,
+            jenis: jenis,
+            date: dateStr,
+            tiket: tiket,
+            nomor_inet: inet,
+            nik: nik,
+            perbaikan: perbaikan
+        });
+    }
+
+    document.getElementById('file-info-section').classList.remove('hidden');
+    document.getElementById('mode-selection-section').classList.remove('hidden');
+    document.getElementById('info-count').innerText = pendingParsedTickets.length;
+    document.getElementById('btn-submit').disabled = false;
+}
+
+// 2. Fungsi Submit Data dengan Batch Send 200 Data & Progress Indicator
+async function submitData() {
+    if (!isLoggedIn) return;
+    if (pendingParsedTickets.length === 0) {
+        alert("Tidak ada data yang terbaca dari CSV.");
+        return;
+    }
+
+    const btnSubmit = document.getElementById('btn-submit');
+    btnSubmit.disabled = true;
+
+    const mode = document.querySelector('input[name="upload-mode"]:checked').value;
+
+    try {
+        if (mode === 'replace') {
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Membersihkan data lama...`;
+            await fetch(`${SUPABASE_URL}?id=gt.0`, {
+                method: 'DELETE',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
+        }
+
+        const payload = pendingParsedTickets.map(t => ({
+            teknisi: t.teknisi,
+            sektor: t.sektor,
+            jenis: t.jenis,
+            tanggal: t.date ? t.date : null,
+            tiket: t.tiket || null,
+            nomor_inet: t.nomor_inet || null,
+            nik: t.nik || null,
+            perbaikan: t.perbaikan || null
+        }));
+
+        // Ukuran batch dikurangi ke 200 agar aman mengirim 23.000+ data tanpa rejected oleh Supabase
+        const batchSize = 200;
+        const totalBatches = Math.ceil(payload.length / batchSize);
+
+        for (let i = 0; i < payload.length; i += batchSize) {
+            const currentBatch = Math.floor(i / batchSize) + 1;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim ${i}/${payload.length} data (${currentBatch}/${totalBatches})...`;
+
+            const chunk = payload.slice(i, i + batchSize);
+            const res = await fetch(SUPABASE_URL, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify(chunk)
+            });
+
+            if (!res.ok) {
+                console.error("Gagal di batch:", i, await res.text());
+            }
+        }
+
+        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memuat ulang dashboard...`;
+        await loadDataFromSupabase();
+        closeModal();
+        alert(`Berhasil mengunggah ${pendingParsedTickets.length} data tiket ke Supabase!`);
+    } catch (err) {
+        console.error("Error submitting data:", err);
+        alert("Gagal menyimpan data ke database!");
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-sync"></i> Update Dashboard Sekarang`;
+    }
+}
 
         function exportExcel() {
     const startDate = document.getElementById('filter-date-start').value;
